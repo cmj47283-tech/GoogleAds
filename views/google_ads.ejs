@@ -175,7 +175,7 @@
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
                             <small>View (2 filters)</small>
-                            <strong><span class="material-symbols-outlined">home</span> All campaigns</strong>
+                            <a><span class="material-symbols-outlined">home</span> All campaigns</a>
                             <span class="material-symbols-outlined">arrow_drop_down</span>
                             <div v-if="dropdown === 'view'" class="ga-dropdown">
                                 <a href="/aw/campaigns">All campaigns</a>
@@ -183,7 +183,7 @@
                         </div>
                         <div class="ga-selector" :class="{ active: selectedCampaign }" @click.stop="toggleDropdown('campaign')">
                             <small>{{ campaignSelectorLabel }}</small>
-                            <strong>{{ selectedCampaign ? selectedCampaign.campaign : 'Select a campaign' }}</strong>
+                            <a>{{ selectedCampaign ? selectedCampaign.campaign : 'Select a campaign' }}</a>
                             <span class="material-symbols-outlined">arrow_drop_down</span>
                             <div v-if="dropdown === 'campaign'" class="ga-dropdown wide">
                                 <a v-for="campaign in campaignRows" :key="campaign.id" :href="campaignHref(campaign.id)">
@@ -194,7 +194,7 @@
                         <div v-if="pageMode !== 'campaigns'" class="ga-selector" :class="{ active: pageMode === 'adassets' }"
                             @click.stop="toggleDropdown('adgroup')">
                             <small>Ad groups (1)</small>
-                            <strong>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Select an ad group' }}</strong>
+                            <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Select an ad group' }}</a>
                             <span class="material-symbols-outlined">arrow_drop_down</span>
                             <div v-if="dropdown === 'adgroup'" class="ga-dropdown">
                                 <a :href="adAssetsHref">{{ adGroup.adGroup }}</a>
@@ -222,7 +222,7 @@
                         <div v-if="isContextBarHidden" class="ga-page-head-selector-wrapper">
                             <div class="ga-selector active" @click.stop="toggleDropdown('view')">
                                 <small>View (2 filters)</small>
-                                <strong><span class="material-symbols-outlined">home</span> All campaigns</strong>
+                                <a><span class="material-symbols-outlined">home</span> All campaigns</a>
                                 <span class="material-symbols-outlined">arrow_drop_down</span>
                                 <div v-if="dropdown === 'view'" class="ga-dropdown">
                                     <a href="/aw/campaigns">All campaigns</a>
@@ -315,6 +315,9 @@
                                 <span class="material-symbols-outlined">{{ tool.icon }}</span>
                                 <small>{{ tool.label }}</small>
                             </button>
+                            <vertical-divider>
+                                <div class="ga-vertical-divider"></div>
+                            </vertical-divider>
                             <button type="button">
                                 <span class="material-symbols-outlined">keyboard_arrow_up</span>
                             </button>
