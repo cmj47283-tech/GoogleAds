@@ -88,6 +88,7 @@ createApp({
             ads_isInsightsReportsOpen: true,
             ads_isAssetsOpen:false,
             isNotificationsOpen: false,
+            isRefreshing: false,
             tooltip: {
                 visible: false,
                 text: '',
@@ -258,6 +259,14 @@ createApp({
                 ];
             }
 
+            if (this.isRefreshing) {
+                return [
+                    { label: 'Avg. target CPA', value: '-', delta: '-' },
+                    { label: 'Cost', value: this.money(this.totals.cost), delta: `${this.money(this.totals.cost)}` },
+                    { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: `${this.fixed(this.totals.conversions, 2)}` }
+                ];
+            }
+
             return [
                 { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: `${this.fixed(this.totals.conversions, 2)}` },
                 { label: 'Impr.', value: '0', delta: '0' },
@@ -268,7 +277,7 @@ createApp({
         metricActions() {
             return [
                 { icon: 'add_chart', label: 'Metrics' },
-                { icon: 'tune', label: 'Adjust', badge: this.pageMode === 'adgroups' ? '2' : '1' },
+                { icon: 'tune', label: 'Adjust', badge: this.pageMode === 'adgroups' ? '2' : '3' },
                 { icon: 'file_download', label: 'Download' },
                 { icon: 'fullscreen', label: 'Expand' }
             ];
@@ -484,7 +493,21 @@ createApp({
     },
     methods: {
         async reloadData() {
-            await this.loadData();
+            if (this.isRefreshing) return;
+            this.isRefreshing = true;
+            this.showDatePicker = false;
+            this.dropdown = '';
+            this.isNotificationsOpen = false;
+
+            try {
+                await this.$nextTick();
+                await Promise.all([
+                    this.loadData(),
+                    new Promise(resolve => setTimeout(resolve, 1200))
+                ]);
+            } finally {
+                this.isRefreshing = false;
+            }
         },
         async loadData() {
             try {

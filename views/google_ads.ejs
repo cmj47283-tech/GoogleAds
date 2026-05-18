@@ -12,7 +12,7 @@
 </head>
 
 <body class="ga-body">
-    <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed }" v-cloak>
+    <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing }" v-cloak>
         <header class="ga-topbar">
             <div class="ga-topbar-left">
                 <button class="ga-icon-button" type="button" aria-label="Toggle navigation" @click="toggleNavigation">
@@ -62,8 +62,10 @@
                     <span class="material-symbols-outlined">responsive_layout</span>
                     <span>Appearance</span>
                 </button>
-                <button class="ga-tool-button" type="button" @click="reloadData" data-tooltip="Refresh">
-                    <span class="material-symbols-outlined">refresh</span>
+                <button class="ga-tool-button ga-refresh-button" type="button"
+                    :class="{ refreshing: isRefreshing }" :disabled="isRefreshing"
+                    :aria-busy="isRefreshing.toString()" @click="reloadData" data-tooltip="Refresh">
+                    <span class="material-symbols-outlined ga-refresh-icon">refresh</span>
                     <span>Refresh</span>
                 </button>
                 <button class="ga-tool-button" type="button" data-tooltip="Open the quick help panel">
@@ -225,7 +227,7 @@
                 </div>
             </nav>
 
-            <main class="ga-main">
+            <main class="ga-main" :class="{ 'is-refreshing': isRefreshing }">
                 <section class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
@@ -491,6 +493,10 @@
                             <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
                             <small style="margin-left: 4px;">{{ metric.delta }}</small>
                         </div>
+                        <div class="ga-metric-skeleton" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                        </div>
                     </div>
                     <div class="ga-metric-actions">
                         <button v-for="action in metricActions" :key="action.label" type="button">
@@ -528,11 +534,17 @@
                         <line x1="20" y1="154" x2="980" y2="154"></line>
                         <polyline points="20,154 980,154" class="ga-chart-line"></polyline>
                     </svg>
+                    <div v-if="isRefreshing" class="ga-chart-loading" role="status" aria-label="Refreshing data">
+                        <span></span>
+                    </div>
                     <span class="ga-chart-start">{{ formattedStartDate }}</span>
                     <span class="ga-chart-end">{{ formattedEndDate }}</span>
                 </section>
 
-                <section class="ga-table-panel">
+                <section class="ga-table-panel" :class="{
+                    'ga-table-panel--refreshing': isRefreshing,
+                    'ga-table-panel--campaign-refreshing': isRefreshing && pageMode === 'campaigns'
+                }">
                     <button class="ga-floating-add" type="button"
                         :aria-label="pageMode === 'adassets' ? 'Edit' : 'Create'">
                         <span class="material-symbols-outlined">{{ pageMode === 'adassets' ? 'edit' : 'add' }}</span>
@@ -549,9 +561,7 @@
                                 <span class="material-symbols-outlined">{{ tool.icon }}</span>
                                 <small>{{ tool.label }}</small>
                             </button>
-                            <vertical-divider>
-                                <div class="ga-vertical-divider"></div>
-                            </vertical-divider>
+                            <div class="ga-vertical-divider" aria-hidden="true"></div>
                             <button type="button">
                                 <span class="material-symbols-outlined">keyboard_arrow_up</span>
                             </button>
@@ -747,8 +757,12 @@
                         <table v-if="pageMode === 'adassets'" class="ga-data-table assets">
                             <thead>
                                 <tr>
-                                    <th class="state-col"><span class="ga-status-dot"></span></th>
-                                    <th class="name-col">Asset</th>
+                                    <th class="name-col">
+                                        <span class="asset-header-cell">
+                                            <span class="ga-status-dot"></span>
+                                            <span>Asset</span>
+                                        </span>
+                                    </th>
                                     <th>Status</th>
                                     <th>Asset type <span class="material-symbols-outlined">arrow_upward</span></th>
                                     <th>Performance</th>
@@ -764,8 +778,8 @@
                             </thead>
                             <tbody>
                                 <tr v-for="asset in assetRows" :key="asset.id">
-                                    <td><span class="ga-status-dot enabled"></span></td>
-                                    <td class="asset-cell">
+                                    <td class="asset-cell name-col">
+                                        <span class="ga-status-dot enabled"></span>
                                         <button v-if="asset.assetType === 'Image'" type="button" class="asset-thumb"
                                             @click="openImagePreview(asset)">
                                             <img :src="asset.image" :alt="asset.asset">

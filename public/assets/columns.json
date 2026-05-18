@@ -6,18 +6,13 @@
   },
   {
     "width": 100,
-    "key": "AdGroup",
-    "label": "Ad group"
+    "key": "campaignId",
+    "label": "campaignId"
   },
   {
     "width": 100,
     "key": "campaign",
     "label": "Campaign"
-  },
-  {
-    "width": 100,
-    "key": "campaignId",
-    "label": "campaignId"
   },
   {
     "width": 100,
@@ -63,6 +58,11 @@
     "width": 100,
     "key": "Buget",
     "label": "Buget"
+  },
+  {
+    "width": 100,
+    "key": "AdGroup",
+    "label": "Ad group"
   },
   {
     "width": 100,

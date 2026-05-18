@@ -2,12 +2,37 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
-const INPUT_FILE = path.join(__dirname, 'data.xlsx');
-const GOOGLE_ADS_INPUT_FILE = path.join(__dirname, 'campaign-adgrops-adsets.xlsx');
 const OUTPUT_DIR = path.join(__dirname, 'public', 'assets');
+const EXCEL_EXTENSIONS = new Set(['.xlsx', '.xls']);
 
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+}
+
+function findRootExcelInputFile() {
+    const candidates = fs.readdirSync(__dirname, { withFileTypes: true })
+        .filter(entry => {
+            if (!entry.isFile()) return false;
+            if (entry.name.startsWith('~$') || entry.name.startsWith('.')) return false;
+            return EXCEL_EXTENSIONS.has(path.extname(entry.name).toLowerCase());
+        })
+        .map(entry => {
+            const filePath = path.join(__dirname, entry.name);
+            const stats = fs.statSync(filePath);
+            return {
+                name: entry.name,
+                filePath,
+                mtimeMs: stats.mtimeMs
+            };
+        })
+        .sort((left, right) => {
+            if (right.mtimeMs !== left.mtimeMs) {
+                return right.mtimeMs - left.mtimeMs;
+            }
+            return left.name.localeCompare(right.name);
+        });
+
+    return candidates.length ? candidates[0].filePath : '';
 }
 
 function padDatePart(value) {
@@ -78,20 +103,22 @@ function convertByType(value, type, key = '') {
         return normalizeDateValue(value);
     }
 
+    const normalizedType = String(type || 'string').trim().toLowerCase();
+
     if (value === null || value === undefined || value === '') {
-        if (type === 'int' || type === 'integer') {
+        if (normalizedType === 'int' || normalizedType === 'integer') {
             return 0;
-        } else if (type === 'float' || type === 'double') {
+        } else if (normalizedType === 'float' || normalizedType === 'double') {
             return 0.0;
-        } else if (type === 'bool' || type === 'boolean') {
+        } else if (normalizedType === 'bool' || normalizedType === 'boolean') {
             return false;
-        } else if (type === 'string') {
+        } else if (normalizedType === 'string' || normalizedType === 'sting') {
             return '';
         }
         return null;
     }
 
-    switch (type.toLowerCase()) {
+    switch (normalizedType) {
         case 'int':
         case 'integer':
             return parseInt(value, 10);
@@ -102,13 +129,66 @@ function convertByType(value, type, key = '') {
         case 'boolean':
             const lowerValue = String(value).toLowerCase();
             return lowerValue === 'true' || lowerValue === '1' || lowerValue === 'yes';
+        case 'sting':
         case 'string':
         default:
             return String(value);
     }
 }
 
-async function processExcelFile(filePath) {
+function normalizeColumnKey(key) {
+    if (key === null || key === undefined) {
+        return '';
+    }
+
+    const text = String(key).trim();
+    if (!text || text.startsWith('//')) {
+        return '';
+    }
+
+    return text.toLowerCase() === 'date' ? 'date' : text;
+}
+
+function isTypeCell(value) {
+    const text = String(value || '').trim().toLowerCase();
+    return ['string', 'sting', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'date'].includes(text);
+}
+
+function resolveSheetLayout(jsonData) {
+    const scanLimit = Math.min(jsonData.length, 8);
+
+    for (let rowIndex = 0; rowIndex < scanLimit; rowIndex++) {
+        const row = jsonData[rowIndex] || [];
+        const filledCells = row.filter(cell => String(cell || '').trim());
+        if (!filledCells.length) continue;
+
+        const typeCellCount = filledCells.filter(isTypeCell).length;
+        if (rowIndex >= 1 && typeCellCount / filledCells.length >= 0.7) {
+            const keys = jsonData[rowIndex - 1] || [];
+            const labels = rowIndex >= 2 ? jsonData[rowIndex - 2] || [] : keys;
+            return {
+                labels,
+                keys,
+                types: row,
+                dataRows: jsonData.slice(rowIndex + 1)
+            };
+        }
+    }
+
+    return {
+        labels: jsonData[1] || jsonData[0] || [],
+        keys: jsonData[2] || jsonData[0] || [],
+        types: jsonData[3] || [],
+        dataRows: jsonData.slice(4)
+    };
+}
+
+async function processExcelFile(filePath = findRootExcelInputFile()) {
+    if (!filePath) {
+        console.error(`No Excel input file found in project root: ${__dirname}`);
+        return;
+    }
+
     console.log(`Processing file: ${filePath}`);
 
     try {
@@ -122,18 +202,16 @@ async function processExcelFile(filePath) {
             return;
         }
 
-        const labels = jsonData[1];
-        const keys = jsonData[2];
-        const types = jsonData[3];
-        const dataRows = jsonData.slice(4);
+        const { labels, keys, types, dataRows } = resolveSheetLayout(jsonData);
 
         const columns = [];
         for (let i = 0; i < keys.length; i++) {
-            if (keys[i] && !keys[i].startsWith('//')) {
+            const key = normalizeColumnKey(keys[i]);
+            if (key) {
                 columns.push({
                     width: 100,
-                    key: keys[i],
-                    label: labels[i] || keys[i]
+                    key,
+                    label: labels[i] || key
                 });
             }
         }
@@ -152,8 +230,8 @@ async function processExcelFile(filePath) {
             }
 
             for (let j = 0; j < keys.length; j++) {
-                const key = keys[j];
-                if (key && !key.startsWith('//')) {
+                const key = normalizeColumnKey(keys[j]);
+                if (key) {
                     const value = row[j];
                     const type = types[j] || 'string';
                     obj[key] = convertByType(value, type, key);
@@ -367,8 +445,8 @@ function buildAssetRows() {
     }));
 }
 
-async function processGoogleAdsWorkbook(filePath = INPUT_FILE) {
-    if (!fs.existsSync(filePath)) {
+async function processGoogleAdsWorkbook(filePath = findRootExcelInputFile()) {
+    if (!filePath || !fs.existsSync(filePath)) {
         console.error(`Google Ads input file not found: ${filePath}`);
         return;
     }
@@ -384,18 +462,16 @@ async function processGoogleAdsWorkbook(filePath = INPUT_FILE) {
             return;
         }
 
-        const labels = jsonData[1];
-        const keys = jsonData[2];
-        const types = jsonData[3];
-        const dataRows = jsonData.slice(4);
+        const { labels, keys, types, dataRows } = resolveSheetLayout(jsonData);
 
         const columns = [];
         for (let i = 0; i < keys.length; i++) {
-            if (keys[i] && !keys[i].startsWith('//')) {
+            const key = normalizeColumnKey(keys[i]);
+            if (key) {
                 columns.push({
                     width: 100,
-                    key: keys[i],
-                    label: labels[i] || keys[i]
+                    key,
+                    label: labels[i] || key
                 });
             }
         }
@@ -413,8 +489,8 @@ async function processGoogleAdsWorkbook(filePath = INPUT_FILE) {
             }
 
             for (let j = 0; j < keys.length; j++) {
-                const key = keys[j];
-                if (key && !key.startsWith('//')) {
+                const key = normalizeColumnKey(keys[j]);
+                if (key) {
                     const value = row[j];
                     const type = types[j] || 'string';
                     obj[key] = convertByType(value, type, key);
@@ -435,30 +511,35 @@ async function processGoogleAdsWorkbook(filePath = INPUT_FILE) {
 }
 
 async function main() {
+    const inputFile = findRootExcelInputFile();
+
     console.log('Starting Excel to JSON conversion...');
-    console.log(`Input file: ${INPUT_FILE}`);
+    console.log(`Input file: ${inputFile || '(none)'}`);
     console.log(`Output directory: ${OUTPUT_DIR}`);
 
-    if (!fs.existsSync(INPUT_FILE)) {
-        console.error(`Input file not found: ${INPUT_FILE}`);
+    if (!inputFile) {
+        console.error(`No Excel input file found in project root: ${__dirname}`);
         return;
     }
 
-    await processExcelFile(INPUT_FILE);
+    await processExcelFile(inputFile);
     console.log('Conversion completed!');
 }
 
 async function googleAdsMain() {
+    const inputFile = findRootExcelInputFile();
+
     console.log('Starting Google Ads workbook conversion...');
-    console.log(`Input file: ${INPUT_FILE}`);
+    console.log(`Input file: ${inputFile || '(none)'}`);
     console.log(`Output directory: ${OUTPUT_DIR}`);
 
-    await processGoogleAdsWorkbook(INPUT_FILE);
+    await processGoogleAdsWorkbook(inputFile);
     console.log('Google Ads conversion completed!');
 }
 
 // 导出函数，以便在其他文件中调用
 module.exports = {
+    findRootExcelInputFile,
     processExcelFile,
     processGoogleAdsWorkbook,
     googleAdsMain,
