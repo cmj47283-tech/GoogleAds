@@ -224,7 +224,7 @@ createApp({
 
             return [
                 { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: `${this.fixed(this.totals.conversions, 2)}` },
-                { label: 'Impr.', value: '0', delta: 'up 0' },
+                { label: 'Impr.', value: '0', delta: '0' },
                 { label: 'Cost', value: this.money(this.totals.cost), delta: `${this.money(this.totals.cost)}` },
                 { label: 'Avg. target CPA', value: '-', delta: '-' }
             ];
