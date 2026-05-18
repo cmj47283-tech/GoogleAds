@@ -855,10 +855,20 @@
     z-index: 40;
 }
 
+.ga-page-head--adassets {
+    min-height: 126px;
+    align-items: flex-start;
+    padding-top: 22px;
+}
+
 .ga-page-head-heading {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+.ga-page-head--adassets .ga-page-head-heading {
+    gap: 24px;
 }
 
 .ga-page-head h1 {
@@ -873,6 +883,71 @@
 .ga-page-head-selector-wrapper {
     display: flex;
     align-items: center;
+}
+
+.ga-frozen-adgroup-card {
+    min-width: 142px;
+    height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(60, 64, 67, 0.28);
+}
+
+.ga-frozen-adgroup-card small,
+.ga-frozen-adgroup-card strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ga-frozen-adgroup-card small {
+    color: #5f6368;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.ga-frozen-adgroup-card strong {
+    color: #202124;
+    font-size: 19px;
+    line-height: 24px;
+    font-weight: 500;
+}
+
+.ga-page-filter-row {
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 28px;
+    padding: 8px 0;
+    border-bottom: 1px solid #dadce0;
+    color: #5f6368;
+    font-size: 16px;
+}
+
+.ga-page-filter-row .ga-filter-badge {
+    background: #eef0f1;
+}
+
+.ga-filter-add {
+    border: 0;
+    background: transparent;
+    color: #5f6368;
+    font: inherit;
+    cursor: pointer;
+    padding: 8px 10px;
+}
+
+.ga-filter-add:hover {
+    color: #202124;
 }
 
 .ga-tabs {
@@ -1305,6 +1380,14 @@ button.ga-floating-add .material-symbols-outlined {
     box-shadow: 0 2px 4px rgba(60, 64, 67, 0.1);
 }
 
+.ga-table-panel--adassets .ga-table-toolbar {
+    top: 126px;
+}
+
+.ga-table-panel--adassets button.ga-floating-add {
+    top: 138px;
+}
+
 .ga-toolbar-left {
     gap: 20px;
     color: #5f6368;
@@ -1337,8 +1420,12 @@ button.ga-floating-add .material-symbols-outlined {
 .ga-filter-badge {
     border: 1px solid #dadce0;
     border-radius: 22px;
+    background: transparent;
     padding: 8px 16px;
     color: #5f6368;
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .ga-tooltip {
@@ -1487,6 +1574,23 @@ button.ga-floating-add .material-symbols-outlined {
 
 .ga-data-table.assets .name-col {
     min-width: 320px;
+}
+
+.ga-data-table.assets th.name-col,
+.ga-data-table.assets td.name-col {
+    position: sticky;
+    left: 0;
+    z-index: 6;
+    background: #fff;
+    box-shadow: 1px 0 0 #dadce0;
+}
+
+.ga-data-table.assets th.name-col {
+    z-index: 9;
+}
+
+.ga-data-table.assets tr:hover td.name-col {
+    background: #f8fafd;
 }
 
 .ga-data-table.assets .asset-header-cell {

@@ -228,7 +228,7 @@
             </nav>
 
             <main class="ga-main" :class="{ 'is-refreshing': isRefreshing }">
-                <section class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
+                <section v-if="pageMode !== 'adassets'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
                             <small>View (2 filters)</small>
@@ -277,10 +277,14 @@
                     </div>
                 </section>
 
-                <section class="ga-page-head">
+                <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
-                        <div v-if="isContextBarHidden" class="ga-page-head-selector-wrapper">
+                        <div v-if="pageMode === 'adassets'" class="ga-frozen-adgroup-card" aria-label="Selected ad group">
+                            <small>Ad group</small>
+                            <strong>{{ adGroup.adGroup }}</strong>
+                        </div>
+                        <div v-if="isContextBarHidden && pageMode !== 'adassets'" class="ga-page-head-selector-wrapper">
                             <div class="ga-selector active" @click.stop="toggleDropdown('view')">
                                 <small>View (2 filters)</small>
                                 <a><span class="material-symbols-outlined">home</span> All campaigns</a>
@@ -472,7 +476,14 @@
                     </transition>
                 </section>
 
-                <div v-if="pageMode !== 'adgroups'" class="ga-tabs">
+                <section v-if="pageMode === 'adassets'" class="ga-page-filter-row">
+                    <span>Filters</span>
+                    <button class="ga-filter-badge" type="button">Campaign status: All</button>
+                    <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
+                    <button class="ga-filter-add" type="button">Add filter</button>
+                </section>
+
+                <div v-if="pageMode === 'campaigns'" class="ga-tabs">
                     <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
                     <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
                 </div>
@@ -525,7 +536,7 @@
                     <span class="material-symbols-outlined">expand_more</span>
                 </section>
 
-                <section class="ga-chart-area">
+                <section v-if="pageMode !== 'adassets'" class="ga-chart-area">
                     <svg viewBox="0 0 1000 180" preserveAspectRatio="none" aria-label="Performance chart">
                         <rect v-for="x in [35, 300, 565, 830]" :key="x" :x="x" y="18" width="38" height="136"
                             class="ga-chart-band"></rect>
@@ -543,7 +554,8 @@
 
                 <section class="ga-table-panel" :class="{
                     'ga-table-panel--refreshing': isRefreshing,
-                    'ga-table-panel--campaign-refreshing': isRefreshing && pageMode === 'campaigns'
+                    'ga-table-panel--campaign-refreshing': isRefreshing && pageMode === 'campaigns',
+                    'ga-table-panel--adassets': pageMode === 'adassets'
                 }">
                     <button class="ga-floating-add" type="button"
                         :aria-label="pageMode === 'adassets' ? 'Edit' : 'Create'">
