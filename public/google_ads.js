@@ -216,8 +216,11 @@ createApp({
             }, { Conversions: 0, cost: 0, installs: 0, inAppActions: 0, impressions: 0, clicks: 0, ParticipatedInAppActions: 0, ViewThroughConv: 0, CostPerConv: 0, costPerInstall: 0, costPerInAppActions: 0, CostPerParticipatedInAppAction: 0, ConvRate: 0 });
         },
         selectedCampaign() {
-            if (!this.campaignRows.length) return null;
-            return this.campaignRows.find(campaign => campaign.campaign === this.selectedCampaignId) || this.campaignRows[0];
+            const rows = this.campaignRows.length
+                ? this.campaignRows
+                : (this.pageMode === 'campaigns' ? [] : this.mergeCampaignsBy(this.rawData));
+            if (!rows.length) return null;
+            return rows.find(campaign => campaign.campaign === this.selectedCampaignId) || rows[0];
         },
         adGroup() {
             return this.data.adGroupTemplate;
@@ -1098,8 +1101,11 @@ createApp({
                         campaignId: row.campaignId,
                         Buget: row.Buget || 0,
                         Status: row.Status || 'Eligible',
+                        Account: row.Account || '',
+                        account: row.Account || '',
                         OptimizationScore: row.OptimizationScore,
                         CampaignType: row.CampaignType || 'App',
+                        campaignType: row.CampaignType || 'App',
                         costPerInstall: 0,
                         costPerInAppActions: 0,
                         costPerInAppAction: 0,

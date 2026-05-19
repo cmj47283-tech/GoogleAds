@@ -233,7 +233,7 @@
             </nav>
 
             <main class="ga-main" :class="{ 'is-refreshing': isRefreshing }">
-                <section v-if="pageMode !== 'adassets'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
+                <section v-if="pageMode !== 'reporteditor'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
                             <small>View (2 filters)</small>
@@ -270,8 +270,8 @@
                         <span>{{ selectedCampaignStateLabel }}</span>
                         <span>Status: <a href="#" :class="{ danger: isSelectedCampaignProblem }">{{
                                 selectedCampaignStatusText }}</a></span>
-                        <span>Account: {{ selectedCampaign ? selectedCampaign.account : '' }}</span>
-                        <span>Type: {{ selectedCampaign ? selectedCampaign.campaignType : 'App' }}</span>
+                        <span>Account: {{ selectedCampaign ? (selectedCampaign.Account || selectedCampaign.account) : '' }}</span>
+                        <span>Type: {{ selectedCampaign ? (selectedCampaign.CampaignType || selectedCampaign.campaignType || 'App') : 'App' }}</span>
                         <span v-if="pageMode === 'adgroups'">Budget: <a href="#">{{ selectedCampaign ?
                                 selectedCampaign.budget : '' }}</a></span>
                         <span v-if="pageMode === 'adassets'">Target CPA: <a href="#">{{ adGroup.targetCpa }}</a></span>
@@ -280,15 +280,17 @@
                             {{ pageMode === 'adassets' ? 'Ad group settings' : 'Campaign settings' }}
                         </a>
                     </div>
+                    <section v-if="pageMode === 'campaigns'" class="ga-page-filter-row">
+                        <span>Filters</span>
+                        <button class="ga-filter-badge" type="button">Campaign status: All</button>
+                        <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
+                        <button class="ga-filter-add" type="button">Add filter</button>
+                    </section>
                 </section>
 
                 <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }" v-if="pageMode !== 'reporteditor'">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
-                        <div v-if="pageMode === 'adassets'" class="ga-frozen-adgroup-card" aria-label="Selected ad group">
-                            <small>Ad group</small>
-                            <strong>{{ adGroup.adGroup }}</strong>
-                        </div>
                         <div v-if="isContextBarHidden && pageMode !== 'adassets'" class="ga-page-head-selector-wrapper">
                             <div class="ga-selector active" @click.stop="toggleDropdown('view')">
                                 <small>View (2 filters)</small>
@@ -300,7 +302,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ga-date-row">
+                    <div v-if="pageMode !== 'adassets'" class="ga-date-row">
                         <span>{{ getDateOptionLabel(appliedDateOption) }}</span>
                         <button ref="dateSelectRef" class="ga-date-button" type="button" @click.stop="toggleDatePicker">
                             {{ dateRangeLabel }}
@@ -557,14 +559,7 @@
 
 </div>
 <template v-else>
-                <section v-if="pageMode === 'campaigns'" class="ga-page-filter-row">
-                    <span>Filters</span>
-                    <button class="ga-filter-badge" type="button">Campaign status: All</button>
-                    <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
-                    <button class="ga-filter-add" type="button">Add filter</button>
-                </section>
-
-                <div v-if="pageMode === 'campaigns'" class="ga-tabs">
+                <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
                     <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
                     <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
                 </div>
