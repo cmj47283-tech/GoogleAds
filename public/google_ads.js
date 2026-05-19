@@ -4,12 +4,7 @@ const params = new URLSearchParams(window.location.search);
 const CAMPAIGN_STATUS_STORAGE_KEY = 'googleAdsCampaignStatuses';
 const ASSET_RANDOM_CACHE_KEY = 'googleAdsAssetRandom_';
 const DATE_FILTER_STORAGE_KEY = 'googleAdsDateFilter';
-const DEFAULT_DATE_FILTER = {
-    selectedDateOption: 'custom',
-    appliedDateOption: 'custom',
-    startDate: '2026-04-11',
-    endDate: '2026-05-08'
-};
+const DATE_FILTER_STORAGE_VERSION = 'yesterday-default-v1';
 
 function readCampaignStatusOverrides() {
     try {
@@ -41,7 +36,26 @@ function parseStoredDate(value) {
     return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
 }
 
+function formatStoredDate(date) {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function getDefaultDateFilter() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    return {
+        selectedDateOption: 'yesterday',
+        appliedDateOption: 'yesterday',
+        startDate: formatStoredDate(yesterday),
+        endDate: formatStoredDate(yesterday)
+    };
+}
+
 function readDateFilterState() {
+    const defaultDateFilter = getDefaultDateFilter();
     let saved = {};
     try {
         saved = JSON.parse(sessionStorage.getItem(DATE_FILTER_STORAGE_KEY) || '{}');
@@ -49,12 +63,16 @@ function readDateFilterState() {
         saved = {};
     }
 
-    const startDate = parseStoredDate(saved.startDate) || parseStoredDate(DEFAULT_DATE_FILTER.startDate);
-    const endDate = parseStoredDate(saved.endDate) || parseStoredDate(DEFAULT_DATE_FILTER.endDate);
+    if (saved.storageVersion !== DATE_FILTER_STORAGE_VERSION) {
+        saved = {};
+    }
+
+    const startDate = parseStoredDate(saved.startDate) || parseStoredDate(defaultDateFilter.startDate);
+    const endDate = parseStoredDate(saved.endDate) || parseStoredDate(defaultDateFilter.endDate);
 
     return {
-        selectedDateOption: saved.selectedDateOption || DEFAULT_DATE_FILTER.selectedDateOption,
-        appliedDateOption: saved.appliedDateOption || DEFAULT_DATE_FILTER.appliedDateOption,
+        selectedDateOption: saved.selectedDateOption || defaultDateFilter.selectedDateOption,
+        appliedDateOption: saved.appliedDateOption || defaultDateFilter.appliedDateOption,
         startDate,
         endDate
     };
@@ -89,6 +107,9 @@ createApp({
             ads_isInsightsReportsOpen: true,
             ads_isAssetsOpen:false,
             isNotificationsOpen: false,
+            isRefreshing: false,
+            metricDeltaRatios: {},
+            assetCostSortDirection: 'desc',
             tooltip: {
                 visible: false,
                 text: '',
@@ -254,22 +275,30 @@ createApp({
         metricCards() {
             if (this.pageMode === 'adgroups') {
                 return [
-                    { label: 'Cost', value: this.money(this.selectedCost), delta: `up ${this.money(this.selectedCost)}` },
-                    { label: 'Conversions', value: this.fixed(this.selectedConversions, 2), delta: `up ${this.fixed(this.selectedConversions, 2)}` }
+                    { label: 'Cost', value: this.money(this.selectedCost), delta: this.randomizedMetricDelta('adgroups-cost', this.selectedCost, 'money') },
+                    { label: 'Conversions', value: this.fixed(this.selectedConversions, 2), delta: this.randomizedMetricDelta('adgroups-conversions', this.selectedConversions, 'fixed') }
+                ];
+            }
+
+            if (this.isRefreshing) {
+                return [
+                    { label: 'Avg. target CPA', value: '-', delta: '-' },
+                    { label: 'Cost', value: this.money(this.totals.cost), delta: this.randomizedMetricDelta('campaigns-cost', this.totals.cost, 'money') },
+                    { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: this.randomizedMetricDelta('campaigns-conversions', this.totals.conversions, 'fixed') }
                 ];
             }
 
             return [
-                { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: `up ${this.fixed(this.totals.conversions, 2)}` },
-                { label: 'Impr.', value: '0', delta: 'up 0' },
-                { label: 'Cost', value: this.money(this.totals.cost), delta: `up ${this.money(this.totals.cost)}` },
-                { label: 'Conv. value', value: '0.00', delta: 'up 0.00' }
+                { label: 'Conversions', value: this.fixed(this.totals.conversions, 2), delta: this.randomizedMetricDelta('campaigns-conversions', this.totals.conversions, 'fixed') },
+                { label: 'Impr.', value: this.metricInteger(this.totals.impressions), delta: this.randomizedMetricDelta('campaigns-impressions', this.totals.impressions, 'integer') },
+                { label: 'Cost', value: this.money(this.totals.cost), delta: this.randomizedMetricDelta('campaigns-cost', this.totals.cost, 'money') },
+                { label: 'Avg. target CPA', value: '-', delta: '-' }
             ];
         },
         metricActions() {
             return [
                 { icon: 'add_chart', label: 'Metrics' },
-                { icon: 'tune', label: 'Adjust', badge: this.pageMode === 'adgroups' ? '2' : '1' },
+                { icon: 'tune', label: 'Adjust', badge: this.pageMode === 'adgroups' ? '2' : '3' },
                 { icon: 'file_download', label: 'Download' },
                 { icon: 'fullscreen', label: 'Expand' }
             ];
@@ -418,7 +447,14 @@ createApp({
                 row.costPerInAppAction = row.inAppActions ? row.cost / row.inAppActions : 0;
             }
 
-            return all;
+            return all.sort((left, right) => {
+                const costDiff = safeNumber(left.cost) - safeNumber(right.cost);
+                if (costDiff !== 0) {
+                    return this.assetCostSortDirection === 'asc' ? costDiff : -costDiff;
+                }
+
+                return String(left.asset || '').localeCompare(String(right.asset || ''), 'en', { numeric: true });
+            });
         },
         paginationText() {
             if (this.pageMode === 'adassets') {
@@ -485,7 +521,21 @@ createApp({
     },
     methods: {
         async reloadData() {
-            await this.loadData();
+            if (this.isRefreshing) return;
+            this.isRefreshing = true;
+            this.showDatePicker = false;
+            this.dropdown = '';
+            this.isNotificationsOpen = false;
+
+            try {
+                await this.$nextTick();
+                await Promise.all([
+                    this.loadData(),
+                    new Promise(resolve => setTimeout(resolve, 1200))
+                ]);
+            } finally {
+                this.isRefreshing = false;
+            }
         },
         async loadData() {
             try {
@@ -510,6 +560,9 @@ createApp({
             } catch (error) {
                 console.error('Unable to load ad assets', error);
             }
+        },
+        toggleAssetCostSort() {
+            this.assetCostSortDirection = this.assetCostSortDirection === 'asc' ? 'desc' : 'asc';
         },
         refreshCampaignData() {
             this.data = {
@@ -837,6 +890,7 @@ createApp({
         saveDateFilterState() {
             try {
                 sessionStorage.setItem(DATE_FILTER_STORAGE_KEY, JSON.stringify({
+                    storageVersion: DATE_FILTER_STORAGE_VERSION,
                     selectedDateOption: this.selectedDateOption,
                     appliedDateOption: this.appliedDateOption,
                     startDate: this.formatIsoDate(this.startDate),
@@ -1018,6 +1072,33 @@ createApp({
         },
         fixed(value, digits = 2) {
             return safeNumber(value).toFixed(digits);
+        },
+        metricInteger(value) {
+            return String(Math.round(safeNumber(value)));
+        },
+        metricDeltaCacheKey(key, value) {
+            return [
+                key,
+                this.formatIsoDate(this.startDate),
+                this.formatIsoDate(this.endDate),
+                safeNumber(value).toFixed(2)
+            ].join('|');
+        },
+        metricDeltaRatio(key, value) {
+            const cacheKey = this.metricDeltaCacheKey(key, value);
+            if (!this.metricDeltaRatios[cacheKey]) {
+                this.metricDeltaRatios[cacheKey] = 0.1 + Math.random() * 0.1;
+            }
+            return this.metricDeltaRatios[cacheKey];
+        },
+        randomizedMetricDelta(key, value, format = 'fixed') {
+            const number = safeNumber(value);
+            if (!number) return format === 'money' ? '$0.00' : '0';
+
+            const delta = number * this.metricDeltaRatio(key, number);
+            if (format === 'money') return this.money(delta);
+            if (format === 'integer') return this.metricInteger(delta);
+            return this.fixed(delta, 2);
         },
         numberOrZero(value) {
             const number = safeNumber(value);
