@@ -21,6 +21,7 @@ function getInitialPageMode() {
     }
     if (window.location.pathname.includes('/adassets')) return 'adassets';
     if (window.location.pathname.includes('/adgroups')) return 'adgroups';
+    if (window.location.pathname.includes('/reporteditor')) return 'reporteditor';
     return 'campaigns';
 }
 
