@@ -21,6 +21,7 @@ function getInitialPageMode() {
     }
     if (window.location.pathname.includes('/adassets')) return 'adassets';
     if (window.location.pathname.includes('/adgroups')) return 'adgroups';
+    if (window.location.pathname.includes('/reporteditor')) return 'reporteditor';
     return 'campaigns';
 }
 
@@ -89,6 +90,7 @@ createApp({
             selectedCampaignId: params.get('campaignId') || '',
             selectedAdGroupId: params.get('adGroupId') || 'adgroup-1',
             showDatePicker: false,
+            datePickerPositionTick: 0,
             selectedDateOption: initialDateFilter.selectedDateOption,
             appliedDateOption: initialDateFilter.appliedDateOption,
             compareEnabled: false,
@@ -101,14 +103,20 @@ createApp({
                 : new Date(2026, 3, 1),
             selectingStartDate: true,
             previewModal: null,
+            isPreviewDetailsExpanded: true,
             isContextBarHidden: false,
             ads_isCampaignOpen: true,
             ads_isInsightsReportsOpen: true,
             ads_isAssetsOpen:false,
             isNotificationsOpen: false,
             isRefreshing: false,
+            pageSize: 30,
+            pageSizeOptions: [10, 30, 50, 100],
+            showPageSizeDropdown: false,
+            currentPage: 1,
             metricDeltaRatios: {},
-            assetCostSortDirection: 'desc',
+            assetSortKey: 'cost',
+            assetSortDirection: 'desc',
             tooltip: {
                 visible: false,
                 text: '',
@@ -208,8 +216,11 @@ createApp({
             }, { Conversions: 0, cost: 0, installs: 0, inAppActions: 0, impressions: 0, clicks: 0, ParticipatedInAppActions: 0, ViewThroughConv: 0, CostPerConv: 0, costPerInstall: 0, costPerInAppActions: 0, CostPerParticipatedInAppAction: 0, ConvRate: 0 });
         },
         selectedCampaign() {
-            if (!this.campaignRows.length) return null;
-            return this.campaignRows.find(campaign => campaign.campaign === this.selectedCampaignId) || this.campaignRows[0];
+            const rows = this.campaignRows.length
+                ? this.campaignRows
+                : (this.pageMode === 'campaigns' ? [] : this.mergeCampaignsBy(this.rawData));
+            if (!rows.length) return null;
+            return rows.find(campaign => campaign.campaign === this.selectedCampaignId) || rows[0];
         },
         adGroup() {
             return this.data.adGroupTemplate;
@@ -447,22 +458,65 @@ createApp({
             }
 
             return all.sort((left, right) => {
-                const costDiff = safeNumber(left.cost) - safeNumber(right.cost);
-                if (costDiff !== 0) {
-                    return this.assetCostSortDirection === 'asc' ? costDiff : -costDiff;
+                let diff = 0;
+
+                if (this.assetSortKey === 'assetType') {
+                    diff = String(left.assetType || '').localeCompare(String(right.assetType || ''), 'en', {
+                        numeric: true,
+                        sensitivity: 'base'
+                    });
+                } else {
+                    diff = safeNumber(left.cost) - safeNumber(right.cost);
+                }
+
+                if (diff !== 0) {
+                    return this.assetSortDirection === 'asc' ? diff : -diff;
                 }
 
                 return String(left.asset || '').localeCompare(String(right.asset || ''), 'en', { numeric: true });
             });
         },
+        assetCostSortDirection() {
+            return this.assetSortKey === 'cost' ? this.assetSortDirection : 'desc';
+        },
+        assetTypeSortDirection() {
+            return this.assetSortKey === 'assetType' ? this.assetSortDirection : 'asc';
+        },
+        activeRows() {
+            if (this.pageMode === 'adassets') return this.assetRows;
+            if (this.pageMode === 'adgroups') return this.adGroupRows;
+            return this.campaignRows;
+        },
+        totalPages() {
+            return Math.max(1, Math.ceil(this.activeRows.length / this.pageSize));
+        },
+        displayPage() {
+            return Math.min(this.currentPage, this.totalPages);
+        },
+        pageStartIndex() {
+            return (this.displayPage - 1) * this.pageSize;
+        },
+        paginatedCampaignRows() {
+            return this.campaignRows.slice(this.pageStartIndex, this.pageStartIndex + this.pageSize);
+        },
+        paginatedAdGroupRows() {
+            return this.adGroupRows.slice(this.pageStartIndex, this.pageStartIndex + this.pageSize);
+        },
+        paginatedAssetRows() {
+            return this.assetRows.slice(this.pageStartIndex, this.pageStartIndex + this.pageSize);
+        },
         paginationText() {
-            if (this.pageMode === 'adassets') {
-                return `1 - ${this.assetRows.length} of ${this.assetRows.length}`;
-            }
-            if (this.pageMode === 'adgroups') {
-                return `1 - ${this.adGroupRows.length} of ${this.adGroupRows.length}`;
-            }
-            return `1 - ${this.campaignRows.length} of ${this.campaignRows.length}`;
+            const totalRows = this.activeRows.length;
+            if (!totalRows) return '0 - 0 of 0';
+            const start = this.pageStartIndex + 1;
+            const end = Math.min(this.pageStartIndex + this.pageSize, totalRows);
+            return `${start} - ${end} of ${totalRows}`;
+        },
+        canGoPreviousPage() {
+            return this.displayPage > 1;
+        },
+        canGoNextPage() {
+            return this.displayPage < this.totalPages;
         },
         calendarMonths() {
             const months = [];
@@ -507,6 +561,7 @@ createApp({
         },
         dropdownStyle() {
             if (!this.showDatePicker || !this.$refs.dateSelectRef) return {};
+            this.datePickerPositionTick;
             const rect = this.$refs.dateSelectRef.getBoundingClientRect();
             const pickerWidth = 508;
             const left = Math.max(16, Math.min(rect.left, window.innerWidth - pickerWidth - 16));
@@ -516,6 +571,22 @@ createApp({
                 left: `${left}px`,
                 zIndex: '10000'
             };
+        }
+    },
+    watch: {
+        pageMode(newMode) {
+            // 1. 只要切换了页面模式，不管三七二十一，先强制让顶部栏显示出来
+            this.isContextBarHidden = false;
+            this.currentPage = 1;
+            this.showPageSizeDropdown = false;
+            
+            // 2. 让滚动容器 (.ga-main) 瞬间回到最顶部，清除上一页残留的滚动距离
+            this.$nextTick(() => {
+                const mainElement = document.querySelector('.ga-main');
+                if (mainElement) {
+                    mainElement.scrollTop = 0;
+                }
+            });
         }
     },
     methods: {
@@ -560,8 +631,30 @@ createApp({
                 console.error('Unable to load ad assets', error);
             }
         },
+        toggleAssetSort(key) {
+            if (this.assetSortKey === key) {
+                this.assetSortDirection = this.assetSortDirection === 'asc' ? 'desc' : 'asc';
+                return;
+            }
+
+            this.assetSortKey = key;
+            this.assetSortDirection = key === 'assetType' ? 'asc' : 'desc';
+        },
         toggleAssetCostSort() {
-            this.assetCostSortDirection = this.assetCostSortDirection === 'asc' ? 'desc' : 'asc';
+            this.toggleAssetSort('cost');
+        },
+        scheduleDatePickerReposition() {
+            this.datePickerPositionTick += 1;
+            if (window.requestAnimationFrame) {
+                window.requestAnimationFrame(() => {
+                    this.datePickerPositionTick += 1;
+                });
+            }
+            [120, 260].forEach(delay => {
+                window.setTimeout(() => {
+                    this.datePickerPositionTick += 1;
+                }, delay);
+            });
         },
         refreshCampaignData() {
             this.data = {
@@ -903,6 +996,7 @@ createApp({
                 window.location.href = '/aw/campaigns';
                 return;
             }
+            this.showPageSizeDropdown = false;
             this.dropdown = this.dropdown === name ? '' : name;
         },
         toggleNavigation() {
@@ -920,6 +1014,34 @@ createApp({
         },
         closeDropdown() {
             this.dropdown = '';
+            this.showPageSizeDropdown = false;
+        },
+        togglePageSizeDropdown() {
+            this.dropdown = '';
+            this.showPageSizeDropdown = !this.showPageSizeDropdown;
+        },
+        setPageSize(size) {
+            const nextSize = Number(size);
+            if (!this.pageSizeOptions.includes(nextSize)) return;
+            this.pageSize = nextSize;
+            this.currentPage = 1;
+            this.showPageSizeDropdown = false;
+        },
+        goToFirstPage() {
+            this.currentPage = 1;
+        },
+        goToPreviousPage() {
+            if (this.canGoPreviousPage) {
+                this.currentPage = this.displayPage - 1;
+            }
+        },
+        goToNextPage() {
+            if (this.canGoNextPage) {
+                this.currentPage = this.displayPage + 1;
+            }
+        },
+        goToLastPage() {
+            this.currentPage = this.totalPages;
         },
         statusDropdownName(campaignId) {
             return `campaign-status-${campaignId}`;
@@ -979,8 +1101,11 @@ createApp({
                         campaignId: row.campaignId,
                         Buget: row.Buget || 0,
                         Status: row.Status || 'Eligible',
+                        Account: row.Account || '',
+                        account: row.Account || '',
                         OptimizationScore: row.OptimizationScore,
                         CampaignType: row.CampaignType || 'App',
+                        campaignType: row.CampaignType || 'App',
                         costPerInstall: 0,
                         costPerInAppActions: 0,
                         costPerInAppAction: 0,
@@ -1122,14 +1247,23 @@ createApp({
         },
         openImagePreview(asset) {
             this.previewModal = { type: 'image', asset };
+            this.isPreviewDetailsExpanded = true;
         },
         closePreview() {
             this.previewModal = null;
+        },
+        togglePreviewDetails() {
+            this.isPreviewDetailsExpanded = !this.isPreviewDetailsExpanded;
         },
         handleScroll() {
             const mainElement = document.querySelector('.ga-main');
             if (mainElement) {
                 this.isContextBarHidden = mainElement.scrollTop > 50;
+            }
+            if (this.showDatePicker) {
+                this.$nextTick(() => {
+                    this.scheduleDatePickerReposition();
+                });
             }
         },
 
@@ -1187,6 +1321,17 @@ createApp({
         toggleNotifications() {
             this.isNotificationsOpen = !this.isNotificationsOpen
         },
+        switchPage(mode) {
+        this.pageMode = mode;
+        // 更新浏览器地址栏，实现 /overview 或 /reporteditor 的效果
+        window.history.pushState(null, '', `/aw/${mode}`);
+        
+        // 强制重置滚动位置
+        this.$nextTick(() => {
+            const main = document.querySelector('.ga-main');
+            if (main) main.scrollTop = 0;
+        });
+        }
     },
     async mounted() {
         await this.loadData();

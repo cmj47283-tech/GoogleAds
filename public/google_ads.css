@@ -708,7 +708,7 @@
 
 .ga-context-bar {
     min-height: 118px;
-    padding: 18px 28px 10px;
+    padding: 18px 28px 0;
     border-bottom: 1px solid #dadce0;
     background: #eef0f1;
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -862,9 +862,9 @@
 }
 
 .ga-page-head--adassets {
-    min-height: 126px;
-    align-items: flex-start;
-    padding-top: 22px;
+    min-height: 56px;
+    align-items: center;
+    padding-top: 12px;
 }
 
 .ga-page-head-heading {
@@ -927,16 +927,15 @@
 }
 
 .ga-page-filter-row {
-    min-height: 56px;
+    min-height: 48px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
-    margin: 0 28px;
-    padding: 8px 0;
-    border-bottom: 1px solid #dadce0;
+    margin-top: 4px;
+    padding: 4px 0 8px;
     color: #5f6368;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .ga-page-filter-row .ga-filter-badge {
@@ -958,8 +957,8 @@
 
 .ga-tabs {
     gap: 24px;
-    padding: 0 28px 16px;
-    margin-bottom: 22px;
+    padding: 0 28px 0px;
+    margin-bottom: 0px;
 }
 
 .ga-tabs button {
@@ -967,8 +966,8 @@
     background: transparent;
     color: #5f6368;
     font: inherit;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 500;
     padding: 0 0 15px;
     position: relative;
     cursor: pointer;
@@ -1215,12 +1214,34 @@
 }
 
 .ga-ring {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 3px solid #1a73e8;
-    box-shadow: inset 0 0 0 8px #e8f0fe;
-    background: conic-gradient(#1a73e8 18%, transparent 0);
+    position: relative;
+    --progress: 0.82;
+    background: #ffffff;
+    border: 1px solid #1a73e8;
+}
+
+.ga-ring::before {
+    content: '';
+    position: absolute;
+    inset: 3.9px;
+    border-radius: 50%;
+    background: #e8f0fe;
+    border: 1px solid #1a73e8;
+    pointer-events: none;
+}
+
+.ga-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(#1a73e8 calc(var(--progress) * 1turn), transparent 0);
+    -webkit-mask-image: radial-gradient(circle closest-side, transparent 80%, black 80%, black 100%, transparent 100%);
+    mask-image: radial-gradient(circle closest-side, transparent 80%, black 80%, black 100%, transparent 100%);
+    pointer-events: none;
 }
 
 .ga-strength-score strong,
@@ -1229,13 +1250,15 @@
 }
 
 .ga-strength-counts {
-    gap: 20px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 8px;
 }
 
 .ga-strength-counts span {
     display: inline-flex;
     align-items: center;
+    font-size: 12px;
     gap: 8px;
     white-space: nowrap;
 }
@@ -1248,11 +1271,131 @@
     background: #fff;
 }
 
+.ga-asset-chart-area {
+    position: relative;
+    margin: 0 28px;
+    height: 210px;
+    background: #eef0f1;
+    border-bottom: 1px solid #dadce0;
+    overflow: hidden;
+}
+
+.ga-asset-chart-controls {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    z-index: 2;
+}
+
+.ga-chart-select,
+.ga-chart-tool {
+    border: 0;
+    background: transparent;
+    color: #3c4043;
+    font: inherit;
+    cursor: pointer;
+}
+
+.ga-chart-select {
+    height: 44px;
+    min-width: 118px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #c4c7c5;
+    border-radius: 4px;
+    background: #eef0f1;
+}
+
+.ga-chart-select .material-symbols-outlined {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+.ga-chart-series-dot {
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.ga-chart-series-dot.blue {
+    background: #1a73e8;
+}
+
+.ga-chart-series-dot.red {
+    background: #d93025;
+}
+
+.ga-chart-tool {
+    width: 62px;
+    min-height: 48px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #5f6368;
+}
+
+.ga-chart-tool .material-symbols-outlined {
+    font-size: 22px;
+    color: #5f6368;
+}
+
+.ga-chart-tool small {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ga-asset-chart-area svg {
+    width: calc(100% - 38px);
+    height: 168px;
+    margin: 28px 18px 0;
+    overflow: visible;
+}
+
+.ga-asset-chart-area line {
+    stroke: #dadce0;
+    stroke-width: 1;
+}
+
+.ga-asset-chart-label {
+    fill: #777;
+    font-size: 14px;
+}
+
+.ga-asset-chart-line {
+    fill: none;
+    stroke: #1a73e8;
+    stroke-width: 2;
+}
+
+.ga-asset-chart-point {
+    fill: #1a73e8;
+}
+
+.ga-asset-chart-date {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    color: #777;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
 .ga-chart-area {
     position: relative;
     margin: 0 28px;
-    height: 220px;
-    background: #fff;
+    height: 205px;
+    background: #eef0f1;
     border-bottom: 1px solid #dadce0;
 }
 
@@ -1305,12 +1448,20 @@
     stroke-width: 2;
 }
 
+.ga-chart-label {
+    font-size: 12px;
+    fill: #5f6368;
+    text-anchor: middle;
+    font-weight: 500;
+}
+
 .ga-chart-start,
 .ga-chart-end {
+    bottom: 10px;
     position: absolute;
     bottom: 16px;
     color: #777;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .ga-chart-start {
@@ -1354,10 +1505,10 @@
 }
 
 button.ga-floating-add {
-    position: sticky;
+    position: absolute;
     z-index: 20;
-    left: 22px;
-    top: 100px;
+    left: 5px;
+    top: -20px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -1366,7 +1517,7 @@ button.ga-floating-add {
     box-shadow: 0 3px 8px rgba(60, 64, 67, 0.28);
     display: grid;
     place-items: center;
-    margin-bottom: 8px;
+    margin: 0;
 }
 
 button.ga-floating-add .material-symbols-outlined {
@@ -1376,7 +1527,7 @@ button.ga-floating-add .material-symbols-outlined {
 .ga-table-toolbar {
     position: sticky;
     top: 88px;
-    height: 64px;
+    height: 56px;
     border-bottom: 1px solid #dadce0;
     justify-content: space-between;
     padding: 10px 0 10px 36px;
@@ -1387,17 +1538,21 @@ button.ga-floating-add .material-symbols-outlined {
 }
 
 .ga-table-panel--adassets .ga-table-toolbar {
-    top: 126px;
+    top: 56px;
+    z-index: 45;
+    box-shadow: 0 2px 6px rgba(60, 64, 67, 0.16);
 }
 
 .ga-table-panel--adassets button.ga-floating-add {
-    top: 138px;
+    top: -20px;
+    position: sticky;
+    top: 72px;
 }
 
 .ga-toolbar-left {
-    gap: 20px;
+    gap: 10px;
     color: #5f6368;
-    font-size: 18px;
+    font-size: 14px;
     font-family: "Google Sans", Roboto, Arial, sans-serif;
 }
 
@@ -1917,6 +2072,52 @@ button.ga-floating-add .material-symbols-outlined {
     justify-content: center;
 }
 
+.ga-page-size-control {
+    position: relative;
+    display: inline-flex;
+}
+
+.ga-page-size-control .material-symbols-outlined {
+    transition: transform 0.16s ease;
+}
+
+.ga-page-size-control .material-symbols-outlined.rotated {
+    transform: rotate(180deg);
+}
+
+.ga-page-size-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 6px);
+    display: flex;
+    flex-direction: column;
+    min-width: 82px;
+    padding: 4px 0;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(60, 64, 67, 0.22);
+    z-index: 30;
+}
+
+.ga-page-size-menu button {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    height: 34px;
+    justify-content: flex-start;
+    border: 0;
+    border-radius: 0;
+    padding: 0 14px;
+    box-shadow: none;
+    font-size: 14px;
+}
+
+.ga-page-size-menu button:hover,
+.ga-page-size-menu button.active {
+    background: #f1f3f4;
+}
+
 .muted {
     color: #bdc1c6;
 }
@@ -1980,6 +2181,12 @@ button.ga-floating-add .material-symbols-outlined {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.36);
 }
 
+.ga-preview-stage h2 {
+    margin: 0 0 22px 50px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
 .ga-preview-stage {
     position: relative;
     background: rgba(32, 33, 36, 0.88);
@@ -1994,7 +2201,7 @@ button.ga-floating-add .material-symbols-outlined {
 .ga-preview-close {
     position: absolute;
     left: 18px;
-    top: 16px;
+    top: 26px;
     border: 0;
     background: transparent;
     color: #fff;
@@ -2031,11 +2238,22 @@ button.ga-floating-add .material-symbols-outlined {
     grid-template-columns: 120px 1fr;
     row-gap: 12px;
     column-gap: 16px;
+    position: relative;
     /* align-items: stretch; */
     /* flex-direction: row; */
     border: 1px solid #dadce0;
     border-radius: 8px;
     padding: 14px 18px;
+}
+
+.ga-preview-details dl::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(14px + 28px);
+    border-top: 1px solid #e8eaed;
+    pointer-events: none;
 }
 
 .ga-preview-details dt,
@@ -2052,9 +2270,222 @@ button.ga-floating-add .material-symbols-outlined {
     margin: 0;
 }
 
+.ga-preview-details-title {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ga-preview-details-toggle {
+    display: flex;
+    justify-self: end;
+    align-items: center;
+}
+
+.ga-preview-details-toggle-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: #5f6368;
+    cursor: pointer;
+}
+
 .ga-preview-details dd {
     margin-left: 120px;
     margin: 0;
+}
+/* Report Editor 专属样式页 */
+.ga-re-container {
+    padding: 24px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 120px);
+    font-family: Roboto, Arial, sans-serif;
+}
+
+/* 按钮样式 */
+.ga-re-action-bar {
+    margin-bottom: 24px;
+}
+.ga-re-btn-primary {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0 16px;
+    height: 36px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+.ga-re-btn-primary:hover {
+    background-color: #1557b0;
+}
+
+/* 通用大卡片布局 */
+.ga-re-card {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+.ga-re-card-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px 8px 24px;
+}
+.ga-re-card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #202124;
+}
+.ga-re-badge-beta {
+    background-color: #e6f4ea;
+    color: #137333;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.ga-re-card-body {
+    padding: 0 24px 24px 24px;
+}
+
+/* 搜索生成组件结构 */
+.ga-re-search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+.ga-re-input {
+    flex: 1;
+    height: 40px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 0 16px;
+    font-size: 14px;
+    outline: none;
+}
+.ga-re-input:focus {
+    border-color: #1a73e8;
+}
+.ga-re-btn-generate {
+    height: 40px;
+    padding: 0 24px;
+    background-color: #f1f3f4;
+    color: #3c4043;
+    border: 1px solid #f1f3f4;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: not-allowed;
+}
+.ga-re-link-suggest {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+/* 推荐小胶囊标签组 Chips */
+.ga-re-chips-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.ga-re-chip {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #3c4043;
+    cursor: pointer;
+}
+.ga-re-chip:hover {
+    background-color: #f8f9fa;
+}
+.ga-re-notice-text {
+    font-size: 12px;
+    color: #5f6368;
+    line-height: 1.5;
+    margin: 0;
+}
+.ga-re-notice-text a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+/* 常用报表栏目 & 网格布局 */
+.ga-re-section-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #202124;
+    margin-bottom: 12px;
+}
+.ga-re-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+/* 四方卡表样式 */
+.ga-re-report-card {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none; /* 让作为 <a> 的卡片 1 不出现下划线 */
+    color: inherit;
+    min-height: 100px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.ga-re-report-card:hover {
+    box-shadow: 0 1px 3px rgba(60,64,67,0.2);
+    border-color: #bcccf6;
+}
+.ga-re-report-card .card-meta {
+    font-size: 11px;
+    color: #5f6368;
+    margin-bottom: 8px;
+}
+.ga-re-report-card .card-main-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #202124;
+    flex: 1;
+}
+.ga-re-report-card .card-author {
+    font-size: 11px;
+    color: #5f6368;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 12px;
+}
+
+.ga-previewModal-asset-aboutinfo-aboutinfo {
+    padding: 0px 0px 16px 25px;
+
+    font-size: 20px;
+    font-weight: 500;
+
+    margin-left: -28px;
+    margin-right: -28px;
+
+    margin-bottom: 30px;
+
+    border-bottom: 1px solid #e0e0e0;
 }
 
 @media (max-width: 1180px) {
