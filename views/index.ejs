@@ -12,10 +12,6 @@
 
 <body>
     <div id="app">
-        <div v-if="isRefreshing" class="page-refresh-overlay" aria-live="polite" aria-label="Refreshing page">
-            <div class="page-refresh-progress"></div>
-        </div>
-
         <!-- 第1行：通知栏 -->
         <!-- <div class="notification-bar">
             <span class="info-icon">ℹ️</span>
@@ -137,6 +133,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div v-if="isRefreshing" class="page-refresh-overlay" aria-live="polite" aria-label="Refreshing page">
+            <div class="page-refresh-progress"></div>
         </div>
 
         <!-- 第2行：视图和广告系列选择器 -->
@@ -486,7 +486,7 @@
                                 @mousedown.stop.prevent="startColumnResize($event, 'campaign')"
                                 @touchstart.stop.prevent="startColumnResize($event, 'campaign')" @click.stop></span>
                         </th>
-                        <th v-show="hasCampaignId" class="col-campaign" @click="sortBy('campaignId')">
+                        <th v-show="hasCampaignId" class="col-campaign-id" @click="sortBy('campaignId')">
                             <div class="th-content" style="justify-content: flex-start;">
                                 <span class="span-title-child">Campaign ID</span>
                                 <span v-if="sortKey === 'campaignId'"
@@ -611,7 +611,7 @@
                     <tr v-for="campaign in paginatedCampaigns" :key="campaign.id"
                         :class="{ 'selected': campaign.selected }">
                         <td>{{ campaign.campaign }} </td>
-                        <td v-show="hasCampaignId">{{ campaign.campaignId }}</td>
+                        <td v-show="hasCampaignId" class="col-campaign-id">{{ campaign.campaignId }}</td>
                         <td class="col-metric">{{ formatCurrency(campaign.cost) }}</td>
                         <td class="col-metric">{{ formatNumber(campaign.impressions) }}</td>
                         <td class="col-metric">{{ formatNumber(campaign.clicks) }}</td>

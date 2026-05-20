@@ -178,8 +178,13 @@
                             'expand_more' }}</span>
                     </button>
                     <div class="ga-sidebar-submenu">
-                        <a class="ga-sidebar-link" href="/aw/reporteditor/view" data-tooltip="Report editor">Report
-                            editor</a>
+                        <a class="ga-sidebar-link" 
+   :class="{ active: pageMode === 'reporteditor' }" 
+   href="#" 
+   @click="switchPage('reporteditor')" 
+   data-tooltip="Report editor">
+    Report editor
+</a>
                         <a class="ga-sidebar-link" href="#" data-tooltip="Dashboards"
                             data-tooltip="Dashboards">Dashboards</a>
                     </div>
@@ -228,7 +233,7 @@
             </nav>
 
             <main class="ga-main" :class="{ 'is-refreshing': isRefreshing }">
-                <section v-if="pageMode !== 'adassets'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
+                <section v-if="pageMode !== 'reporteditor'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
                             <small>View (2 filters)</small>
@@ -265,8 +270,8 @@
                         <span>{{ selectedCampaignStateLabel }}</span>
                         <span>Status: <a href="#" :class="{ danger: isSelectedCampaignProblem }">{{
                                 selectedCampaignStatusText }}</a></span>
-                        <span>Account: {{ selectedCampaign ? selectedCampaign.account : '' }}</span>
-                        <span>Type: {{ selectedCampaign ? selectedCampaign.campaignType : 'App' }}</span>
+                        <span>Account: {{ selectedCampaign ? (selectedCampaign.Account || selectedCampaign.account) : '' }}</span>
+                        <span>Type: {{ selectedCampaign ? (selectedCampaign.CampaignType || selectedCampaign.campaignType || 'App') : 'App' }}</span>
                         <span v-if="pageMode === 'adgroups'">Budget: <a href="#">{{ selectedCampaign ?
                                 selectedCampaign.budget : '' }}</a></span>
                         <span v-if="pageMode === 'adassets'">Target CPA: <a href="#">{{ adGroup.targetCpa }}</a></span>
@@ -275,15 +280,17 @@
                             {{ pageMode === 'adassets' ? 'Ad group settings' : 'Campaign settings' }}
                         </a>
                     </div>
+                    <section v-if="pageMode === 'campaigns'" class="ga-page-filter-row">
+                        <span>Filters</span>
+                        <button class="ga-filter-badge" type="button">Campaign status: All</button>
+                        <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
+                        <button class="ga-filter-add" type="button">Add filter</button>
+                    </section>
                 </section>
 
-                <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }">
+                <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }" v-if="pageMode !== 'reporteditor'">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
-                        <div v-if="pageMode === 'adassets'" class="ga-frozen-adgroup-card" aria-label="Selected ad group">
-                            <small>Ad group</small>
-                            <strong>{{ adGroup.adGroup }}</strong>
-                        </div>
                         <div v-if="isContextBarHidden && pageMode !== 'adassets'" class="ga-page-head-selector-wrapper">
                             <div class="ga-selector active" @click.stop="toggleDropdown('view')">
                                 <small>View (2 filters)</small>
@@ -295,7 +302,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ga-date-row">
+                    <div v-if="pageMode !== 'adassets'" class="ga-date-row">
                         <span>{{ getDateOptionLabel(appliedDateOption) }}</span>
                         <button ref="dateSelectRef" class="ga-date-button" type="button" @click.stop="toggleDatePicker">
                             {{ dateRangeLabel }}
@@ -475,15 +482,84 @@
                         </div>
                     </transition>
                 </section>
+                <div v-if="pageMode === 'reporteditor'" class="ga-re-container">
+    
+    <div class="ga-re-action-bar">
+        <button class="ga-re-btn-primary" type="button">
+            <span class="material-symbols-outlined">add</span>
+            Create report
+        </button>
+    </div>
 
-                <section v-if="pageMode === 'campaigns'" class="ga-page-filter-row">
-                    <span>Filters</span>
-                    <button class="ga-filter-badge" type="button">Campaign status: All</button>
-                    <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
-                    <button class="ga-filter-add" type="button">Add filter</button>
-                </section>
+    <div class="ga-re-card">
+        <div class="ga-re-card-header" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="color: #5f6368;">analytics</span>
+                <span class="ga-re-card-title">Generate report</span>
+                <span class="ga-re-badge-beta">BETA</span>
+            </div>
+            <span class="material-symbols-outlined" style="color: #5f6368; cursor: pointer;">expand_less</span>
+        </div>
+        
+        <div class="ga-re-card-body">
+            <div class="ga-re-search-row">
+                <input type="text" class="ga-re-input" placeholder="Describe the report you want to generate">
+                <button class="ga-re-btn-generate" disabled>Generate</button>
+                <a href="#" class="ga-re-link-suggest">Refresh suggestions</a>
+            </div>
+            
+            <div class="ga-re-chips-group">
+                <button class="ga-re-chip" type="button">Where is my performance dropping?</button>
+                <button class="ga-re-chip" type="button">What are my top campaigns?</button>
+                <button class="ga-re-chip" type="button">Who are seeing my ads?</button>
+            </div>
+            
+            <p class="ga-re-notice-text">
+                Review the automatically selected rows and columns to ensure the generated report represents what you asked for. Do not share personal, confidential, or sensitive information. Learn more about Google's <a href="#">Terms of Service</a>.
+            </p>
+        </div>
+    </div>
 
-                <div v-if="pageMode === 'campaigns'" class="ga-tabs">
+    <div class="ga-re-section">
+        <h2 class="ga-re-section-title">Frequently used reports</h2>
+        
+        <div class="ga-re-grid">
+            <a href="/aw/reporteditor/view" class="ga-re-report-card">
+                <div class="card-meta">Saved report</div>
+                <div class="card-main-title">1</div>
+                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+            </a>
+
+            <div class="ga-re-report-card">
+                <div class="card-meta">Saved report</div>
+                <div class="card-main-title">BA</div>
+                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+            </div>
+
+            <div class="ga-re-report-card">
+                <div class="card-meta">Saved report</div>
+                <div class="card-main-title">JK</div>
+                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+            </div>
+
+            <div class="ga-re-report-card">
+                <div class="card-meta">Saved report</div>
+                <div class="card-main-title">999</div>
+                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ga-re-card" style="margin-top: 16px;">
+        <div class="ga-re-card-header" style="justify-content: space-between; cursor: pointer; padding: 16px 24px;">
+            <span class="ga-re-card-title" style="font-size: 15px;">Saved reports</span>
+            <span class="material-symbols-outlined" style="color: #5f6368;">expand_more</span>
+        </div>
+    </div>
+
+</div>
+<template v-else>
+                <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
                     <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
                     <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
                 </div>
@@ -661,7 +737,7 @@
                                         Drafts in progress: 0</td>
                                     <td colspan="14"></td>
                                 </tr>
-                                <tr v-for="(campaign, index) in campaignRows" :key="campaign.id || index">
+                                <tr v-for="(campaign, index) in paginatedCampaignRows" :key="campaign.id || index">
                                     <td class="select-col"><span class="ga-checkbox"></span></td>
                                     <td class="state-col">
                                         <div class="ga-status-cell"
@@ -768,7 +844,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(adGroup, index) in adGroupRows" :key="adGroup.id">
+                                <tr v-for="(adGroup, index) in paginatedAdGroupRows" :key="adGroup.id">
                                     <td><span class="ga-checkbox"></span></td>
                                     <td><span
                                             :class="'ga-status-dot ' + statusDotClass(getStatusFromRow(adGroup))"></span>
@@ -848,7 +924,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="asset in assetRows" :key="asset.id">
+                                <tr v-for="asset in paginatedAssetRows" :key="asset.id">
                                     <td class="asset-cell name-col">
                                         <span class="ga-status-dot enabled"></span>
                                         <button v-if="asset.assetType === 'Image'" type="button" class="asset-thumb"
@@ -879,13 +955,28 @@
 
                     <div class="ga-pagination">
                         <span>Show rows:</span>
-                        <button type="button">{{ pageMode === 'campaigns' ? 100 : 50 }} <span
-                                class="material-symbols-outlined">arrow_drop_down</span></button>
+                        <div class="ga-page-size-control" @click.stop>
+                            <button type="button" @click.stop="togglePageSizeDropdown">
+                                {{ pageSize }}
+                                <span class="material-symbols-outlined"
+                                    :class="{ rotated: showPageSizeDropdown }">arrow_drop_down</span>
+                            </button>
+                            <div v-if="showPageSizeDropdown" class="ga-page-size-menu">
+                                <button v-for="option in pageSizeOptions" :key="option" type="button"
+                                    :class="{ active: option === pageSize }" @click.stop="setPageSize(option)">
+                                    {{ option }}
+                                </button>
+                            </div>
+                        </div>
                         <span>{{ paginationText }}</span>
-                        <span class="material-symbols-outlined muted">first_page</span>
-                        <span class="material-symbols-outlined muted">chevron_left</span>
-                        <span class="material-symbols-outlined muted">chevron_right</span>
-                        <span class="material-symbols-outlined muted">last_page</span>
+                        <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
+                            @click="canGoPreviousPage && goToFirstPage()">first_page</span>
+                        <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
+                            @click="canGoPreviousPage && goToPreviousPage()">chevron_left</span>
+                        <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
+                            @click="canGoNextPage && goToNextPage()">chevron_right</span>
+                        <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
+                            @click="canGoNextPage && goToLastPage()">last_page</span>
                     </div>
                 </section>
 
@@ -897,6 +988,7 @@
                         accredited metrics.</p>
                     <p>&copy; Google, 2026.</p>
                 </footer>
+                </template>
             </main>
         </div>
 

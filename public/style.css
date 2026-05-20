@@ -107,6 +107,10 @@ body {
     height: 80px;
 }
 
+#app {
+    position: relative;
+}
+
 .header-left {
     display: flex;
     align-items: center;
@@ -276,12 +280,15 @@ body {
 }
 
 .page-refresh-overlay {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    height: 3px;
     z-index: 20000;
-    background: rgba(255, 255, 255, 0.28);
-    backdrop-filter: blur(0.5px);
+    background: transparent;
     cursor: progress;
+    pointer-events: none;
 }
 
 .page-refresh-progress {
@@ -1324,6 +1331,11 @@ input:checked+.toggle-slider:before {
     color: #3c4043;
 }
 
+.data-table td.col-campaign-id {
+    color: #3c4043;
+    font-weight: 400;
+}
+
 .data-table .empty-state-row:hover {
     background-color: #fff;
 }
@@ -1338,6 +1350,7 @@ input:checked+.toggle-slider:before {
 }
 
 .data-table.is-reloading tbody td.col-metric,
+.data-table.is-reloading tbody td.col-campaign-id,
 .data-table.is-reloading tfoot td.col-metric {
     position: relative;
     color: transparent !important;
@@ -1357,6 +1370,20 @@ input:checked+.toggle-slider:before {
     top: 50%;
     left: 16px;
     width: min(260px, calc(100% - 32px));
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #e8eaed 0%, #f8fafd 45%, #e8eaed 100%);
+    background-size: 180% 100%;
+    transform: translateY(-50%);
+    animation: metric-loading 0.9s ease-in-out infinite;
+}
+
+.data-table.is-reloading tbody td.col-campaign-id::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: min(120px, calc(100% - 32px));
     height: 12px;
     border-radius: 6px;
     background: linear-gradient(90deg, #e8eaed 0%, #f8fafd 45%, #e8eaed 100%);
