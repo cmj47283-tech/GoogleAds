@@ -413,6 +413,12 @@
     color: #1a73e8;
 }
 
+.ga-rail-item .material-symbols-outlined-extended {
+    font-family: 'Material Symbols Outlined extended';
+    font-size: 24px;
+    font-style: normal;
+}
+
 .ga-rail-item.active .material-symbols-outlined {
     background: #1a73e8;
     color: #fff;
@@ -1516,6 +1522,18 @@ button.ga-floating-add {
 
 button.ga-floating-add .material-symbols-outlined {
     font-size: 24px;
+}
+
+button.ga-floating-add:hover {
+    box-shadow: 0 4px 12px rgba(60, 64, 67, 0.32);
+}
+
+button.ga-floating-add:hover .ga-create-tooltip,
+button.ga-floating-add:focus-visible .ga-create-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) scale(1);
+    transition-delay: 0.18s, 0.18s, 0s;
 }
 
 .ga-table-toolbar {

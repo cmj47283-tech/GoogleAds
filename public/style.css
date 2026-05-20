@@ -27,8 +27,16 @@
     src: url("./fonts/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDCvHOej.woff2") format('woff2');
 }
 
+@font-face {
+    font-family: 'Material Symbols Outlined extended';
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/Gw6kwdfw6UnXLJCcmafZyFRXb3BL9rvi0QZG3Q.woff2") format('woff2');
+}
+
+
 .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
+    font-family: 'Material Symbols Outlined', 'Material Symbols Outlined extended';
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
