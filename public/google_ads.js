@@ -243,6 +243,7 @@ createApp({
         pageTitle() {
             if (this.pageMode === 'adassets') return 'Ad assets';
             if (this.pageMode === 'adgroups') return 'Ad groups';
+            if (this.pageMode === 'reporteditor') return 'Report editor';
             return 'Campaigns';
         },
         totals() {

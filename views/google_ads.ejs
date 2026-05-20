@@ -233,7 +233,7 @@
             </nav>
 
             <main class="ga-main" :class="{ 'is-refreshing': isRefreshing }">
-                <section v-if="pageMode !== 'reporteditor'" class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
+                <section class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
                             <small>View (2 filters)</small>
@@ -255,7 +255,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div v-if="pageMode !== 'campaigns'" class="ga-selector"
+                        <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor'" class="ga-selector"
                             :class="{ active: pageMode === 'adassets' }" @click.stop="toggleDropdown('adgroup')">
                             <small>Ad groups</small>
                             <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Select an ad group' }}</a>
@@ -265,7 +265,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode !== 'campaigns'" class="ga-state-line">
+                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor'" class="ga-state-line">
                         <span :class="['ga-dot', selectedCampaignStatusClass]"></span>
                         <span>{{ selectedCampaignStateLabel }}</span>
                         <span>Status: <a href="#" :class="{ danger: isSelectedCampaignProblem }">{{
@@ -280,7 +280,7 @@
                             {{ pageMode === 'adassets' ? 'Ad group settings' : 'Campaign settings' }}
                         </a>
                     </div>
-                    <section v-if="pageMode === 'campaigns'" class="ga-page-filter-row">
+                    <section v-if="pageMode === 'campaigns' || pageMode === 'reporteditor'" class="ga-page-filter-row">
                         <span>Filters</span>
                         <button class="ga-filter-badge" type="button">Campaign status: All</button>
                         <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
@@ -288,7 +288,7 @@
                     </section>
                 </section>
 
-                <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }" v-if="pageMode !== 'reporteditor'">
+                <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
                         <div v-if="isContextBarHidden && (pageMode === 'campaigns' || pageMode === 'adassets')" class="ga-page-head-selector-wrapper">
