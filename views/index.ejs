@@ -726,6 +726,67 @@ keyboard_arrow_up
                 Learn more about Google's <a href="#" target="_blank">Terms of Service</a>.
             </p>
         </div>
+<!-- 数据分析界面 -->
+        <div class="analytics-interface">
+            <div class="analytics-container">
+                <!-- 左侧面板 -->
+                <div class="analytics-left-panel">
+                    <!-- Table 选择器 -->
+                    <div class="analytics-table-selector">
+                        <div class="analytics-table-selector-inner">
+                            <img class="visualization-icon-table" src="https://www.gstatic.com/matcha/images/gm_colors/table_simple.svg" alt="Table icon">
+                            <span class="analytics-flex-text">Table</span>
+                            <span class="material-symbols-outlined" style="padding-left: 120px;">
+arrow_drop_down
+</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 部分 -->
+                    <div class="analytics-row-section">
+                        <div class="analytics-label">Row</div>
+                    </div>
+
+                    <!-- Column 部分 -->
+                    <div class="analytics-column-section">
+                        <div class="analytics-label">Column</div>
+                        <div class="analytics-column-selector">
+                            <span class="material-symbols-outlined" style="font-size: 18px;padding-left: 4px;">
+drag_indicator
+</span>
+                            <span class="analytics-flex-text">Cost</span>
+                            <span class="material-symbols-outlined" style="padding-left: 140px;color: #6b7280;font-size: 24px;">arrow_drop_down</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧面板 -->
+                <div class="analytics-right-panel">
+                    <!-- 搜索栏 -->
+                    <div class="analytics-search-bar">
+                        <div class="analytics-search-bar-inner">
+                            <span class="material-symbols-outlined">search</span>
+                            <input type="text" placeholder="Search metrics and dime..." class="analytics-search-input">
+                            <button class="analytics-menu-btn">
+                                <span class="material-symbols-outlined">more_vert</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 推荐列 -->
+                    <div class="analytics-recommended-section">
+                        <button class="analytics-recommended-header">
+                            <span>Recommended columns</span>
+                            <span class="material-symbols-outlined" id="analyticsExpandIcon">expand_less</span>
+                        </button>
+                        <div class="analytics-recommended-content" id="analyticsRecommendedContent">
+                            <div class="analytics-recommended-item">Participated in-app actions</div>
+                            <div class="analytics-recommended-item">Cost / Participated in-app action</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
     </div>
 <div class="footer"> © Google, 2026.</div>
