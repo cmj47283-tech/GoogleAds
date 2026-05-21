@@ -1364,6 +1364,7 @@
     align-items: flex-start;
     gap: 10px;
     z-index: 2;
+    pointer-events: none;
 }
 
 .ga-chart-select,
@@ -1373,6 +1374,7 @@
     color: #3c4043;
     font: inherit;
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .ga-chart-select {
@@ -1446,24 +1448,21 @@
     font-size: 14px;
 }
 
-.ga-asset-chart-line {
-    fill: none;
-    stroke: #1a73e8;
-    stroke-width: 2;
-}
-
 .ga-asset-chart-point {
     fill: #1a73e8;
+    cursor: pointer;
 }
 
-.ga-asset-chart-date {
-    position: absolute;
-    left: 50%;
-    bottom: 8px;
-    transform: translateX(-50%);
-    color: #777;
-    font-size: 12px;
-    white-space: nowrap;
+.ga-asset-chart-point-hitarea {
+    fill: transparent;
+    stroke: transparent;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.ga-asset-chart-point-hitarea:focus,
+.ga-asset-chart-point:focus {
+    outline: none;
 }
 
 .ga-chart-area {
@@ -1538,6 +1537,72 @@
     fill: #1a73e8;
     stroke: #1a73e8;
     stroke-width: 1;
+    cursor: pointer;
+}
+
+.ga-chart-point-hitarea {
+    fill: transparent;
+    stroke: transparent;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.ga-chart-point-hitarea:focus,
+.ga-chart-point:focus {
+    outline: none;
+}
+
+.ga-chart-hover-line {
+    stroke: #9aa0a6;
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+}
+
+.ga-chart-tooltip {
+    position: absolute;
+    z-index: 30;
+    min-width: 132px;
+    padding: 14px 16px 16px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow:
+        0 1px 3px rgba(60, 64, 67, 0.3),
+        0 4px 10px rgba(60, 64, 67, 0.18);
+    color: #3c4043;
+    transform: translate(10px, -50%);
+    pointer-events: none;
+}
+
+.ga-chart-tooltip-date,
+.ga-chart-tooltip-label {
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.ga-chart-tooltip-date {
+    font-weight: 600;
+    color: #202124;
+}
+
+.ga-chart-tooltip-label {
+    margin-top: 8px;
+    color: #5f6368;
+}
+
+.ga-chart-tooltip-value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    font-size: 24px;
+    line-height: 32px;
+    color: #202124;
+}
+
+.ga-chart-tooltip-value span {
+    width: 10px;
+    height: 2px;
+    background: #1a73e8;
 }
 
 .ga-chart-start,

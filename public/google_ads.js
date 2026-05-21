@@ -124,6 +124,12 @@ createApp({
                 x: 0,
                 y: 0
             },
+            conversionsChartTooltip: {
+                visible: false
+            },
+            assetChartTooltip: {
+                visible: false
+            },
             ads_currentTooltipTarget: null,
             ads_tooltipTimer: null,
             mouseX: 0,
@@ -337,6 +343,63 @@ createApp({
                 x: 555,
                 y: bottom - ratio * (bottom - top)
             };
+        },
+        conversionsChartTooltipStyle() {
+            const leftPercent = this.conversionsChartPoint.x / 10;
+            const top = 18 + (this.conversionsChartPoint.y / 180) * 170;
+            return {
+                left: `${leftPercent}%`,
+                top: `${top}px`
+            };
+        },
+        conversionsChartTooltipDate() {
+            if (!this.endDate) return '';
+            return this.formatDateWithWeekday(this.endDate);
+        },
+        conversionsChartTooltipValue() {
+            return this.formatNumber(this.conversionsChartValue, 2);
+        },
+        assetChartValue() {
+            return safeNumber(this.adGroupTotal.Conversions) || this.selectedConversions;
+        },
+        assetChartMax() {
+            const value = this.assetChartValue;
+            if (value <= 0) return 2;
+            return Math.max(2, Math.ceil((value * 1.45) / 20) * 20);
+        },
+        assetChartLabels() {
+            const max = this.assetChartMax;
+            return {
+                max: this.fixed(max, 2),
+                mid: this.fixed(max / 2, 2),
+                min: this.fixed(0, 2)
+            };
+        },
+        assetChartPoint() {
+            const top = 30;
+            const bottom = 154;
+            const max = this.assetChartMax;
+            const value = Math.min(this.assetChartValue, max);
+            const ratio = max > 0 ? value / max : 0;
+            return {
+                x: 555,
+                y: bottom - ratio * (bottom - top)
+            };
+        },
+        assetChartTooltipStyle() {
+            const leftPercent = this.assetChartPoint.x / 10;
+            const top = 28 + (this.assetChartPoint.y / 180) * 168;
+            return {
+                left: `${leftPercent}%`,
+                top: `${top}px`
+            };
+        },
+        assetChartTooltipDate() {
+            if (!this.endDate) return '';
+            return this.formatDateWithWeekday(this.endDate);
+        },
+        assetChartTooltipValue() {
+            return this.formatNumber(this.assetChartValue, 2);
         },
         metricActions() {
             return [
@@ -739,6 +802,12 @@ createApp({
             if (!d) return '';
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        },
+        formatDateWithWeekday(date) {
+            const d = this.parseLocalDate(date);
+            if (!d) return '';
+            const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return `${weekdayNames[d.getDay()]}, ${this.formatDate(d)}`;
         },
         formatIsoDate(date) {
             const d = this.parseLocalDate(date);
@@ -1373,6 +1442,22 @@ createApp({
             clearTimeout(this.tooltipTimer)
             this.tooltip.visible = false
             this.currentTooltipTarget = null
+        },
+
+        showConversionsChartTooltip() {
+            this.conversionsChartTooltip.visible = true;
+        },
+
+        hideConversionsChartTooltip() {
+            this.conversionsChartTooltip.visible = false;
+        },
+
+        showAssetChartTooltip() {
+            this.assetChartTooltip.visible = true;
+        },
+
+        hideAssetChartTooltip() {
+            this.assetChartTooltip.visible = false;
         },
 
         toggleNotifications() {
