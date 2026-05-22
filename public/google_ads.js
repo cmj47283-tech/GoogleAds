@@ -22,6 +22,7 @@ function getInitialPageMode() {
     if (window.location.pathname.includes('/adassets')) return 'adassets';
     if (window.location.pathname.includes('/adgroups')) return 'adgroups';
     if (window.location.pathname.includes('/reporteditor')) return 'reporteditor';
+    if (window.location.pathname.includes('/overview')) return 'overview';
     return 'campaigns';
 }
 
@@ -251,6 +252,7 @@ createApp({
             if (this.pageMode === 'adassets') return 'Ad assets';
             if (this.pageMode === 'adgroups') return 'Ad groups';
             if (this.pageMode === 'reporteditor') return 'Report editor';
+            if (this.pageMode === 'overview') return 'Overview';
             return 'Campaigns';
         },
         totals() {
@@ -669,22 +671,7 @@ createApp({
             };
         }
     },
-    watch: {
-        pageMode(newMode) {
-            // 1. 只要切换了页面模式，不管三七二十一，先强制让顶部栏显示出来
-            this.isContextBarHidden = false;
-            this.currentPage = 1;
-            this.showPageSizeDropdown = false;
-            
-            // 2. 让滚动容器 (.ga-main) 瞬间回到最顶部，清除上一页残留的滚动距离
-            this.$nextTick(() => {
-                const mainElement = document.querySelector('.ga-main');
-                if (mainElement) {
-                    mainElement.scrollTop = 0;
-                }
-            });
-        }
-    },
+    
     methods: {
         async reloadData() {
             if (this.isRefreshing) return;

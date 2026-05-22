@@ -161,7 +161,7 @@
             <nav class="ga-sidebar" aria-label="Campaign navigation" @mouseover="handleTooltipMouseOver"
                 @mouseleave="hideTooltip" @mousemove="handleMouseMove">
                 <div class="ga-sidebar-group" href="#">
-                    <button class="ga-sidebar-group-title" type="button">
+                    <button class="ga-sidebar-group-title" type="button" :class="{ active: pageMode === 'overview' }" href="#" @click="switchPage('overview')">
                         <span data-tooltip="Overview">Overview</span>
                     </button>
                 </div>
@@ -255,7 +255,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor'" class="ga-selector"
+                        <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'" class="ga-selector"
                             :class="{ active: pageMode === 'adassets' }" @click.stop="toggleDropdown('adgroup')">
                             <small>Ad groups</small>
                             <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Select an ad group' }}</a>
@@ -265,7 +265,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor'" class="ga-state-line">
+                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'" class="ga-state-line">
                         <span :class="['ga-dot', selectedCampaignStatusClass]"></span>
                         <span>{{ selectedCampaignStateLabel }}</span>
                         <span>Status: <a href="#" :class="{ danger: isSelectedCampaignProblem }">{{
@@ -280,7 +280,7 @@
                             {{ pageMode === 'adassets' ? 'Ad group settings' : 'Campaign settings' }}
                         </a>
                     </div>
-                    <section v-if="pageMode === 'campaigns' || pageMode === 'reporteditor'" class="ga-page-filter-row">
+                    <section v-if="pageMode === 'campaigns' || pageMode === 'reporteditor' || pageMode === 'overview'" class="ga-page-filter-row">
                         <span>Filters</span>
                         <button class="ga-filter-badge" type="button">Campaign status: All</button>
                         <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
@@ -291,14 +291,14 @@
                 <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
-                        <div v-if="isContextBarHidden && (pageMode === 'campaigns' || pageMode === 'adassets')" class="ga-page-head-selector-wrapper">
+                        <div v-if="isContextBarHidden && (pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'reporteditor' || pageMode === 'overview')" class="ga-page-head-selector-wrapper">
                             <div class="ga-ContextBarHidden">
                                 <small>Ad groups</small>
                                 <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Ad group 1' }}</a>
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-date-row">
+                    <div v-if="pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'overview'" class="ga-date-row">
                         <span>{{ getDateOptionLabel(appliedDateOption) }}</span>
                         <button ref="dateSelectRef" class="ga-date-button" type="button" @click.stop="toggleDatePicker">
                             {{ dateRangeLabel }}
@@ -478,6 +478,182 @@
                         </div>
                     </transition>
                 </section>
+<!-- Google Ads Dashboard Section -->
+<div class="gads-dashboard" v-if="pageMode === 'overview'">
+
+  <!-- Tab Bar：两行 -->
+  <div class="gads-tabbar">
+    <!-- 第一行：导航标签 -->
+    <div class="gads-tabbar-row1">
+      <a class="gads-tab active" href="#">Home</a>
+      <a class="gads-tab gads-tab-add" href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Add custom view
+      </a>
+      <span class="material-symbols-outlined" style="color: #3c4043; font-size: 24px;">help_outline</span>
+    </div>
+    <!-- 第二行：操作按钮 -->
+    <div class="gads-tabbar-row2">
+      <div class="gads-action-btn">
+        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;">file_download</span>
+        Download
+      </div>
+      <div class="gads-action-btn">
+        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;">feedback</span>
+        Feedback
+      </div>
+    </div>
+  </div>
+
+  <!-- Metric Cards + Chart 合并（圆角8，四周border） -->
+  <div class="gads-metrics-chart" style="margin-top:16px">
+    <!-- Metric Cards -->
+    <div class="gads-metrics">
+      <div class="gads-metric accent-blue">
+        <div class="gads-metric-label">Clicks <span class="material-symbols-outlined" style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
+        <div class="gads-metric-value">4.75K</div>
+       
+      </div>
+      <div class="gads-metric accent-red">
+        <div class="gads-metric-label">Impressions <span class="material-symbols-outlined" style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
+        <div class="gads-metric-value">203K</div>
+      </div>
+      <div class="gads-metric">
+        <div class="gads-metric-label">Avg. CPC</div>
+        <div class="gads-metric-value">$0.04</div>
+      </div>
+      <div class="gads-metric">
+        <div class="gads-metric-label">Cost</div>
+        <div class="gads-metric-value">$211</div>
+        
+      </div>
+      <div class="gads-metric">
+        
+        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;padding-left:180px;padding-top: 12px;">more_vert</span>
+      </div>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="gads-chart-wrapper">
+      <!-- 图表主体：左轴标签 + SVG + 右轴标签 -->
+      <div class="gads-chart-body">
+        <!-- 左轴（Clicks） -->
+        <div class="gads-chart-labels">
+          <span>5K</span>
+          <span>2.5K</span>
+          <span>0</span>
+        </div>
+        <!-- SVG 图表区域 -->
+        <div class="gads-chart-svg-container">
+          <svg viewBox="0 0 900 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid lines (top / mid / bottom) -->
+            <line x1="0" y1="1"   x2="900" y2="1"   stroke="#e8eaed" stroke-width="1"/>
+            <line x1="0" y1="60"  x2="900" y2="60"  stroke="#e8eaed" stroke-width="1"/>
+            <line x1="0" y1="119" x2="900" y2="119" stroke="#e8eaed" stroke-width="1"/>
+            <!-- Impressions line（红色实线） -->
+            <path d="M0,118 L90,116 L180,115 L270,114 L360,112 L450,110 L520,18 L540,58 L600,108 L720,110 L810,112 L900,114"
+                  fill="none" stroke="#d93025" stroke-width="1.5"/>
+            <!-- Clicks line（蓝色实线） -->
+            <path d="M0,116 L90,114 L180,113 L270,112 L360,110 L450,108 L520,16 L540,56 L600,106 L720,108 L810,110 L900,112"
+                  fill="none" stroke="#1a73e8" stroke-width="2"/>
+          </svg>
+        </div>
+        <!-- 右轴（Impressions） -->
+        <div class="gads-chart-labels right">
+          <span>210K</span>
+          <span>105K</span>
+          <span>0</span>
+        </div>
+      </div>
+      <!-- 日期 -->
+      <div class="gads-chart-dates">
+        <span>Dec 22, 2025</span>
+        <span>May 18, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Campaigns + Promo -->
+  <div class="gads-bottom">
+
+    <!-- Campaigns Panel -->
+    <div class="gads-panel">
+      <div class="gads-panel-header">
+        <div class="gads-panel-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
+        <span class="gads-panel-title">Campaigns</span>
+        <span class="gads-panel-more">⋮</span>
+      </div>
+      <div class="gads-panel-body">
+        <div class="gads-panel-subtitle">Summary of how your campaigns are performing</div>
+        <table class="gads-campaign-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Cost <span class="gads-sort-arrow"></span></th>
+              <th>Clicks <span class="gads-sort-arrow"></span></th>
+              <th>CTR <span class="gads-sort-arrow"></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-paused"></span>77RP-GGB-26-GG-Lucky MCard-ID KKluv</div></td>
+              <td><span class="gads-cost-chip">$205.24</span></td>
+              <td>4,690</td><td>2.33%</td>
+            </tr>
+            <tr>
+              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-paused"></span>JK7039-EI4-GG-BR-0224 KKluv</div></td>
+              <td>$5.31</td><td>60</td><td>2.99%</td>
+            </tr>
+            <tr>
+              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-active"></span>ZZ11-7U7-35-EB26-0507</div></td>
+              <td>$0.00</td><td>0</td><td>0.00%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="gads-pagination">
+          <a class="gads-all-link" href="#">All campaigns</a>
+          <div class="gads-page-nav">
+            <span>1 / 1</span>
+            <button disabled>&#8249;</button>
+            <button disabled>&#8250;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Marketing Live Promo -->
+    <div class="gads-panel">
+      <div class="gads-promo-header">
+        <div class="gads-panel-icon">
+          <span class="g-logo"><span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span></span>
+        </div>
+        <span class="gads-panel-title" style="font-size:12px;color:#5f6368;font-weight:400">Google Ads</span>
+        <button class="gads-promo-close" onclick="this.closest('.gads-panel').style.display='none'">&#10005;</button>
+        <span class="gads-panel-more">⋮</span>
+      </div>
+      <div class="gads-promo-body">
+        <div class="gads-promo-title">Google Marketing Live 2026</div>
+        <div class="gads-promo-desc">Tune in now to see groundbreaking ads innovations across Ads, Search, and YouTube.</div>
+        <div class="gads-promo-thumb">
+          <div class="gads-promo-thumb-inner">
+            <div class="gads-promo-thumb-content">
+              <div class="gads-promo-thumb-text">
+                <div class="gads-promo-thumb-google">Google Ads</div>
+                <div class="gads-promo-thumb-headline">Google Marketing Live 2026</div>
+                <div class="gads-promo-thumb-sub">Global Keynote 2026</div>
+              </div>
+              <div class="gads-play-btn"></div>
+              <span class="gads-yt-badge">&#9654; YouTube</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /gads-bottom -->
+</div><!-- /gads-dashboard -->
                 <div v-if="pageMode === 'reporteditor'" class="ga-re-container">
     
     <div class="ga-re-action-bar">
@@ -554,7 +730,7 @@
     </div>
 
 </div>
-<template v-else>
+<template v-if="pageMode !== 'reporteditor' && pageMode !== 'overview'">
                 <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
                     <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
                     <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
