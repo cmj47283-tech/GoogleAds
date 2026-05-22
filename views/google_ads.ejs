@@ -572,7 +572,7 @@
                         :class="{ primary: index === 0 }">
                         <span>{{ metric.label }}</span>
                         <strong>{{ metric.value }}</strong>
-                        <div class="ga-metric-delta">
+                        <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
                             <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
                             <small style="margin-left: 4px;">{{ metric.delta }}</small>
                         </div>
@@ -767,7 +767,7 @@
                                     <td><span class="material-symbols-outlined">expand_more</span></td>
                                     <td class="name-col"><span class="material-symbols-outlined filled">folder</span>
                                         Drafts in progress: 0</td>
-                                    <td colspan="14"></td>
+                                    <td colspan="15"></td>
                                 </tr>
                                 <tr v-for="(campaign, index) in paginatedCampaignRows" :key="campaign.id || index">
                                     <td class="select-col"><span class="ga-checkbox"></span></td>
@@ -799,17 +799,17 @@
                                         </div>
                                     </td>
                                     <td class="name-col">
-                                        <span
-                                            class="material-symbols-outlined ga-campaign-type">download_for_offline</span>
+                                        <!-- <span class="material-symbols-outlined ga-campaign-type">download_for_offline</span> -->
+                                        <span class="ga-nghost-awv"></span>
                                         <a :href="campaignHref(campaign.campaign)">{{ campaign.campaign }}</a>
-                                        <!-- <i class="material-symbols-outlined" style="font-size: 14px;">edit</i>
-                                        <i class="material-symbols-outlined" style="font-size: 14px;">settings</i> -->
+                                        <i class="ga-status-rowbudget" aria-hidden="true" style="margin-left: 15px; margin-right: 25px;"></i>
+                                        <i class="material-symbols-outlined ga-status-rowitem" aria-hidden="true">settings</i>
                                     </td>
                                     <td class="budget-col">
                                         <span style="display: inline-flex; align-items: center; gap: 4px;">
                                             {{ formatCurrency(campaign.Buget || campaign.budget) }}/day
-                                            <i class="material-symbols-outlined" style="font-size: 14px;">image</i>
-                                            <!-- <i class="material-symbols-outlined" style="font-size: 14px;">edit</i> -->
+                                            <i class="material-symbols-outlined" style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
+                                            <i class="ga-status-rowbudget" aria-hidden="true"></i>
                                         </span>
                                     </td>
                                     <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status) }}</span>
@@ -819,14 +819,14 @@
                                     <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
                                     <td>{{ formatCurrency(campaign.costPerInAppActions || campaign.costPerInAppAction) }}
                                     </td>
-                                    <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv) }}</td>
-                                    <td>{{ formatNumber(campaign.installs) }}</td>
-                                    <td>{{ formatNumber(campaign.inAppActions) }}</td>
-                                    <td>{{ formatNumber(campaign.ParticipatedInAppActions) }}</td>
+                                    <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv , 2) }}</td>
+                                    <td>{{ formatNumber(campaign.installs,2) }}</td>
+                                    <td>{{ formatNumber(campaign.inAppActions,2) }}</td>
+                                    <td>{{ formatNumber(campaign.ParticipatedInAppActions,2) }}</td>
                                     <td>{{ formatCurrency(campaign.cost) }}</td>
                                     <td>{{ formatCurrency(campaign.CostPerParticipatedInAppAction) }}</td>
                                     <td>{{ percent(campaign.ConvRate) }}</td>
-                                    <td>{{ formatNumber(campaign.Conversions) }}</td>
+                                    <td>{{ formatNumber(campaign.Conversions , 2) }}</td>
                                     <td>{{ formatCurrency(campaign.CostPerConv) }}</td>
                                 </tr>
                                 <tr class="total-row">
@@ -838,9 +838,9 @@
                                     <td>-</td>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>{{ formatNumber(totals.viewThroughConv) }}</td>
-                                    <td>{{ formatNumber(totals.installs) }}</td>
-                                    <td>{{ formatNumber(totals.inAppActions) }}</td>
+                                    <td>{{ formatNumber(totals.viewThroughConv , 2) }}</td>
+                                    <td>{{ formatNumber(totals.installs,2) }}</td>
+                                    <td>{{ formatNumber(totals.inAppActions,2) }}</td>
                                     <td>-</td>
                                     <td>{{ formatCurrency(totals.cost) }}</td>
                                     <td>-</td>
@@ -974,12 +974,12 @@
                                     <td><span class="ga-dashed">{{ asset.performance }}</span></td>
                                     <td>{{ formatNumber(asset.clicks) }}</td>
                                     <td>{{ asset.clicks ? percent(asset.ctr) : '-' }}</td>
-                                    <td>{{ formatNumber(asset.impressions) }}</td>
+                                    <td>{{ formatNumber(asset.impressions, 2) }}</td>
                                     <td>{{ formatCurrency(asset.cost) }}</td>
                                     <td>{{ formatCurrency(asset.installs) }}</td>
-                                    <td>{{ moneyOrDash(asset.costPerInstall) }}</td>
+                                    <td>{{ formatNumber(asset.costPerInstall , 2) }}</td>
                                     <td>{{ formatCurrency(asset.inAppActions) }}</td>
-                                    <td>{{ moneyOrDash(asset.costPerInAppAction) }}</td>
+                                    <td>{{ formatNumber(asset.costPerInAppAction , 2) }}</td>
                                 </tr>
                             </tbody>
                         </table>

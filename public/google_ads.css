@@ -287,6 +287,17 @@
     white-space: nowrap;
 }
 
+.ga-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #00a1b3;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+}
+
 .ga-shell {
     flex: 1;
     min-height: 0;
@@ -2070,7 +2081,8 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 }
 
 .ga-status-arrow {
-    width: 18px;
+    width: 20px;
+    height: 20px;
     color: #9aa0a6;
     font-size: 20px;
     opacity: 0;
@@ -2081,6 +2093,63 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 .ga-status-cell.open .ga-status-arrow,
 .ga-status-trigger:focus-visible .ga-status-arrow {
     opacity: 1;
+}
+
+.ga-status-rowitem {
+    color: #6b6b6f;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-right: 25px;
+    vertical-align: middle;
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.ga-data-table tr:hover .ga-status-rowitem,
+.ga-status-cell.open .ga-status-rowitem,
+.ga-status-trigger:focus-visible .ga-status-rowitem {
+    opacity: 1;
+}
+
+.ga-status-rowbudget {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    color: #6b6b6f;
+    font-size: 20px;
+    background-color: #6b6b6f;
+
+    vertical-align: middle;
+
+    mask: url('/images/pen_svg.svg') no-repeat center;
+    -webkit-mask: url('/images/pen_svg.svg') no-repeat center;
+
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.ga-data-table tr:hover .ga-status-rowbudget,
+.ga-status-cell.open .ga-status-rowbudget,
+.ga-status-trigger:focus-visible .ga-status-rowbudget {
+    opacity: 1;
+}
+
+.ga-nghost-awv {
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: middle;
+    flex-shrink: 0;
+    flex-grow: 0;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iIzhhOGE4YSI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgyNHYyNEgwem0wIDBoMjR2MjRIMHoiLz48cGF0aCBkPSJNMjAuMDEgNEgzLjk5QzIuODkgNCAyIDQuODkgMiA1Ljk4djEyLjAzYzAgMS4xLjg5IDEuOTkgMS45OSAxLjk5aDE2LjAyYzEuMDkgMCAxLjk5LS44OSAxLjk5LTEuOThWNS45OEMyMiA0Ljg5IDIxLjExIDQgMjAuMDEgNE0xMiAxOGMtMy4zNiAwLTYtMi43NS02LTZzMi43NS02IDYtNmMzLjM2IDAgNiAyLjc1IDYgNnMtMi43NSA2LTYgNm0yLTEwaC00djRIOGw0IDQgNC00aC0yeiIvPjwvc3ZnPg==);
+    /* background-position: 50%; */
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    height: 24px;
+    padding: 0;
+    margin-right: 10px;
+    width: 24px;
 }
 
 .ga-status-marker {
