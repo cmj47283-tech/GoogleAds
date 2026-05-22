@@ -312,7 +312,7 @@ createApp({
                 { label: 'Conversions', value: this.formatNumber(this.totals.conversions, 2), delta: this.randomizedMetricDelta('campaigns-conversions', this.totals.conversions, 'fixed') },
                 { label: 'Impr.', value: this.formatNumber(this.totals.impressions), delta: this.randomizedMetricDelta('campaigns-impressions', this.totals.impressions, 'integer') },
                 { label: 'Cost', value: this.formatCurrency(this.totals.cost), delta: this.randomizedMetricDelta('campaigns-cost',  this.totals.cost, 'money') },
-                { label: 'Avg. target CPA', value: '-', delta: '-' }
+                { label: 'Avg. target CPA', value: '—', delta: '-' }
             ];
         },
         conversionsChartValue() {

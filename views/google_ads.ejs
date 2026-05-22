@@ -571,7 +571,7 @@
                         :class="{ primary: index === 0 }">
                         <span>{{ metric.label }}</span>
                         <strong>{{ metric.value }}</strong>
-                        <div class="ga-metric-delta">
+                        <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
                             <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
                             <small style="margin-left: 4px;">{{ metric.delta }}</small>
                         </div>
