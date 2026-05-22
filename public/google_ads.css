@@ -165,7 +165,8 @@
 }
 
 .ga-refresh-button.refreshing .ga-refresh-icon {
-    animation: ga-refresh-spin 0.85s linear infinite;
+    /* animation: ga-refresh-spin 0.85s linear infinite; */
+    font-size: 24px;
 }
 
 @keyframes ga-refresh-spin {
@@ -325,6 +326,13 @@
     background-size: 32px 32px;
 }
 
+.notifications-red-icon {
+    position: absolute;
+    width: 24px;
+    height: 27px;
+    background: url(/images/red_warning.svg);
+}
+
 .ga-create-button:hover {
     box-shadow: 0 4px 12px rgba(60, 64, 67, 0.32);
 }
@@ -406,6 +414,24 @@
     font-family: 'Material Symbols Outlined extended';
     font-size: 24px;
     font-style: normal;
+}
+
+.ga-tool-button .material-symbols-outlined-extended {
+    font-family: 'Material Symbols Outlined extended';
+    font-size: 24px;
+    font-style: normal;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+}
+
+.ga-date-nav .material-symbols-outlined-extended {
+    font-family: 'Material Symbols Outlined extended';
+    font-size: 24px;
+    font-style: normal;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
 }
 
 .ga-rail-item.active .material-symbols-outlined {

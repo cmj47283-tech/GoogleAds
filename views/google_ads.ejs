@@ -55,29 +55,30 @@
             </div>
             <div class="ga-topbar-actions">
                 <button class="ga-tool-button ga-tool-button--search" type="button">
-                    <span class="material-symbols-outlined">search</span>
+                    <span class="material-symbols-outlined-extended">search</span>
                     <span>Search</span>
                 </button>
                 <button class="ga-tool-button" type="button" data-tooltip="Appearance">
-                    <span class="material-symbols-outlined">responsive_layout</span>
+                    <i class="material-symbols-outlined-extended">responsive_layout</i>
                     <span>Appearance</span>
                 </button>
                 <button class="ga-tool-button ga-refresh-button" type="button"
                     :class="{ refreshing: isRefreshing }" :disabled="isRefreshing"
                     :aria-busy="isRefreshing.toString()" @click="reloadData" data-tooltip="Refresh">
-                    <span class="material-symbols-outlined ga-refresh-icon">refresh</span>
+                    <i class="material-symbols-outlined-extended ga-refresh-icon">refresh</i>
                     <span>Refresh</span>
                 </button>
                 <button class="ga-tool-button" type="button" data-tooltip="Open the quick help panel">
-                    <span class="material-symbols-outlined">help</span>
+                    <i class="material-symbols-outlined-extended">help_outline</i>
                     <span>Help</span>
                 </button>
                 <!-- @click="isNotificationsOpen = !isNotificationsOpen" -->
                 <button ref="notificationButton" class="ga-tool-button ga-notifications" type="button"
                     @click.stop="toggleNotifications">
-                    <span class="material-symbols-outlined">notifications</span>
+                    <i class="material-symbols-outlined-extended">notifications</i>
                     <span>Notifications</span>
-                    <b>!</b>
+                    <!-- <b class="notifications-red-icon"></b> -->
+                     <b>!</b>
                 </button>
                 <transition name="ga-notifications-transition-popup">
                     <div v-if="isNotificationsOpen" ref="notificationPopup" class="ga-notifications-popup" @click.stop>
@@ -305,11 +306,11 @@
                         </button>
                         <button class="ga-date-nav" type="button" @click="shiftDateRange(-1)"
                             aria-label="Previous date range">
-                            <span class="material-symbols-outlined">chevron_left</span>
+                            <i class="material-symbols-outlined-extended">chevron_left</i>
                         </button>
                         <button class="ga-date-nav" type="button" @click="shiftDateRange(1)"
                             aria-label="Next date range">
-                            <span class="material-symbols-outlined">chevron_right</span>
+                            <i class="material-symbols-outlined-extended">chevron_right</i>
                         </button>
                         <a href="#" @click.prevent="applyQuickDateOption('last30Days')">Show last 30 days</a>
                     </div>
