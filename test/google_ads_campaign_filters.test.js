@@ -14,7 +14,7 @@ test('campaigns page can render the page-level status filters', () => {
   assert.ok(filterRowIndex < pageHeadIndex);
   assert.match(
     template,
-    /<section\s+v-if="pageMode === 'campaigns'"\s+class="ga-page-filter-row"/
+    /<section\s+v-if="pageMode === 'campaigns' \|\| pageMode === 'reporteditor'"\s+class="ga-page-filter-row"/
   );
   assert.doesNotMatch(template, /ga-page-filter-row[^>]*pageMode === 'adassets'/);
   assert.match(template, /Campaign status: All/);

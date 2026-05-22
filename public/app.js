@@ -22,7 +22,7 @@ createApp({
         }
 
         return {
-            showRightPanel: false,
+            showRightPanel: true,
             showNotification: true,
             isRefreshing: false,
             compareEnabled: false,
@@ -737,6 +737,19 @@ createApp({
             this.showRightPanel = true;
             await this.runReportDataLoad();
         },
+        hideReportBootLoader() {
+            const loader = document.getElementById('report-boot-loader');
+            if (!loader) return;
+
+            const startedAt = Number(window.__reportBootStartedAt || 0);
+            const elapsed = startedAt ? performance.now() - startedAt : 0;
+            const remaining = Math.max(0, 1000 - elapsed);
+
+            window.setTimeout(() => {
+                loader.classList.add('is-hidden');
+                window.setTimeout(() => loader.remove(), 220);
+            }, remaining);
+        },
         togglePageSizeDropdown() {
             this.showPageSizeDropdown = !this.showPageSizeDropdown;
         },
@@ -753,6 +766,7 @@ createApp({
         await this.loadTableData();
         this.selectDateOption('yesterday', { skipApply: true });
         this.applyDateRange({ skipRefresh: true });
+        this.hideReportBootLoader();
         document.addEventListener('click', this.handleClickOutside);
     },
     beforeUnmount() {

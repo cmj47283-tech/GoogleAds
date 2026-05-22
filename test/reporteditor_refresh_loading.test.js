@@ -103,6 +103,12 @@ test('report editor refresh state is scoped to the table only', () => {
   const template = fs.readFileSync(path.join(__dirname, '..', 'views', 'index.ejs'), 'utf8');
   const styles = fs.readFileSync(path.join(__dirname, '..', 'public', 'style.css'), 'utf8');
 
+  assert.match(template, /id="report-boot-loader"\s+class="report-boot-loader"/);
+  assert.match(template, /class="report-boot-progress"/);
+  assert.match(template, /class="report-boot-logo"/);
+  assert.match(styles, /\.report-boot-loader\s*\{[^}]*position:\s*fixed/s);
+  assert.match(styles, /\.report-boot-progress span\s*\{[^}]*animation:\s*report-boot-progress/s);
+  assert.match(styles, /\.report-boot-logo-blue\s*\{[^}]*background:\s*#4285f4/s);
   assert.match(template, /<th\s+v-show="hasCampaignId"\s+class="col-campaign-id"/);
   assert.match(template, /<td\s+v-show="hasCampaignId"\s+class="col-campaign-id"/);
   assert.match(template, /class="table-wrapper"\s+:class="\{\s*'is-reloading':\s*isRefreshing\s*\}"/);
