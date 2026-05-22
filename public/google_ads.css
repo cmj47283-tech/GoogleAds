@@ -2748,6 +2748,223 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 
     border-bottom: 1px solid #e0e0e0;
 }
+/* ===== Google Ads Dashboard ===== */
+  .gads-dashboard {
+    max-width: 960px;
+    margin: 24px auto;
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    color: #202124;
+  }
+
+  /* ── Tab Bar：两行 ── */
+ 
+  .gads-tabbar-row1 {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid #dadce0;
+    width: 760px;
+  }
+  .gads-tabbar-row2 {
+    display: flex;
+    justify-content: flex-end;
+
+  }
+  .gads-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    width: 180px;
+    color: #3c4043;
+
+  }
+  .gads-tab.active {
+
+    border-bottom-color: #1a73e8;
+  }
+  .gads-tab-add {
+    color: #1a73e8;
+    font-weight: 500;
+  }
+
+  .gads-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    color: #5f6368;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 100px;
+  }
+  .gads-action-btn:hover { background: rgba(0,0,0,.04); }
+
+  /* ── Metric Cards + Chart 合并容器 ── */
+  .gads-metrics-chart {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    background: #fff;
+  }
+
+  /* Metric Cards */
+  .gads-metrics {
+    display: flex;
+    height: 120px;
+  }
+  .gads-metric {
+    width: 180px;
+    padding: 14px 16px 10px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .gads-metric:last-child { border-right: none;border-bottom: none; }
+  .gads-metric.accent-blue { background: #1a73e8; color: #fff; }
+  .gads-metric.accent-red  { background: #d93025; color: #fff; }
+  .gads-metric-label {
+    display: flex; align-items: center; gap: 4px;
+    font-size: .875rem; font-weight: 500; margin-bottom: 6px;margin-top:12px ;
+  }
+  .gads-metric.accent-blue .gads-metric-label,
+  .gads-metric.accent-red  .gads-metric-label { color: rgba(255,255,255,.9); }
+  
+  .gads-metric-value { font-size: 2rem; font-weight: 400; line-height: 1.1; }
+  .gads-metric.accent-blue .gads-metric-value,
+  .gads-metric.accent-red  .gads-metric-value { color: #fff; }
+
+
+
+  /* ── Chart ── */
+  .gads-chart-wrapper {
+    padding: 18px 20px 18px;
+  }
+  /* 图表主体：左标签 + SVG + 右标签 */
+  .gads-chart-body {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    height: 160px;
+  }
+  .gads-chart-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: right;
+    font-size: 11px;
+    color: #80868b;
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+  .gads-chart-labels.right { text-align: left; }
+  .gads-chart-svg-container {
+    flex: 1;
+    position: relative;
+  }
+  .gads-chart-svg-container svg { width: 100%; height: 100%; }
+  .gads-chart-dates {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: #80868b;
+    margin-top: 6px;
+    padding: 0 2px;
+  }
+
+  /* ── Bottom panels ── */
+  .gads-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .gads-panel {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .gads-panel-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .gads-panel-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; color: #1a73e8; }
+  .gads-panel-title { font-size: 13px; font-weight: 500; color: #202124; flex: 1; }
+  .gads-panel-more { cursor: pointer; color: #5f6368; font-size: 18px; }
+  .gads-panel-body { padding: 12px 16px; }
+  .gads-panel-subtitle { font-size: 12px; color: #5f6368; margin-bottom: 10px; }
+
+  /* Campaign Table */
+  .gads-campaign-table { width: 100%; border-collapse: collapse; }
+  .gads-campaign-table th {
+    text-align: right; font-size: 11px; font-weight: 500; color: #5f6368;
+    padding: 4px 8px; border-bottom: 1px solid #e0e0e0;
+  }
+  .gads-campaign-table th:first-child { text-align: left; padding-left: 20px; }
+  .gads-campaign-table td {
+    text-align: right; font-size: 12px; color: #202124;
+    padding: 8px; border-bottom: 1px solid #f1f3f4; vertical-align: middle;
+  }
+  .gads-campaign-table td:first-child { text-align: left; padding-left: 4px; }
+  .gads-sort-arrow {
+    display: inline-block; width: 0; height: 0;
+    border-left: 3px solid transparent; border-right: 3px solid transparent;
+    border-top: 4px solid #5f6368; margin-left: 3px; vertical-align: middle;
+  }
+  .gads-campaign-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 6px; vertical-align: middle; flex-shrink: 0;
+  }
+  .dot-paused { background: #e8eaed; border: 1px solid #bdc1c6; }
+  .dot-active  { background: #34a853; }
+  .gads-campaign-name { display: flex; align-items: center; font-size: 12px; color: #1a73e8; }
+  .gads-cost-chip {
+    background: #e8f0fe; color: #1a73e8;
+    padding: 2px 8px; border-radius: 2px; font-size: 12px; font-weight: 500; display: inline-block;
+  }
+  .gads-pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0 0; font-size: 12px;
+  }
+  .gads-all-link { color: #1a73e8; cursor: pointer; text-decoration: none; }
+  .gads-all-link:hover { text-decoration: underline; }
+  .gads-page-nav { display: flex; align-items: center; gap: 4px; color: #5f6368; }
+  .gads-page-nav button {
+    background: none; border: none; cursor: pointer; color: #5f6368;
+    padding: 2px 4px; font-size: 16px; line-height: 1;
+  }
+  .gads-page-nav button:disabled { opacity: .3; cursor: default; }
+
+  /* Promo Panel */
+  .gads-promo-header { display: flex; align-items: center; gap: 6px; padding: 12px 16px 10px; border-bottom: 1px solid #e0e0e0; }
+  .gads-promo-close { cursor: pointer; color: #5f6368; font-size: 16px; background: none; border: none; padding: 0 4px; }
+  .gads-promo-body { padding: 14px 16px 16px; }
+  .gads-promo-title { font-size: 14px; font-weight: 500; color: #202124; margin-bottom: 6px; }
+  .gads-promo-desc { font-size: 12px; color: #5f6368; margin-bottom: 14px; line-height: 1.5; }
+  .gads-promo-thumb { width: 100%; border-radius: 4px; overflow: hidden; }
+  .gads-promo-thumb-inner { width: 100%; padding-top: 52%; position: relative; background: linear-gradient(135deg,#0d1b2a 0%,#1a3a5c 50%,#0d1b2a 100%); }
+  .gads-promo-thumb-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; }
+  .gads-promo-thumb-text { color: #fff; flex: 1; }
+  .gads-promo-thumb-google { font-size: 9px; color: rgba(255,255,255,.7); margin-bottom: 2px; }
+  .gads-promo-thumb-headline { font-size: 13px; font-weight: 600; line-height: 1.2; }
+  .gads-promo-thumb-sub { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.9); margin-top: 2px; }
+  .gads-play-btn { width: 40px; height: 40px; background: rgba(255,255,255,.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
+  .gads-play-btn::after { content: ""; display: block; width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 14px solid #fff; margin-left: 3px; }
+  .gads-yt-badge { position: absolute; bottom: 6px; right: 8px; background: #ff0000; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 2px; }
+
+  /* Google Multicolor Logo */
+  .g-logo { font-size: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .g-logo .g1{color:#4285f4}.g-logo .g2{color:#ea4335}.g-logo .g3{color:#fbbc04}
+  .g-logo .g4{color:#4285f4}.g-logo .g5{color:#34a853}.g-logo .g6{color:#ea4335}
 
 @media (max-width: 1180px) {
     .ga-search,
