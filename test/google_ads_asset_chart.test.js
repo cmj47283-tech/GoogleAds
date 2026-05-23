@@ -10,7 +10,7 @@ test('ad assets page renders a middle performance chart with chart controls', ()
   assert.match(template, /<section\s+class="ga-context-bar"\s+:class="\{\s*hidden:\s*isContextBarHidden\s*\}"/);
   assert.doesNotMatch(template, /<section\s+v-if="pageMode !== 'adassets'"\s+class="ga-context-bar"/);
   assert.match(template, /<div\s+v-if="pageMode === 'campaigns' \|\| pageMode === 'adassets'"\s+class="ga-tabs"/);
-  assert.match(template, /<div\s+v-if="pageMode === 'campaigns' \|\| pageMode === 'adassets'"\s+class="ga-date-row"/);
+  assert.match(template, /<div\s+v-if="pageMode === 'campaigns' \|\| pageMode === 'adassets' \|\| pageMode === 'overview'"\s+class="ga-date-row"/);
   assert.match(
     template,
     /<section\s+v-if="pageMode === 'adassets'"\s+class="ga-asset-chart-area"/

@@ -155,3 +155,24 @@ test('google ads shell hides its boot loader after the minimum visible interval'
   sandbox.timeouts[1].callback();
   assert.equal(loader.removed, true);
 });
+
+test('campaign conversion chart uses an arithmetic nice-number axis', () => {
+  const { config } = loadGoogleAdsAppConfig();
+
+  assert.equal(config.computed.conversionsChartMax.call({ conversionsChartValue: 45 }), 60);
+  const labels = config.computed.conversionsChartLabels.call({
+    conversionsChartMax: 60,
+    fixed: config.methods.fixed
+  });
+  assert.equal(labels.max, '60.00');
+  assert.equal(labels.mid, '30.00');
+  assert.equal(labels.min, '0.00');
+
+  const point = config.computed.conversionsChartPoint.call({
+    conversionsChartMax: 60,
+    conversionsChartValue: 45
+  });
+
+  assert.equal(point.x, 555);
+  assert.equal(Number(point.y.toFixed(2)), 61);
+});
