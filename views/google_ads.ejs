@@ -1026,13 +1026,21 @@
                                     <th>
                                         <button class="ga-sort-header" type="button"
                                             @click="toggleCampaignSort('installs')">
+                                            <span v-if="campaignSortKey === 'installs'"
+                                                class="material-symbols-outlined">{{ campaignSortIcon('installs') }}</span>
                                             <span>Installs</span>
-                                            <span class="material-symbols-outlined">{{ campaignSortIcon('installs') }}</span>
                                         </button>
                                     </th>
                                     <th>In-app actions</th>
                                     <th>Particlpated in-app actions</th>
-                                    <th>Cost</th>
+                                    <th>
+                                        <button class="ga-sort-header" type="button"
+                                            @click="toggleCampaignSort('cost')">
+                                            <span v-if="campaignSortKey === 'cost'"
+                                                class="material-symbols-outlined">{{ campaignSortIcon('cost') }}</span>
+                                            <span>Cost</span>
+                                        </button>
+                                    </th>
                                     <th>Cost / Particlpated in-app actions</th>
                                     <th>Conv. rate</th>
                                     <th>Conversions</th>

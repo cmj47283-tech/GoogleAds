@@ -280,8 +280,8 @@ createApp({
             const direction = this.campaignSortDirection === 'desc' ? -1 : 1;
             return filtered.slice().sort((left, right) => {
                 let diff = 0;
-                if (key === 'installs') {
-                    diff = safeNumber(left.installs) - safeNumber(right.installs);
+                if (key === 'installs' || key === 'cost') {
+                    diff = safeNumber(left[key]) - safeNumber(right[key]);
                 } else {
                     diff = String(left.campaign || '').localeCompare(String(right.campaign || ''), 'en', { numeric: true });
                 }
@@ -864,7 +864,7 @@ createApp({
             this.assetSortDirection = key === 'assetType' ? 'asc' : 'desc';
         },
         toggleCampaignSort(key) {
-            if (!['campaign', 'installs'].includes(key)) return;
+            if (!['campaign', 'installs', 'cost'].includes(key)) return;
             if (this.campaignSortKey === key) {
                 this.campaignSortDirection = this.campaignSortDirection === 'asc' ? 'desc' : 'asc';
             } else {

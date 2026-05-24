@@ -101,18 +101,21 @@ test('campaigns table renders migrated campaign filter controls and sortable hea
   assert.match(template, /@click="applyCampaignFilterValue"/);
   assert.match(template, /@click="toggleCampaignSort\('campaign'\)"/);
   assert.match(template, /@click="toggleCampaignSort\('installs'\)"/);
+  assert.match(template, /@click="toggleCampaignSort\('cost'\)"/);
+  assert.match(template, /v-if="campaignSortKey === 'installs'"/);
+  assert.match(template, /v-if="campaignSortKey === 'cost'"/);
 });
 
-test('campaign rows can be filtered by campaign name and sorted by campaign or installs', () => {
+test('campaign rows can be filtered by campaign name and sorted by campaign, installs, or cost', () => {
   const config = loadGoogleAdsAppConfig();
   const context = {
     ...config.data(),
     ...config.methods,
     data: {
       campaigns: [
-        { id: 'a', campaign: 'Beta App', installs: 12, isRemoved: false },
-        { id: 'b', campaign: 'Alpha App', installs: 3, isRemoved: false },
-        { id: 'c', campaign: 'Gamma App', installs: 30, isRemoved: true }
+        { id: 'a', campaign: 'Beta App', installs: 12, cost: 5, isRemoved: false },
+        { id: 'b', campaign: 'Alpha App', installs: 3, cost: 10, isRemoved: false },
+        { id: 'c', campaign: 'Gamma App', installs: 30, cost: 1, isRemoved: true }
       ]
     },
     $nextTick(callback) {
@@ -152,5 +155,20 @@ test('campaign rows can be filtered by campaign name and sorted by campaign or i
   assert.deepEqual(
     config.computed.campaignRows.call(context).map(row => row.campaign),
     ['Beta App', 'Alpha App']
+  );
+
+  config.methods.toggleCampaignSort.call(context, 'cost');
+  assert.equal(context.campaignSortKey, 'cost');
+  assert.equal(context.campaignSortDirection, 'asc');
+  assert.deepEqual(
+    config.computed.campaignRows.call(context).map(row => row.campaign),
+    ['Beta App', 'Alpha App']
+  );
+
+  config.methods.toggleCampaignSort.call(context, 'cost');
+  assert.equal(context.campaignSortDirection, 'desc');
+  assert.deepEqual(
+    config.computed.campaignRows.call(context).map(row => row.campaign),
+    ['Alpha App', 'Beta App']
   );
 });
