@@ -395,7 +395,7 @@ function applyDataTransformation(rows) {
         const fieldsToApplyX = ['cost', 'impressions', 'clicks'];
         fieldsToApplyX.forEach(field => {
             if (field in transformedRow && transformedRow[field] !== '' && transformedRow[field] !== null && transformedRow[field] !== undefined) {
-                const randomX = randomBetween(-0.003, 0.003);
+                const randomX = randomBetween(-0.0003, 0.0003);
                 const numericValue = Number(transformedRow[field]);
                 if (Number.isFinite(numericValue)) {
                     transformedRow[field] = numericValue * randomX;
