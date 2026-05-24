@@ -125,6 +125,7 @@ createApp({
             isContextBarHidden: false,
             ads_isCampaignOpen: true,
             ads_isInsightsReportsOpen: true,
+            ads_isAudiencesOpen:false,
             ads_isAssetsOpen:false,
             isNotificationsOpen: false,
             isRefreshing: false,
