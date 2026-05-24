@@ -99,6 +99,8 @@ createApp({
             resizingColumn: '',
             selectAll: false,
             filterText: localStorage.getItem('filterText') || '',
+                showFilterTagClose: false,
+            isApplyJustNow: false,
             accountOptions: [
                 { id: '680-644-5446', label: '680-644-5446' },
                 { id: '921-239-0750', label: '921-239-0750' },
@@ -294,6 +296,20 @@ createApp({
                 }
             }
             return this.aggregateCampaigns(result);
+        },
+        appliedCostFilterLabel() {
+            if (this.appliedCostFilterValue === '' || this.appliedCostFilterValue === null || this.appliedCostFilterValue === undefined) {
+                return '';
+            }
+            const operatorSymbol = {
+                gt: '>',
+                lt: '<',
+                gte: '>=',
+                lte: '<=',
+                eq: '=',
+                neq: '≠'
+            }[this.appliedCostFilterOperator] || '>';
+            return `${operatorSymbol}${this.appliedCostFilterValue}`;
         },
         calendarMonths() {
             const months = [];
@@ -1164,6 +1180,9 @@ createApp({
             if (this.filterValueInput) {
                 this.campaignNameFilter = this.filterValueInput;
                 this.isFilterTagFocused = true; // 标签处于选中状态
+                // 显示标签上的关闭按钮，仅在刚点击 Apply 时显示
+                this.showFilterTagClose = true;
+                this.isApplyJustNow = true; // 标记为刚 Apply（黑色文字）
             } else {
                 this.campaignNameFilter = '';
             }
@@ -1179,6 +1198,9 @@ createApp({
                 const filterTag = document.querySelector('.filter-tag');
                 if (filterTag && !filterTag.contains(event.target)) {
                     this.isFilterTagFocused = false;
+                    this.showFilterTagClose = false;
+                    this.isApplyJustNow = false;
+                    this.showFilterValueModal = false; // 关闭二级弹框
                 }
             }
             // 点击外部时，关闭 Cost 下拉菜单
@@ -1203,6 +1225,8 @@ createApp({
             this.filterText = '';
             this.saveFilter();
             this.currentPage = 1;
+            this.showFilterTagClose = false;
+            this.isApplyJustNow = false;
         },
         focusFilterTag() {
             this.isFilterTagFocused = true;
@@ -1210,6 +1234,8 @@ createApp({
             if (this.selectedFilterName) {
                 this.showFilterValueModal = true;
             }
+            this.showFilterTagClose = true;
+            this.isApplyJustNow = false; // 再次点击时，不是「刚 Apply」状态（文字改回蓝色）
         },
         toggleCostDropdown() {
             this.showCostDropdown = !this.showCostDropdown;
@@ -1269,6 +1295,7 @@ createApp({
                 this.appliedCostFilterOperator = this.costFilterOperator;
                 this.currentPage = 1;
                 this.showFilterConditionModal = false;
+                this.runReportDataLoad();
             }
         }
     },

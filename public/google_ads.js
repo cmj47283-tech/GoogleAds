@@ -755,15 +755,26 @@ createApp({
             this.assetSortDirection = key === 'assetType' ? 'asc' : 'desc';
         },
         formatCurrency(value) {
-            if (value === 0 || value === undefined) return '-';
-            const fixedValue = value.toFixed(2);
+            const numericValue = Number(value);
+            if (!Number.isFinite(numericValue) || numericValue === 0) return '$0.00';
+            const fixedValue = numericValue.toFixed(2);
             const parts = fixedValue.split('.');
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             return '$' + parts.join('.');
         },
         formatNumber(value, decimals = 0) {
-            if (value === 0 || value === undefined) return '-';
-            return value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+            const numericValue = Number(value);
+            const fractionDigits = Math.max(0, Number.isInteger(decimals) ? decimals : Number(decimals) || 0);
+            if (!Number.isFinite(numericValue) || numericValue === 0) {
+                return (0).toLocaleString('en-US', {
+                    minimumFractionDigits: fractionDigits,
+                    maximumFractionDigits: fractionDigits
+                });
+            }
+            return numericValue.toLocaleString('en-US', {
+                minimumFractionDigits: fractionDigits,
+                maximumFractionDigits: fractionDigits
+            });
         },
         toggleAssetCostSort() {
             this.toggleAssetSort('cost');
@@ -1356,17 +1367,20 @@ createApp({
             return this.formatNumber(delta, 2);
         },
         numberOrZero(value) {
+            if (value === 0 || value === undefined) return '0';
             const number = safeNumber(value);
             return Number.isInteger(number) ? String(number) : number.toFixed(2);
         },
         money(value) {
+            if (value === 0 || value === undefined) return '$0.00';
             return `$${safeNumber(value).toFixed(2)}`;
         },
         moneyOrDash(value) {
             const number = safeNumber(value);
-            return number ? this.money(number) : '-';
+            return number ? this.money(number) : '0.00';
         },
         percent(value) {
+            if (value === 0 || value === undefined) return '0.00%';
             return `${safeNumber(value).toFixed(2)}%`;
         },
         dash(value) {

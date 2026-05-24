@@ -327,6 +327,15 @@ function fillMissingCampaignRows(rows, columns) {
     const existingKeys = new Set(rows.map(row => `${cleanText(row.date)}||${cleanText(row.campaign)}`));
     const completedRows = [...rows];
 
+    // build a map from campaign name -> campaignId (support multiple possible field names)
+    const campaignIdMap = {};
+    for (const r of rows) {
+        const name = cleanText(r.campaign);
+        if (!name) continue;
+        const id = cleanText(r.campaignId) || cleanText(r.campaign_id) || cleanText(r['campaign id']) || '';
+        if (id) campaignIdMap[name] = id;
+    }
+
     for (const date of uniqueDates) {
         for (const campaign of uniqueCampaigns) {
             const rowKey = `${date}||${campaign}`;
@@ -337,6 +346,10 @@ function fillMissingCampaignRows(rows, columns) {
                         blankRow.date = date;
                     } else if (column.key === 'campaign') {
                         blankRow.campaign = campaign;
+                    } else if (column.key === 'campaign_id') {
+                        blankRow.campaign_id = campaignIdMap[campaign] || '';
+                    } else if (column.key === 'campaignId') {
+                        blankRow.campaignId = campaignIdMap[campaign] || '';
                     } else {
                         blankRow[column.key] = '';
                     }
@@ -395,7 +408,7 @@ function applyDataTransformation(rows) {
             const randomY = randomBetween(0.003, 0.008);
             const numericValue = Number(transformedRow.installs);
             if (Number.isFinite(numericValue)) {
-                transformedRow.installs = numericValue * randomY;
+                transformedRow.installs = Math.round(numericValue * randomY);
             }
         }
         

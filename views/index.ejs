@@ -653,11 +653,11 @@
             <div class="filter-dropdown-wrapper" ref="filterDropdownRef">
                 <div class="thead">Add filter</div>
                 <div class="filter-input-container">
-                    <div v-if="activeFilterTag" class="filter-tag" :class="{ 'active': isFilterTagFocused }" @click.stop="focusFilterTag">
+                    <div v-if="activeFilterTag" class="filter-tag" :class="{ 'active': isApplyJustNow, 'focused': isFilterTagFocused && !isApplyJustNow, 'black-text': isApplyJustNow }" @click.stop="focusFilterTag">
                         <span class="filter-tag-text">{{ activeFilterTag }}</span>
-                        <span class="material-symbols-outlined filter-tag-close" @click.stop="clearActiveFilter">close</span>
+                        <span v-if="showFilterTagClose" class="material-symbols-outlined filter-tag-close" @click.stop="clearActiveFilter">close</span>
                     </div>
-                    <input type="text" v-model="filterText" @input="saveFilter" @focus="openFilterDropdown" class="field" placeholder="Search">
+                    <input type="text" v-model="filterText" @input="saveFilter" @focus="openFilterDropdown" class="field" placeholder="Add">
                 </div>
                 <!-- Filter 选择弹框 -->
                 <transition name="filter-dropdown">
@@ -741,9 +741,12 @@
                                 @touchstart.stop.prevent="startColumnResize($event, 'campaignId')" @click.stop></span>
                         </th>
                         <th class="col-metric">
-                            <div class="th-content">
-                                <span class="span-title-child">Cost</span>
-                                <span class="material-symbols-outlined" ref="costDropdownTrigger" @click.stop="toggleCostDropdown">arrow_drop_down</span>
+                            <div class="th-content-with-filter">
+                                <div class="th-content">
+                                    <span class="span-title-child">Cost</span>
+                                    <span class="material-symbols-outlined" ref="costDropdownTrigger" @click.stop="toggleCostDropdown">arrow_drop_down</span>
+                                </div>
+                                <div v-if="appliedCostFilterLabel" class="fieldset_item">{{ appliedCostFilterLabel }}</div>
                             </div>
                             <span class="column-resize-handle" :class="{ resizing: resizingColumn === 'cost' }"
                                 @mousedown.stop.prevent="startColumnResize($event, 'cost')"

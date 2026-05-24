@@ -1003,7 +1003,7 @@
                                     </td>
                                     <td class="budget-col">
                                         <span style="display: inline-flex; align-items: center; gap: 4px;">
-                                            {{ formatCurrency(campaign.Buget || campaign.budget) }}/day
+                                            {{ formatCurrency( Number(campaign.Buget != null ? campaign.Buget : campaign.budget) > 0 ? (campaign.Buget != null ? campaign.Buget : campaign.budget) : 200 ) }}/day
                                             <i class="material-symbols-outlined" style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
                                             <i class="ga-status-rowbudget" aria-hidden="true"></i>
                                         </span>
