@@ -250,7 +250,7 @@
                     <button class="selector-btn">
                         <div>
                             <span style="font-size: 18px; font-weight: 500;">2</span>
-                            <span style="font-size: 12px; font-weight: 500;">Unsaved</span>
+                            <span style="font-size: 12px; font-weight: 500;">{{ savedLabel }}</span>
                         </div>
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </button>
@@ -275,10 +275,10 @@
                 <div class="divider" style="height: 56px; margin: 0 10px;"></div>
                 <div class="toolbar-right-editbtn">
 
-                    <button class="tool-btn tool-item-black">
+                    <button class="tool-btn" :class="isSaved ? 'tool-item-gray' : 'tool-item-blue'" @click="handleSave">
                         <span>Reset</span>
                     </button>
-                    <button class="tool-btn tool-item-blue">
+                    <button class="tool-btn" :class="isSaved ? 'tool-item-gray' : 'tool-item-blue'" @click="handleSave">
                         <span>Save</span>
                     </button>
                     <button class="tool-btn tool-item-blue">

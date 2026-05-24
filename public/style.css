@@ -1000,6 +1000,14 @@ body {
     letter-spacing: 1px;
 }
 
+.tool-item-gray {
+    color: #bdbdcc;
+    font-weight: 550;
+    unicode-bidi: isolate;
+    margin: 0 14px 0 0px;
+    letter-spacing: 1px;
+}
+
 .tool-item-blue {
     color: #1a73e8;
     font-weight: 550;

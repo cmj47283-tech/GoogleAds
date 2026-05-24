@@ -35,6 +35,8 @@ createApp({
             showRightPanel: true,
             showNotification: true,
             isRefreshing: false,
+            isSaved: false,
+            savedLabel: 'Unsaved',
             compareEnabled: false,
             isFirstNotificationsOpen: false,
             dateRange: '2025年12月9日 - 2026年3月24日',
@@ -507,6 +509,10 @@ createApp({
         }
     },
     methods: {
+        handleSave() {
+            this.isSaved = true;
+            this.savedLabel = `Saved in ${this.modalSelectedAccounts[0]} (${this.modalSelectedAccounts[1]})`;
+        },
         aggregateCampaigns(campaigns) {
             const aggregatedMap = {};
             
