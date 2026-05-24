@@ -1059,6 +1059,110 @@
     color: #202124;
 }
 
+.ga-campaigns-ref-strip {
+    padding: 0 28px 12px;
+    border-bottom: 1px solid #dadce0;
+    background: #eef0f1;
+}
+
+.ga-campaigns-ref-selectors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 58px;
+}
+
+.ga-campaigns-ref-selector {
+    min-width: 176px;
+    height: 48px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 16px 22px;
+    align-items: center;
+    column-gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid #9aa0a6;
+    border-radius: 4px;
+    background: #fff;
+    color: #3c4043;
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ga-campaigns-ref-selector.active {
+    border-color: #dadce0;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.24);
+}
+
+.ga-campaigns-ref-selector small {
+    grid-column: 1 / 4;
+    color: #5f6368;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.ga-campaigns-ref-selector strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.ga-campaigns-ref-selector .material-symbols-outlined {
+    color: #5f6368;
+    font-size: 20px;
+}
+
+.ga-campaigns-ref-filters {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5f6368;
+    font-size: 13px;
+}
+
+.ga-campaigns-context-filters {
+    padding-top: 4px;
+}
+
+.ga-campaigns-ref-filters button:not(.ga-campaigns-ref-save) {
+    height: 32px;
+    padding: 0 14px;
+    border: 1px solid #dadce0;
+    border-radius: 18px;
+    background: #eef0f1;
+    color: #3c4043;
+    font: inherit;
+    cursor: pointer;
+}
+
+.ga-campaigns-ref-filters a {
+    padding: 8px 10px;
+    color: #5f6368;
+    text-decoration: none;
+}
+
+.ga-campaigns-ref-save {
+    margin-left: auto;
+    min-width: 48px;
+    border: 0;
+    background: transparent;
+    color: #5f6368;
+    font: inherit;
+    cursor: pointer;
+}
+
+.ga-campaigns-ref-save .material-symbols-outlined,
+.ga-campaigns-ref-save small {
+    display: block;
+    margin: 0 auto;
+}
+
 .ga-tabs {
     gap: 24px;
     padding: 0 28px 0px;
@@ -1872,21 +1976,9 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 }
 
 .ga-table-panel--campaigns .ga-table-toolbar {
-    top: 128px;
+    top: 0;
     z-index: 45;
-    transform: translateX(var(--ga-main-scroll-left, 0px));
-}
-
-.ga-campaign-sticky-backdrop {
-    position: sticky;
-    top: 72px;
-    left: 0;
-    height: 56px;
-    margin-bottom: -56px;
     background: #eef0f1;
-    z-index: 44;
-    pointer-events: none;
-    transform: translateX(var(--ga-main-scroll-left, 0px));
 }
 
 .ga-table-panel--adassets .ga-table-toolbar {
@@ -2165,7 +2257,11 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     max-height: none;
 }
 
-.ga-table-panel--campaigns .ga-table-scroll,
+.ga-table-panel--campaigns .ga-table-scroll {
+    overflow: auto;
+    max-height: calc(100vh - 342px);
+}
+
 .ga-table-panel--campaigns .ga-table-scroll-inner {
     overflow: visible;
     max-height: none;
@@ -2239,13 +2335,13 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 
 .ga-data-table.campaigns thead {
     position: sticky;
-    top: 184px;
+    top: 56px;
     z-index: 30;
 }
 
 .ga-data-table.campaigns thead th {
     position: sticky;
-    top: 184px;
+    top: 56px;
     z-index: 31;
 }
 

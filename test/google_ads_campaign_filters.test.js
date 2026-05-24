@@ -198,7 +198,7 @@ test('campaign add filter opens the selector and applies a campaign name filter'
   assert.equal(config.computed.activeFilterTag.call(context), null);
 });
 
-test('campaign table sorts campaigns by campaign name, cost, and cost per install', () => {
+test('campaign table sorts campaigns by campaign name, cost, cost per install, and installs', () => {
   const config = loadGoogleAdsAppConfig('campaigns');
   const context = {
     ...config.data(),
@@ -207,9 +207,9 @@ test('campaign table sorts campaigns by campaign name, cost, and cost per instal
     data: {
       ...config.data().data,
       campaigns: [
-        { campaign: 'Campaign 2', cost: 50, costPerInstall: 3 },
-        { campaign: 'Campaign 10', cost: 10, costPerInstall: 8 },
-        { campaign: 'Campaign 1', cost: 30, costPerInstall: 5 }
+        { campaign: 'Campaign 2', cost: 50, costPerInstall: 3, installs: 20 },
+        { campaign: 'Campaign 10', cost: 10, costPerInstall: 8, installs: 5 },
+        { campaign: 'Campaign 1', cost: 30, costPerInstall: 5, installs: 12 }
       ]
     }
   };
@@ -249,6 +249,21 @@ test('campaign table sorts campaigns by campaign name, cost, and cost per instal
     config.computed.filteredCampaignRows.call(context).map(row => row.campaign),
     ['Campaign 2', 'Campaign 1', 'Campaign 10']
   );
+
+  context.toggleCampaignSort('installs');
+  assert.equal(context.campaignSortKey, 'installs');
+  assert.equal(context.campaignSortDirection, 'desc');
+  assert.deepEqual(
+    config.computed.filteredCampaignRows.call(context).map(row => row.campaign),
+    ['Campaign 2', 'Campaign 1', 'Campaign 10']
+  );
+
+  context.toggleCampaignSort('installs');
+  assert.equal(context.campaignSortDirection, 'asc');
+  assert.deepEqual(
+    config.computed.filteredCampaignRows.call(context).map(row => row.campaign),
+    ['Campaign 10', 'Campaign 1', 'Campaign 2']
+  );
 });
 
 test('campaigns table freezes the toolbar header rows and left campaign columns', () => {
@@ -264,17 +279,20 @@ test('campaigns table freezes the toolbar header rows and left campaign columns'
   assert.ok(toolbarIndex > scrollIndex);
   assert.ok(campaignsTableIndex > scrollIndex);
   assert.match(template, /'ga-table-panel--campaigns':\s*pageMode === 'campaigns'/);
-  assert.match(template, /v-if="pageMode === 'campaigns'"\s+class="ga-campaign-sticky-backdrop"/);
+  assert.match(template, /v-if="pageMode === 'campaigns'"\s+class="ga-campaigns-ref-strip"/);
+  assert.match(template, /Campaign status:\s*Enabled,\s*Paused/);
+  assert.match(template, /Ad group status:\s*Enabled,\s*Paused/);
   assert.match(styles, /\.ga-table-toolbar\s*\{[^}]*position:\s*sticky;[^}]*top:\s*72px;/s);
-  assert.match(styles, /\.ga-campaign-sticky-backdrop\s*\{[^}]*position:\s*sticky;[^}]*top:\s*72px;[^}]*background:\s*#eef0f1;[^}]*z-index:\s*44;/s);
+  assert.match(styles, /\.ga-campaigns-ref-strip\s*\{[^}]*border-bottom:\s*1px solid #dadce0;[^}]*background:\s*#eef0f1;/s);
   assert.match(template, /@click="toggleCampaignSort\('campaign'\)"/);
   assert.match(template, /@click="toggleCampaignSort\('cost'\)"/);
   assert.match(template, /@click="toggleCampaignSort\('costPerInstall'\)"/);
-  assert.match(styles, /\.ga-table-panel--campaigns\s+\.ga-table-toolbar\s*\{[^}]*top:\s*128px;[^}]*z-index:\s*45;[^}]*transform:\s*translateX\(var\(--ga-main-scroll-left,\s*0px\)\);/s);
+  assert.match(template, /@click="toggleCampaignSort\('installs'\)"/);
+  assert.match(styles, /\.ga-table-panel--campaigns\s+\.ga-table-toolbar\s*\{[^}]*top:\s*0;[^}]*z-index:\s*45;[^}]*background:\s*#eef0f1;/s);
   assert.match(styles, /\.ga-table-scroll\s*\{[^}]*overflow:\s*auto;[^}]*max-height:\s*calc\(100vh - 240px\);/s);
   assert.match(styles, /\.ga-table-scroll-inner\s*\{[^}]*overflow:\s*visible;[^}]*max-height:\s*none;/s);
-  assert.match(styles, /\.ga-table-panel--campaigns\s+\.ga-table-scroll,[\s\S]*?\.ga-table-panel--campaigns\s+\.ga-table-scroll-inner\s*\{[^}]*overflow:\s*visible;[^}]*max-height:\s*none;/s);
-  assert.match(styles, /\.ga-data-table\.campaigns thead th\s*\{[^}]*position:\s*sticky;[^}]*top:\s*184px;/s);
+  assert.match(styles, /\.ga-table-panel--campaigns\s+\.ga-table-scroll\s*\{[^}]*overflow:\s*auto;[^}]*max-height:\s*calc\(100vh - 342px\);/s);
+  assert.match(styles, /\.ga-data-table\.campaigns thead th\s*\{[^}]*position:\s*sticky;[^}]*top:\s*56px;/s);
   assert.match(styles, /\.ga-data-table\.campaigns th\.select-col,[\s\S]*?left:\s*0;/);
   assert.match(styles, /\.ga-data-table\.campaigns th\.state-col,[\s\S]*?left:\s*var\(--ga-campaign-select-col-width\);/);
   assert.match(styles, /\.ga-data-table\.campaigns th\.name-col,[\s\S]*?left:\s*calc\(var\(--ga-campaign-select-col-width\) \+ var\(--ga-campaign-state-col-width\)\);/);

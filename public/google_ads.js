@@ -873,6 +873,8 @@ createApp({
                     diff = safeNumber(left.cost) - safeNumber(right.cost);
                 } else if (this.campaignSortKey === 'costPerInstall') {
                     diff = safeNumber(left.costPerInstall) - safeNumber(right.costPerInstall);
+                } else if (this.campaignSortKey === 'installs') {
+                    diff = safeNumber(left.installs) - safeNumber(right.installs);
                 } else {
                     diff = String(left.campaign || '').localeCompare(String(right.campaign || ''), 'en', { numeric: true });
                 }

@@ -296,6 +296,16 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="pageMode === 'campaigns'" class="ga-campaigns-ref-filters ga-campaigns-context-filters">
+                        <span>Filters</span>
+                        <button type="button">Campaign status: Enabled, Paused</button>
+                        <button type="button">Ad group status: Enabled, Paused</button>
+                        <a href="#" @click.prevent="openFilterDropdown">Add filter</a>
+                        <button class="ga-campaigns-ref-save" type="button">
+                            <span class="material-symbols-outlined">save</span>
+                            <small>Save</small>
+                        </button>
+                    </div>
                     <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'" class="ga-state-line">
                         <span :class="['ga-dot', selectedCampaignStatusClass]"></span>
                         <span>{{ selectedCampaignStateLabel }}</span>
@@ -756,19 +766,35 @@
 
 </div>
 <template v-if="pageMode !== 'reporteditor' && pageMode !== 'overview'">
+                <section v-if="pageMode === 'campaigns'" class="ga-campaigns-ref-strip">
+                    <div class="ga-campaigns-ref-selectors">
+                        <button class="ga-campaigns-ref-selector active" type="button">
+                            <small>View (2 filters)</small>
+                            <span class="material-symbols-outlined">view_list</span>
+                            <strong>All campaigns</strong>
+                            <span class="material-symbols-outlined">arrow_drop_down</span>
+                        </button>
+                        <button class="ga-campaigns-ref-selector" type="button">
+                            <small>Campaigns ({{ filteredCampaignRows.length }})</small>
+                            <strong>Select a campaign</strong>
+                            <span class="material-symbols-outlined">arrow_drop_down</span>
+                        </button>
+                    </div>
+                </section>
+
                 <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
                     <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
                     <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
                 </div>
 
-                <div v-if="pageMode !== 'adassets'" class="ga-info-banner">
+                <div v-if="pageMode === 'adgroups'" class="ga-info-banner">
                     <span class="material-symbols-outlined">info</span>
                     <span>You are viewing data between {{ data.dateRange.start }} and {{ data.dateRange.end }}</span>
                     <a href="#" @click.prevent="toggleDatePicker">Change date range</a>
                     <a href="#">Dismiss</a>
                 </div>
 
-                <section v-if="pageMode !== 'adassets'" class="ga-metrics">
+                <section v-if="pageMode === 'adgroups'" class="ga-metrics">
                     <div v-for="(metric, index) in metricCards" :key="metric.label" class="ga-metric-card"
                         :class="{ primary: index === 0 }">
                         <span>{{ metric.label }}</span>
@@ -865,7 +891,7 @@
                     <span class="ga-chart-end">{{ formattedEndDate }}</span>
                 </section>
 
-                <section v-if="pageMode === 'campaigns' || pageMode === 'adgroups'"
+                <section v-if="pageMode === 'adgroups'"
                     class="ga-chart-area ga-conversions-dot-chart" @mouseleave="hideConversionsChartTooltip">
                     <svg viewBox="0 0 1000 180" preserveAspectRatio="none" aria-label="Conversions dot chart">
                         <line x1="78" y1="30" x2="970" y2="30"></line>
@@ -911,7 +937,6 @@
                         <span class="ga-create-tooltip">Create campaign</span>
                     </button>
                     <div class="ga-table-scroll">
-                        <div v-if="pageMode === 'campaigns'" class="ga-campaign-sticky-backdrop" aria-hidden="true"></div>
                         <div v-if="pageMode !== 'adassets'" class="ga-table-toolbar" :class="{ 'ga-hidden-row': isTableLoading }">
                             <div class="ga-toolbar-left">
                                 <div v-if="pageMode === 'campaigns'" class="ga-toolbar-filter filter-dropdown-wrapper"
@@ -1030,7 +1055,15 @@
                                     </th>
                                     <th>Cost / In-app action</th>
                                     <th>View-through conv.</th>
-                                    <th>Installs</th>
+                                    <th :aria-sort="campaignSortAria('installs')">
+                                        <button class="ga-sort-header" type="button" @click="toggleCampaignSort('installs')"
+                                            aria-label="Sort campaigns by installs">
+                                            <span>Installs</span>
+                                            <span class="material-symbols-outlined">
+                                                {{ campaignSortDirectionFor('installs') === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                                            </span>
+                                        </button>
+                                    </th>
                                     <th>In-app actions</th>
                                     <th>Particlpated in-app actions</th>
                                     <th :aria-sort="campaignSortAria('cost')">

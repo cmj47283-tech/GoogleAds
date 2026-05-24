@@ -65,13 +65,13 @@ test('ad assets table filter toolbar stays pinned while scrolling', () => {
   assert.match(css, /\.ga-chart-select,\s*\.ga-chart-tool\s*\{[^}]*pointer-events:\s*auto;/s);
 });
 
-test('campaign and ad group pages render conversions as a dot chart with a left axis', () => {
+test('ad group pages render conversions as a dot chart with a left axis', () => {
   const template = fs.readFileSync(path.join(__dirname, '..', 'views', 'google_ads.ejs'), 'utf8');
   const styles = fs.readFileSync(path.join(__dirname, '..', 'public', 'google_ads.css'), 'utf8');
 
   assert.match(
     template,
-    /<section\s+v-if="pageMode === 'campaigns' \|\| pageMode === 'adgroups'"\s+class="ga-chart-area ga-conversions-dot-chart"/
+    /<section\s+v-if="pageMode === 'adgroups'"\s+class="ga-chart-area ga-conversions-dot-chart"/
   );
   assert.match(template, /aria-label="Conversions dot chart"/);
   assert.match(template, /\{\{\s*conversionsChartLabels\.max\s*\}\}/);
