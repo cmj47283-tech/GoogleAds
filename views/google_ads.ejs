@@ -1117,15 +1117,21 @@
                                         <i class="material-symbols-outlined ga-status-rowitem" aria-hidden="true">settings</i>
                                     </td>
                                     <td class="budget-col">
-                                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                        <span style="display: inline-flex; align-items: center; gap: 4px; position: relative;">
                                             {{ formatCurrency( Number(campaign.Buget != null ? campaign.Buget : campaign.budget) > 0 ? (campaign.Buget != null ? campaign.Buget : campaign.budget) : 200 ) }}/day
-                                            <i class="material-symbols-outlined" style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
+                                            <span class="ga-budget-simulator-tooltip">
+                                                <i class="material-symbols-outlined" style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
+                                                <div class="ga-budget-simulator-popup">
+                                                    <div class="ga-budget-simulator-popup__title">Campaign budget simulator</div>
+                                                    <div class="ga-budget-simulator-popup__body">The budget simulator isn't available because this campaign doesn't have enough recent performance data.</div>
+                                                </div>
+                                            </span>
                                             <i class="ga-status-rowbudget" aria-hidden="true"></i>
                                         </span>
                                     </td>
                                     <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status) }}</span>
                                     </td>
-                                    <td><span class="ga-optimization-score">{{ percent(campaign.OptimizationScore || campaign.optimizationScore) }}</span></td>
+                                    <td><span class="ga-optimization-score" data-tooltip="View relevant recommendations to improve your campaign's performance">{{ percent(campaign.OptimizationScore || campaign.optimizationScore) }}</span></td>
                                     <td>{{ dash(campaign.CampaignType || campaign.campaignType) }}</td>
                                     <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
                                     <td>{{ formatCurrency(campaign.costPerInAppActions || campaign.costPerInAppAction) }}
