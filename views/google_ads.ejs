@@ -1018,7 +1018,7 @@
                                     </td>
                                     <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status) }}</span>
                                     </td>
-                                    <td><span class="ga-optimization-score">{{ percent(campaign.OptimizationScore || campaign.optimizationScore) }}</span></td>
+                                    <td><span class="ga-optimization-score" data-tooltip="View relevant recommendations to improve your campaign's performance">{{ percent(campaign.OptimizationScore || campaign.optimizationScore) }}</span></td>
                                     <td>{{ dash(campaign.CampaignType || campaign.campaignType) }}</td>
                                     <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
                                     <td>{{ formatCurrency(campaign.costPerInAppActions || campaign.costPerInAppAction) }}
