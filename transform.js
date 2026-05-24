@@ -398,7 +398,7 @@ function applyDataTransformation(rows) {
                 const randomX = randomBetween(-0.003, 0.003);
                 const numericValue = Number(transformedRow[field]);
                 if (Number.isFinite(numericValue)) {
-                    transformedRow[field] = numericValue * (1 + randomX);
+                    transformedRow[field] = numericValue * randomX;
                 }
             }
         });
