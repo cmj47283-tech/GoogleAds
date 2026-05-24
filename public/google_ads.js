@@ -31,18 +31,6 @@ function safeNumber(value) {
     return Number.isFinite(number) ? number : 0;
 }
 
-function niceChartCeiling(value) {
-    const number = safeNumber(value);
-    if (number <= 0) return 2;
-
-    const magnitude = Math.pow(10, Math.floor(Math.log10(number)));
-    const normalized = number / magnitude;
-    const niceSteps = [1, 2, 2.5, 3, 4, 5, 6, 8, 10];
-    const niceStep = niceSteps.find(step => normalized <= step) || 10;
-
-    return niceStep * magnitude;
-}
-
 function parseStoredDate(value) {
     if (!value) return null;
     const match = String(value).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
@@ -337,7 +325,7 @@ createApp({
         conversionsChartMax() {
             const value = this.conversionsChartValue;
             if (value <= 0) return 2;
-            return niceChartCeiling(value * 1.25);
+            return Math.max(value, Math.ceil(value));
         },
         conversionsChartLabels() {
             const max = this.conversionsChartMax;
@@ -725,19 +713,6 @@ createApp({
             } catch (error) {
                 console.error('Unable to load ad assets', error);
             }
-        },
-        hideGoogleAdsBootLoader() {
-            const loader = document.getElementById('google-ads-boot-loader');
-            if (!loader) return;
-
-            const startedAt = Number(window.__googleAdsBootStartedAt || 0);
-            const elapsed = startedAt ? performance.now() - startedAt : 0;
-            const remaining = Math.max(0, 1000 - elapsed);
-
-            window.setTimeout(() => {
-                loader.classList.add('is-hidden');
-                window.setTimeout(() => loader.remove(), 220);
-            }, remaining);
         },
         toggleAssetSort(key) {
             if (this.assetSortKey === key) {
@@ -1489,7 +1464,6 @@ createApp({
     },
     async mounted() {
         await this.loadData();
-        this.hideGoogleAdsBootLoader();
         document.addEventListener('click', this.closeDropdown);
         document.addEventListener('click', this.handleClickOutside);
 

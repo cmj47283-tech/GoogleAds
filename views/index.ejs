@@ -310,9 +310,9 @@
                 </div>
             </div>
             <div class="compare-controls">
-                <div class="all_accounts">
+                <div class="all_accounts" @click="openAccountModal">
                     <input type="text" v-model="accountText" @input="saveAccountText" class="account-input"
-                        placeholder="2 accounts">
+                        placeholder="2 accounts" readonly>
                     <span class="material-symbols-outlined">Edit</span>
                 </div>
                 <div class="divider _ngcontent-awn-GINSU-22"></div>
@@ -503,13 +503,139 @@
 
         </transition>
 
+        <!-- 账户选择器模态框 -->
+        <transition name="account-modal">
+            <div v-if="showAccountModal" class="account-modal-overlay" @click="closeAccountModal">
+                <div class="account-modal" @click.stop>
+                    <!-- 顶部：Filter 和 Search -->
+                    <div class="account-modal-header">
+                        <div class="account-filter-section">
+                            <label class="account-filter-label">Select from:</label>
+                            <select class="account-filter-dropdown" v-model="accountFilterType">
+                                <option value="accounts">Accounts</option>
+                                <option value="campaigns">Campaigns</option>
+                            </select>
+                        </div>
+                        <div class="account-search-section">
+                            <div class="account-search-bar">
+                                <span class="material-symbols-outlined search-icon">search</span>
+                                <input type="text" v-model="accountSearchQuery" class="account-search-input" placeholder="Search">
+                            </div>
+                            <div class="account-selection-status">
+                                <span class="selected-count">{{ selectedAccounts.length }} selected</span>
+                                <span class="clear-all-btn" @click="clearAllAccounts" v-if="selectedAccounts.length > 0">Clear all</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 中间：左右两栏 -->
+                    <div class="account-modal-content">
+                        <!-- 左侧：可用账户 -->
+                        <div class="account-available-panel">
+                            <div class="account-panel-header">
+                                <label class="select-all-checkbox">
+                                    <input type="checkbox" v-model="allAccountsSelected" @change="toggleAllAccounts">
+                                    <span>Select all</span>
+                                </label>
+                            </div>
+                            <div class="account-list">
+                                <div v-for="account in filteredAvailableAccounts" :key="account.id"
+                                    class="account-item" :class="{ selected: isAccountSelected(account.id) }">
+                                    <label class="account-checkbox">
+                                        <input type="checkbox" :value="account.id" v-model="selectedAccounts">
+                                        <span class="account-info">
+                                            <span class="account-primary">{{ account.name }}</span>
+                                            <span class="account-secondary">{{ account.phone }}</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 分隔线 -->
+                        <div class="account-divider"></div>
+
+                        <!-- 右侧：已选账户 -->
+                        <div class="account-selected-panel">
+                            <div class="account-panel-header">
+                                <span class="selected-panel-title">Selected accounts</span>
+                            </div>
+                            <div class="account-list">
+                                <div v-for="accountId in selectedAccounts" :key="'selected-' + accountId"
+                                    class="account-item selected-item">
+                                    <span class="account-info">
+                                        <span class="account-primary">{{ getAccountById(accountId)?.name }}</span>
+                                        <span class="account-secondary">{{ getAccountById(accountId)?.phone }}</span>
+                                    </span>
+                                    <span class="material-symbols-outlined remove-account-btn" @click="removeAccount(accountId)">close</span>
+                                </div>
+                                <div v-if="selectedAccounts.length === 0" class="no-accounts-message">
+                                    No accounts selected
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 底部：操作按钮 -->
+                    <div class="account-modal-footer">
+                        <button class="account-modal-btn cancel-btn" @click="closeAccountModal">Cancel</button>
+                        <button class="account-modal-btn save-btn" @click="saveAccountSelection">Save</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
 
 
         <!-- 筛选栏 -->
         <div class="filter-bar">
-            <div>
+            <div class="filter-dropdown-wrapper" ref="filterDropdownRef">
                 <div class="thead">Add filter</div>
-                <input type="text" v-model="filterText" @input="saveFilter" class="field" placeholder="">
+                <div class="filter-input-container">
+                    <div v-if="activeFilterTag" class="filter-tag" :class="{ 'active': isFilterTagFocused }" @click.stop="focusFilterTag">
+                        <span class="filter-tag-text">{{ activeFilterTag }}</span>
+                        <span class="material-symbols-outlined filter-tag-close" @click.stop="clearActiveFilter">close</span>
+                    </div>
+                    <input type="text" v-model="filterText" @input="saveFilter" @focus="openFilterDropdown" class="field" placeholder="Search">
+                </div>
+                <!-- Filter 选择弹框 -->
+                <transition name="filter-dropdown">
+                    <div v-if="showFilterDropdown" class="filter-selector-dropdown" @click.stop>
+                        <div class="filter-selector-list">
+                            <div v-for="filter in displayFilters" :key="filter.id"
+                                class="filter-option" @click="selectFilter(filter)">
+                                <span class="filter-option-name">{{ filter.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </transition>
+
+                <!-- Filter 值选择弹框 (二级弹框) -->
+                <transition name="filter-dropdown">
+                    <div v-if="showFilterValueModal" class="filter-value-modal" @click.stop>
+                        <div class="filter-value-modal-content">
+                            <div class="filter-value-header">
+                                <span class="filter-value-title">{{ selectedFilterName }}</span>
+                            </div>
+                            <div class="filter-value-body">
+                                <div class="filter-value-row">
+                                    <select class="filter-value-operator-select" v-model="filterOperator">
+                                        <option value="contains">contains</option>
+                                        <option value="is">is</option>
+                                        <option value="is not">is not</option>
+                                        <option value="does not contain">does not contain</option>
+                                    </select>
+                                </div>
+                                <div class="filter-value-row">
+                                    <input type="text" v-model="filterValueInput" class="filter-value-text-input" placeholder="Enter value">
+                                </div>
+                            </div>
+                            <div class="filter-value-footer">
+                                <button class="filter-value-btn apply-btn" @click="applyFilterValue">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </transition>
             </div>
 
         </div>
@@ -556,7 +682,7 @@
                         <th class="col-metric">
                             <div class="th-content">
                                 <span class="span-title-child">Cost</span>
-                                <span class="material-symbols-outlined">arrow_drop_down</span>
+                                <span class="material-symbols-outlined" ref="costDropdownTrigger" @click.stop="toggleCostDropdown">arrow_drop_down</span>
                             </div>
                             <span class="column-resize-handle" :class="{ resizing: resizingColumn === 'cost' }"
                                 @mousedown.stop.prevent="startColumnResize($event, 'cost')"
@@ -693,6 +819,51 @@
                 </tfoot>
             </table>
             </div>
+
+            <!-- Cost 下拉菜单 (移到表格外部) -->
+            <transition name="cost-dropdown">
+                <div v-if="showCostDropdown" class="cost-dropdown-menu" :style="costDropdownStyle" @click.stop>
+                    <div class="cost-dropdown-item" @click="selectCostOption('Filter')">
+                        <span class="cost-dropdown-text">Filter</span>
+                    </div>
+                    <div class="cost-dropdown-item" >
+                        <span class="cost-dropdown-text">Conditional formatting</span>
+                    </div>
+                </div>
+            </transition>
+
+            <!-- Filter 条件弹框 (普通下拉框) -->
+            <transition name="filter-condition-dropdown">
+                <div v-if="showFilterConditionModal" class="filter-condition-dropdown" :style="filterConditionStyle" @click.stop>
+                    <div class="filter-condition-header">
+                        <span class="filter-condition-title">Filter</span>
+                        <span class="material-symbols-outlined filter-condition-close" @click="closeFilterConditionModal">close</span>
+                    </div>
+                    <div class="filter-condition-body">
+                        <div class="filter-condition-row">
+                            <select class="filter-condition-operator-select" v-model="costFilterOperator">
+                                <option value="gt">></option>
+                                <option value="lt"><</option>
+                                <option value="gte">>=</option>
+                                <option value="lte"><=</option>
+                                <option value="eq">=</option>
+                                <option value="neq">≠</option>
+                            </select>
+                            <input type="number" v-model="costFilterValue" class="filter-condition-input" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="filter-condition-actions">
+                            <button class="filter-condition-btn secondary-btn" @click="addNewCondition">Add new condition</button>
+                        </div>
+                    </div>
+                    <div class="filter-condition-footer">
+                        <button class="filter-condition-btn secondary-btn remove-all-btn" @click="removeAllConditions">Remove all</button>
+                        <button class="filter-condition-btn primary-btn"
+                                :class="{ disabled: !costFilterValue }"
+                                :disabled="!costFilterValue"
+                                @click="applyCostFilter">Apply</button>
+                    </div>
+                </div>
+            </transition>
 
             <!-- 分页控件 -->
             <div class="pagination">

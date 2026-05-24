@@ -1186,7 +1186,6 @@ input:checked+.toggle-slider:before {
 }
 
 .filter-bar {
-    overflow: auto;
     background-color: #fff;
     padding: 0;
     margin: 0px 8px;
@@ -1213,9 +1212,30 @@ input:checked+.toggle-slider:before {
 
 .filter-bar>div>.field {
     color: #1a73e8;
-    border: 0;
-    outline: none;
+    border: none !important;
+    outline: none !important;
     flex: 1;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.filter-bar>div>.field:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.filter-input-container .field {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.filter-input-container .field:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* ========== 表格区域 ========== */
@@ -1361,6 +1381,7 @@ input:checked+.toggle-slider:before {
     user-select: none;
     background-color: #fff;
     position: relative;
+    overflow: visible;
     /* 确保表头有背景色 */
 }
 
@@ -2780,4 +2801,826 @@ body.is-column-resizing * {
     font-weight: 500;
     height: 28px;
     color: #000000;
+}
+
+/* ============================================
+   账户选择器模态框样式
+   ============================================ */
+
+/* 模态框覆盖层 */
+.account-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.account-modal-enter-active,
+.account-modal-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.account-modal-enter-from,
+.account-modal-leave-to {
+    opacity: 0;
+}
+
+.account-modal-enter-active .account-modal,
+.account-modal-leave-active .account-modal {
+    transition: transform 0.2s ease;
+}
+
+.account-modal-enter-from .account-modal,
+.account-modal-leave-to .account-modal {
+    transform: scale(0.95);
+}
+
+/* 模态框主体 */
+.account-modal {
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    width: 888px;
+    height: 567px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 模态框头部 */
+.account-modal-header {
+    padding: 24px 32px 16px;
+    border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.account-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.account-filter-label {
+    font-size: 14px;
+    color: #212529;
+    font-weight: 600;
+}
+
+.account-filter-dropdown {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #212529;
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23212529'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    width: 180px;
+    height: 40px;
+}
+
+.account-search-section {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.account-search-bar {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.account-search-bar .search-icon {
+    position: absolute;
+    left: 12px;
+    color: #6c757d;
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.account-search-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px 0 40px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    color: #212529;
+}
+
+.account-search-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.account-search-input::placeholder {
+    color: #6c757d;
+}
+
+.account-selection-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.selected-count {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.clear-all-btn {
+    font-size: 14px;
+    color: #0d6efd;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.clear-all-btn:hover {
+    text-decoration: underline;
+}
+
+/* 模态框内容区域 */
+.account-modal-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 可用账户面板 */
+.account-available-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.account-panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.select-all-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #212529;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 400;
+}
+
+.select-all-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0d6efd;
+}
+
+/* 账户列表 */
+.account-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.account-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f8f9fa;
+    transition: background-color 0.2s ease;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.account-item:hover {
+    background-color: #f8f9fa;
+}
+
+.account-item.selected {
+    background-color: #e9ecef;
+}
+
+.account-item.selected-item {
+    background-color: transparent;
+    padding-right: 48px;
+    position: relative;
+}
+
+.account-item.selected-item:hover {
+    background-color: #f8f9fa;
+}
+
+.account-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+}
+
+.account-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0d6efd;
+    flex-shrink: 0;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.account-primary {
+    font-size: 14px;
+    color: #212529;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.account-secondary {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* 分隔线 */
+.account-divider {
+    width: 1px;
+    background-color: #dee2e6;
+    flex-shrink: 0;
+    margin: 0 16px;
+}
+
+/* 已选账户面板 */
+.account-selected-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.selected-panel-title {
+    font-size: 14px;
+    color: #212529;
+    font-weight: 600;
+}
+
+.remove-account-btn {
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 20px;
+    transition: color 0.15s ease;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.remove-account-btn:hover {
+    color: #dc3545;
+}
+
+.no-accounts-message {
+    padding: 40px 16px;
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* 模态框底部 */
+.account-modal-footer {
+    padding: 16px 32px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.account-modal-btn {
+    width: 100px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+.cancel-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.save-btn {
+    background-color: #0d6efd;
+    border: 1px solid #0d6efd;
+    color: #fff;
+}
+
+.save-btn:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* 滚动条样式 */
+.account-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.account-list::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.account-list::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 6px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.account-list::-webkit-scrollbar-thumb:hover {
+    background-color: #adb5bd;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* ============================================
+   Filter 选择器弹框样式
+   ============================================ */
+
+.filter-dropdown-wrapper {
+    position: relative;
+}
+
+.filter-selector-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 80px;
+    width: 250px;
+    height: 570px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.filter-dropdown-enter-active,
+.filter-dropdown-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.filter-dropdown-enter-from,
+.filter-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.filter-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.filter-input-container .field {
+    flex: 1;
+}
+
+.filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #1967d2;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filter-tag.active {
+    background-color: #e8f0fe;
+    border: 1px solid #1967d2;
+}
+
+.filter-tag:not(.active) {
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.filter-tag-text {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filter-tag-close {
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.filter-tag-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.filter-selector-list {
+    height: 570px;
+    overflow-y: scroll;
+    padding: 8px 0;
+}
+
+/* Filter 选择器滚动条样式 */
+.filter-selector-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.filter-selector-list::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.filter-selector-list::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 6px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.filter-selector-list::-webkit-scrollbar-thumb:hover {
+    background-color: #adb5bd;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* ============================================
+   Filter 值选择弹框 (二级弹框) 样式
+   ============================================ */
+
+.filter-value-modal {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 275px;
+    height: 273px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10001;
+    overflow: hidden;
+}
+
+.filter-value-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.filter-value-header {
+    padding: 16px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.filter-value-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212529;
+}
+
+.filter-value-body {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.filter-value-row {
+    display: flex;
+    align-items: center;
+}
+
+.filter-value-operator-select,
+.filter-value-text-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #212529;
+    background-color: white;
+    outline: none;
+}
+
+.filter-value-operator-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23212529'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+}
+
+.filter-value-operator-select:focus,
+.filter-value-text-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-value-text-input::placeholder {
+    color: #adb5bd;
+}
+
+.filter-value-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.filter-value-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.apply-btn {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+}
+
+.apply-btn:hover {
+    background-color: #0b5ed7;
+}
+
+/* ============================================
+   Cost 下拉菜单样式
+   ============================================ */
+
+.cost-dropdown-menu {
+    position: fixed;
+    width: 180px;
+    height: 114px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    overflow: hidden;
+}
+
+.cost-dropdown-enter-active,
+.cost-dropdown-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cost-dropdown-enter-from,
+.cost-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.cost-dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.cost-dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.cost-dropdown-text {
+    font-size: 14px;
+    color: #212529;
+}
+
+/* ============================================
+   Filter 条件弹框样式 (普通下拉框)
+   ============================================ */
+
+.filter-condition-dropdown {
+    position: fixed;
+    width: 383px;
+    height: 243px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-condition-dropdown-enter-active,
+.filter-condition-dropdown-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.filter-condition-dropdown-enter-from,
+.filter-condition-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.filter-condition-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.filter-condition-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212529;
+}
+
+.filter-condition-close {
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 20px;
+}
+
+.filter-condition-close:hover {
+    color: #212529;
+}
+
+.filter-condition-body {
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-condition-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.filter-condition-operator-select {
+    width: 145px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #212529;
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23212529'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+}
+
+.filter-condition-input {
+    width: 145px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+}
+
+.filter-condition-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-condition-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.filter-condition-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: #0d6efd;
+}
+
+.secondary-btn:hover {
+    background-color: #e8f0fe;
+}
+
+.remove-all-btn {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.remove-all-btn:hover {
+    background-color: #0b5ed7;
+}
+
+.secondary-btn:hover {
+    background-color: #e8f0fe;
+}
+
+.primary-btn {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.primary-btn:hover:not(.disabled) {
+    background-color: #0b5ed7;
+}
+
+.primary-btn.disabled {
+    background-color: #e0e0e0;
+    color: #9e9e9e;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.primary-btn.disabled:hover {
+    background-color: #e0e0e0;
+}
+
+.filter-condition-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 20px;
+    border-top: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.filter-option {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.filter-option:hover {
+    background-color: #e8f0fe;
+}
+
+.filter-option:hover {
+    background-color: #f8f9fa;
+}
+
+.filter-option-name {
+    display: block;
+    font-size: 14px;
+    color: #212529;
 }

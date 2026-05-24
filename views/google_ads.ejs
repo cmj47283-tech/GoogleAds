@@ -7,31 +7,11 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Ads</title>
-    <script>
-        window.__googleAdsBootStartedAt = performance.now();
-    </script>
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/google_ads.css">
 </head>
 
 <body class="ga-body">
-    <div id="google-ads-boot-loader" class="report-boot-loader" role="status" aria-label="Loading Google Ads">
-        <div class="report-boot-progress" aria-hidden="true">
-            <span></span>
-        </div>
-        <svg class="report-boot-logo" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <rect fill="none" height="192" width="192"></rect>
-            <path class="report-boot-logo-yellow report-boot-logo-shape"
-                d="M56.40,177.25L121.40,64.67A29.33,29.33 0 0 0 70.60,35.33L5.60,147.91A29.33,29.33 0 0 0 56.40,177.25z"
-                fill="#FBBC04"></path>
-            <path class="report-boot-logo-blue report-boot-logo-shape"
-                d="M186.40,147.91L121.40,35.33A29.33,29.33 0 0 0 70.60,64.67L135.60,177.25A29.33,29.33 0 0 0 186.40,147.91z"
-                fill="#4285F4"></path>
-            <circle class="report-boot-logo-green report-boot-logo-shape" cx="47.25" cy="134.44"
-                fill="#34A853" r="29.33"></circle>
-        </svg>
-    </div>
     <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing }" v-cloak>
         <header class="ga-topbar">
             <div class="ga-topbar-left">

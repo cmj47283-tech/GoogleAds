@@ -243,8 +243,10 @@ async function processExcelFile(filePath = findRootExcelInputFile()) {
             }
         }
 
+        const completedTableData = fillMissingCampaignRows(tableData, columns);
+        const transformedTableData = applyDataTransformation(completedTableData);
         const tableDataPath = path.join(OUTPUT_DIR, 'tableData.json');
-        fs.writeFileSync(tableDataPath, JSON.stringify(tableData, null, 2), 'utf8');
+        fs.writeFileSync(tableDataPath, JSON.stringify(transformedTableData, null, 2), 'utf8');
         console.log(`Successfully created ${tableDataPath}`);
 
     } catch (error) {
@@ -302,6 +304,103 @@ function normalizeAccount(value, index) {
     }
 
     return text;
+}
+
+function fillMissingCampaignRows(rows, columns) {
+    const hasDateColumn = columns.some(column => column.key === 'date');
+    const hasCampaignColumn = columns.some(column => column.key === 'campaign');
+    if (!hasDateColumn || !hasCampaignColumn) {
+        return rows;
+    }
+
+    const uniqueCampaigns = [...new Set(rows
+        .map(row => cleanText(row.campaign))
+        .filter(campaign => campaign))];
+    const uniqueDates = [...new Set(rows
+        .map(row => cleanText(row.date))
+        .filter(date => date))];
+
+    if (!uniqueCampaigns.length || !uniqueDates.length) {
+        return rows;
+    }
+
+    const existingKeys = new Set(rows.map(row => `${cleanText(row.date)}||${cleanText(row.campaign)}`));
+    const completedRows = [...rows];
+
+    for (const date of uniqueDates) {
+        for (const campaign of uniqueCampaigns) {
+            const rowKey = `${date}||${campaign}`;
+            if (!existingKeys.has(rowKey)) {
+                const blankRow = {};
+                columns.forEach(column => {
+                    if (column.key === 'date') {
+                        blankRow.date = date;
+                    } else if (column.key === 'campaign') {
+                        blankRow.campaign = campaign;
+                    } else {
+                        blankRow[column.key] = '';
+                    }
+                });
+                completedRows.push(blankRow);
+                existingKeys.add(rowKey);
+            }
+        }
+    }
+
+    return completedRows;
+}
+
+function getYesterdayDateString() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const year = yesterday.getFullYear();
+    const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function randomBetween(min, max) {
+    return Math.random() * (max - min) + min + 1;
+}
+
+function applyDataTransformation(rows) {
+    const yesterdayDate = getYesterdayDateString();
+    
+    return rows.map(row => {
+        const rowDate = cleanText(row.date);
+        
+        // 只转换昨天之前的数据（rowDate < yesterdayDate）
+        // 昨天及以后的数据保持不变
+        if (rowDate >= yesterdayDate) {
+            return row;
+        }
+        
+        // 昨天之前的数据需要进行转换
+        const transformedRow = { ...row };
+        
+        // cost、impressions、clicks 三个字段各自乘以一个随机数 x (-0.003, 0.003)
+        const fieldsToApplyX = ['cost', 'impressions', 'clicks'];
+        fieldsToApplyX.forEach(field => {
+            if (field in transformedRow && transformedRow[field] !== '' && transformedRow[field] !== null && transformedRow[field] !== undefined) {
+                const randomX = randomBetween(-0.003, 0.003);
+                const numericValue = Number(transformedRow[field]);
+                if (Number.isFinite(numericValue)) {
+                    transformedRow[field] = numericValue * (1 + randomX);
+                }
+            }
+        });
+        
+        // installs 乘以一个随机数 y (0.003, 0.008)
+        if ('installs' in transformedRow && transformedRow.installs !== '' && transformedRow.installs !== null && transformedRow.installs !== undefined) {
+            const randomY = randomBetween(0.003, 0.008);
+            const numericValue = Number(transformedRow.installs);
+            if (Number.isFinite(numericValue)) {
+                transformedRow.installs = numericValue * randomY;
+            }
+        }
+        
+        return transformedRow;
+    });
 }
 
 function normalizeCampaignStatus(value) {
@@ -502,8 +601,10 @@ async function processGoogleAdsWorkbook(filePath = findRootExcelInputFile()) {
             }
         }
 
+        const completedTableData = fillMissingCampaignRows(tableData, columns);
+        const transformedTableData = applyDataTransformation(completedTableData);
         const tableDataPath = path.join(OUTPUT_DIR, 'tableData.json');
-        fs.writeFileSync(tableDataPath, JSON.stringify(tableData, null, 2), 'utf8');
+        fs.writeFileSync(tableDataPath, JSON.stringify(transformedTableData, null, 2), 'utf8');
         console.log(`Successfully created ${tableDataPath}`);
     } catch (error) {
         console.error(`Error processing file ${filePath}:`, error.message);

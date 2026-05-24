@@ -32,7 +32,7 @@ createApp({
             pageSizeOptions: [10, 30, 50, 100],
             showPageSizeDropdown: false,
             currentPage: 1,
-            sortKey: '',
+            sortKey: 'campaign',
             sortOrderList: {
                 campaign: 'desc',
                 campaignId: 'desc',
@@ -113,7 +113,78 @@ createApp({
             draftEndDate: null,
             calendarMonth: new Date(),
             selectingStartDate: true,
-            dateSelectRef: null
+            dateSelectRef: null,
+            showCampaignIdColumn: localStorage.getItem('showCampaignIdColumn') !== 'false',
+            lastHKeyPressAt: 0,
+            // 账户选择器
+            showAccountModal: false,
+            accountFilterType: 'accounts',
+            accountSearchQuery: '',
+            selectedAccounts: ['1124-4-mcc', '172-135-6148'],
+            // Filter 选择器
+            showFilterDropdown: false,
+            filterSearchQuery: '',
+            showFilterValueModal: false,
+            selectedFilterName: '',
+            filterValueInput: '',
+            filterOperator: 'contains',
+            campaignNameFilter: '',
+            isFilterTagFocused: true,
+            showCostDropdown: false,
+            costDropdownStyle: {},
+            // Filter condition modal
+            showFilterConditionModal: false,
+            filterConditionStyle: {},
+            costFilterOperator: 'gt',
+            costFilterValue: '',
+            appliedCostFilterValue: '',
+            appliedCostFilterOperator: 'gt',
+            costFilterConditions: [],
+            allFilters: [
+                { id: 'ad-device-preference-type', name: 'Ad device preference type', description: '' },
+                { id: 'ad-group', name: 'Ad group', description: '' },
+                { id: 'ad-group-bid-strategy-type', name: 'Ad group bid strategy type', description: '' },
+                { id: 'ad-group-name', name: 'Ad group name', description: '' },
+                { id: 'ad-group-performance', name: 'Ad group performance', description: '' },
+                { id: 'ad-group-state', name: 'Ad group state', description: '' },
+                { id: 'ad-group-status', name: 'Ad group status', description: '' },
+                { id: 'ad-group-type', name: 'Ad group type', description: '' },
+                { id: 'ad-name', name: 'Ad name', description: '' },
+                { id: 'ad-performance', name: 'Ad performance', description: '' },
+                { id: 'ad-state', name: 'Ad state', description: '' },
+                { id: 'ad-status', name: 'Ad status', description: '' },
+                { id: 'ad-type', name: 'Ad type', description: '' },
+                { id: 'app-asset-state', name: 'App asset state', description: '' },
+                { id: 'app-asset-status', name: 'App asset status', description: '' },
+                { id: 'app-asset-type', name: 'App asset type', description: '' },
+                { id: 'approval-status', name: 'Approval status', description: '' },
+                { id: 'campaign', name: 'Campaign', description: '' },
+                { id: 'campaign-bid-strategy-type', name: 'Campaign bid strategy type', description: '' },
+                { id: 'campaign-name', name: 'Campaign name', description: '' },
+                { id: 'campaign-performance', name: 'Campaign performance', description: '' },
+                { id: 'campaign-state', name: 'Campaign state', description: '' },
+                { id: 'campaign-status', name: 'Campaign status', description: '' },
+                { id: 'campaign-status-reasons', name: 'Campaign status reasons', description: '' },
+                { id: 'campaign-subtype', name: 'Campaign subtype', description: '' },
+                { id: 'campaign-type', name: 'Campaign type', description: '' },
+                { id: 'eu-political-ads', name: 'EU political ads', description: '' },
+                { id: 'network-with-search-partners', name: 'Network (with search partners)', description: '' },
+                { id: 'sub-network-demand-gen', name: 'Sub-network (Demand Gen only)', description: '' }
+            ],
+            availableAccounts: [
+                { id: '1124-4-mcc', name: '1124-4-mcc', phone: '172-135-6148' },
+                { id: '172-135-6148', name: '172-135-6148', phone: '1124-4-mcc' },
+                { id: '921-239-0750', name: '921-239-0750', phone: '921-239-0750' },
+                { id: '382-941-0056', name: '382-941-0056', phone: '382-941-0056' },
+                { id: '617-520-8394', name: '617-520-8394', phone: '617-520-8394' },
+                { id: '105-772-4613', name: '105-772-4613', phone: '105-772-4613' },
+                { id: '849-316-5582', name: '849-316-5582', phone: '849-316-5582' },
+                { id: '294-087-1129', name: '294-087-1129', phone: '294-087-1129' },
+                { id: '503-648-9271', name: '503-648-9271', phone: '503-648-9271' },
+                { id: '771-403-2285', name: '771-403-2285', phone: '771-403-2285' },
+                { id: '426-159-6740', name: '426-159-6740', phone: '426-159-6740' },
+                { id: '938-251-7064', name: '938-251-7064', phone: '938-251-7064' }
+            ]
 
         }
     },
@@ -123,16 +194,63 @@ createApp({
             if (this.startDate && this.endDate) {
                 const start = this.parseLocalDate(this.startDate);
                 const end = this.parseLocalDate(this.endDate);
-                if (!start || !end) return result;
-                start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999);
+                if (!start || !end) return [];
+                // 使用字符串比较避免时区和时间部分的问题
+                const startDateStr = this.formatDateForComparison(start);
+                const endDateStr = this.formatDateForComparison(end);
                 result = result.filter(campaign => {
                     const campaignDate = this.parseLocalDate(campaign.date);
                     if (!campaignDate) return false;
-                    return campaignDate >= start && campaignDate <= end;
+                    const campaignDateStr = this.formatDateForComparison(campaignDate);
+                    return campaignDateStr >= startDateStr && campaignDateStr <= endDateStr;
                 });
             }
-            return result;
+            // Campaign name 过滤
+            if (this.campaignNameFilter) {
+                result = result.filter(campaign => {
+                    const campaignName = campaign.campaign || '';
+                    const filterValue = this.campaignNameFilter.toLowerCase();
+                    const campaignNameLower = campaignName.toLowerCase();
+                    switch (this.filterOperator) {
+                        case 'is':
+                            return campaignNameLower === filterValue;
+                        case 'is not':
+                            return campaignNameLower !== filterValue;
+                        case 'contains':
+                            return campaignNameLower.includes(filterValue);
+                        case 'does not contain':
+                            return !campaignNameLower.includes(filterValue);
+                        default:
+                            return true;
+                    }
+                });
+            }
+            // Cost 过滤 (使用已应用的值)
+            if (this.appliedCostFilterValue !== '' && this.appliedCostFilterValue !== null && this.appliedCostFilterValue !== undefined) {
+                const filterValue = parseFloat(this.appliedCostFilterValue);
+                if (!isNaN(filterValue)) {
+                    result = result.filter(campaign => {
+                        const cost = campaign.cost || 0;
+                        switch (this.appliedCostFilterOperator) {
+                            case 'gt':
+                                return cost > filterValue;
+                            case 'lt':
+                                return cost < filterValue;
+                            case 'gte':
+                                return cost >= filterValue;
+                            case 'lte':
+                                return cost <= filterValue;
+                            case 'eq':
+                                return cost === filterValue;
+                            case 'neq':
+                                return cost !== filterValue;
+                            default:
+                                return true;
+                        }
+                    });
+                }
+            }
+            return this.aggregateCampaigns(result);
         },
         calendarMonths() {
             const months = [];
@@ -263,7 +381,51 @@ createApp({
             return result;
         },
         hasCampaignId() {
-            return this.campaigns.some(c => c.campaignId !== undefined && c.campaignId !== null && c.campaignId !== '');
+            return this.showCampaignIdColumn;
+        },
+        filteredAvailableAccounts() {
+            let result = this.availableAccounts;
+            if (this.accountSearchQuery) {
+                const query = this.accountSearchQuery.toLowerCase();
+                result = result.filter(account =>
+                    account.name.toLowerCase().includes(query) ||
+                    account.phone.toLowerCase().includes(query)
+                );
+            }
+            return result;
+        },
+        allAccountsSelected() {
+            return this.filteredAvailableAccounts.length > 0 &&
+                this.filteredAvailableAccounts.every(account => this.selectedAccounts.includes(account.id));
+        },
+        filteredAllFilters() {
+            if (!this.filterSearchQuery) return this.allFilters;
+            const query = this.filterSearchQuery.toLowerCase();
+            return this.allFilters.filter(filter =>
+                filter.name.toLowerCase().includes(query) ||
+                filter.description.toLowerCase().includes(query)
+            );
+        },
+        displayFilters() {
+            // 合并并去重所有 filters
+            const allFilterIds = new Set();
+            const result = [];
+
+            // 添加 all filters 中不重复的
+            for (const filter of this.allFilters) {
+                if (!allFilterIds.has(filter.id)) {
+                    allFilterIds.add(filter.id);
+                    result.push(filter);
+                }
+            }
+
+            return result;
+        },
+        activeFilterTag() {
+            if (this.campaignNameFilter && this.selectedFilterName) {
+                return `${this.selectedFilterName} ${this.filterOperator} ${this.campaignNameFilter}`;
+            }
+            return null;
         },
         totalColumnWidth() {
             return this.columnOrder.reduce((total, columnKey) => {
@@ -286,12 +448,61 @@ createApp({
         }
     },
     methods: {
+        aggregateCampaigns(campaigns) {
+            const aggregatedMap = {};
+            
+            campaigns.forEach(campaign => {
+                const key = campaign.campaign;
+                if (!aggregatedMap[key]) {
+                    aggregatedMap[key] = {
+                        campaign: campaign.campaign,
+                        campaignId: campaign.campaignId,
+                        cost: 0,
+                        impressions: 0,
+                        clicks: 0,
+                        installs: 0,
+                        inAppActions: 0,
+                        id: campaign.id || key
+                    };
+                }
+                
+                const agg = aggregatedMap[key];
+                agg.cost += Number(campaign.cost) || 0;
+                agg.impressions += Number(campaign.impressions) || 0;
+                agg.clicks += Number(campaign.clicks) || 0;
+                agg.installs += Number(campaign.installs) || 0;
+                agg.inAppActions += Number(campaign.inAppActions) || 0;
+            });
+            
+            // 计算派生字段
+            Object.values(aggregatedMap).forEach(agg => {
+                agg.costPerInstall = agg.installs > 0 ? agg.cost / agg.installs : 0;
+                agg.costPerInAppActions = agg.inAppActions > 0 ? agg.cost / agg.inAppActions : 0;
+                agg.ctr = agg.impressions > 0 ? (agg.clicks / agg.impressions) * 100 : 0;
+            });
+            
+            return Object.values(aggregatedMap);
+        },
         toggleRightPanel() {
-        this.showRightPanel = !this.showRightPanel;
-    },
-    closeRightPanel() {
-        this.showRightPanel = false;
-    },
+            this.showRightPanel = !this.showRightPanel;
+        },
+        closeRightPanel() {
+            this.showRightPanel = false;
+        },
+        toggleCampaignIdColumnVisibility() {
+            this.showCampaignIdColumn = !this.showCampaignIdColumn;
+            localStorage.setItem('showCampaignIdColumn', this.showCampaignIdColumn);
+        },
+        handleKeyboardShortcut(event) {
+            if (event.key.toLowerCase() !== 'h') return;
+            const now = Date.now();
+            if (now - this.lastHKeyPressAt <= 400) {
+                this.toggleCampaignIdColumnVisibility();
+                this.lastHKeyPressAt = 0;
+            } else {
+                this.lastHKeyPressAt = now;
+            }
+        },
         getCalendarWeeks(targetDate) {
             const year = targetDate.getFullYear();
             const month = targetDate.getMonth();
@@ -634,20 +845,30 @@ createApp({
             document.removeEventListener('touchcancel', this.stopColumnResize);
         },
         formatCurrency(value) {
-            if (value === 0 || value === undefined) return '-';
-            const fixedValue = value.toFixed(2);
+            const numericValue = Number(value);
+            if (!Number.isFinite(numericValue) || numericValue === 0) return '$0.00';
+            const fixedValue = numericValue.toFixed(2);
             const parts = fixedValue.split('.');
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             return '$' + parts.join('.');
         },
         formatNumber(value, decimals = 0) {
-            if (value === 0 || value === undefined) return '-';
-            return value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+            const numericValue = Number(value);
+            const fractionDigits = Math.max(0, Number.isInteger(decimals) ? decimals : Number(decimals) || 0);
+            if (!Number.isFinite(numericValue) || numericValue === 0) {
+                return (0).toLocaleString('en-US', {
+                    minimumFractionDigits: fractionDigits,
+                    maximumFractionDigits: fractionDigits
+                });
+            }
+            return numericValue.toLocaleString('en-US', {
+                minimumFractionDigits: fractionDigits,
+                maximumFractionDigits: fractionDigits
+            });
         },
         formatPercent(value) {
-            if (value === 0 || value === undefined) return '-';
             const numValue = Number(value);
-            if (isNaN(numValue)) return '-';
+            if (!Number.isFinite(numValue) || numValue === 0) return '0.00%';
             return `${numValue.toFixed(2)}%`;
         },
         sortBy(key) {
@@ -701,6 +922,13 @@ createApp({
             const parsed = new Date(text);
             if (Number.isNaN(parsed.getTime())) return null;
             return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+        },
+        formatDateForComparison(date) {
+            if (!date) return '';
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         },
         async loadTableData() {
             try {
@@ -760,6 +988,199 @@ createApp({
         },
         toggleFirstNotifications() {
             this.isFirstNotificationsOpen = !this.isFirstNotificationsOpen
+        },
+        // 账户选择器方法
+        openAccountModal() {
+            this.showAccountModal = true;
+        },
+        closeAccountModal() {
+            this.showAccountModal = false;
+        },
+        isAccountSelected(accountId) {
+            return this.selectedAccounts.includes(accountId);
+        },
+        getAccountById(accountId) {
+            return this.availableAccounts.find(account => account.id === accountId);
+        },
+        toggleAllAccounts() {
+            if (this.allAccountsSelected) {
+                // 取消选择所有
+                this.filteredAvailableAccounts.forEach(account => {
+                    const index = this.selectedAccounts.indexOf(account.id);
+                    if (index > -1) {
+                        this.selectedAccounts.splice(index, 1);
+                    }
+                });
+            } else {
+                // 选择所有
+                this.filteredAvailableAccounts.forEach(account => {
+                    if (!this.selectedAccounts.includes(account.id)) {
+                        this.selectedAccounts.push(account.id);
+                    }
+                });
+            }
+        },
+        removeAccount(accountId) {
+            const index = this.selectedAccounts.indexOf(accountId);
+            if (index > -1) {
+                this.selectedAccounts.splice(index, 1);
+            }
+        },
+        clearAllAccounts() {
+            this.selectedAccounts = [];
+        },
+        saveAccountSelection() {
+            const count = this.selectedAccounts.length;
+            this.accountText = count === 1 ? '1 account' : `${count} accounts`;
+            this.saveAccountText();
+            this.closeAccountModal();
+        },
+        // Filter 选择器方法
+        openFilterDropdown() {
+            this.showFilterDropdown = true;
+            // 添加全局点击监听来关闭弹框
+            this.$nextTick(() => {
+                document.addEventListener('click', this.handleFilterDropdownClickOutside);
+            });
+        },
+        closeFilterDropdown() {
+            this.showFilterDropdown = false;
+            document.removeEventListener('click', this.handleFilterDropdownClickOutside);
+        },
+        handleFilterDropdownClickOutside(event) {
+            const dropdownRef = this.$refs.filterDropdownRef;
+            if (dropdownRef && !dropdownRef.contains(event.target)) {
+                this.closeFilterDropdown();
+            }
+        },
+        selectFilter(filter) {
+            // 特殊处理 Campaign name - 打开二级弹框
+            if (filter.id === 'campaign-name') {
+                this.selectedFilterName = filter.name;
+                this.filterValueInput = '';
+                this.showFilterValueModal = true;
+                this.showFilterDropdown = false;
+            } else {
+                // 其他选项也不显示在输入框中，只保存状态
+                this.selectedFilterName = filter.name;
+                this.filterText = '';
+                this.saveFilter();
+                this.closeFilterDropdown();
+            }
+        },
+        closeFilterValueModal() {
+            this.showFilterValueModal = false;
+        },
+        applyFilterValue() {
+            if (this.filterValueInput) {
+                this.campaignNameFilter = this.filterValueInput;
+                this.isFilterTagFocused = true; // 标签处于选中状态
+            } else {
+                this.campaignNameFilter = '';
+            }
+            // 清空输入框显示，不显示任何值
+            this.filterText = '';
+            this.saveFilter();
+            this.currentPage = 1; // 重置到第一页
+            this.showFilterValueModal = false;
+        },
+        handleGlobalClick(event) {
+            // 点击外部时，标签失去焦点
+            if (this.activeFilterTag) {
+                const filterTag = document.querySelector('.filter-tag');
+                if (filterTag && !filterTag.contains(event.target)) {
+                    this.isFilterTagFocused = false;
+                }
+            }
+            // 点击外部时，关闭 Cost 下拉菜单
+            if (this.showCostDropdown) {
+                const costMenu = document.querySelector('.cost-dropdown-menu');
+                if (costMenu && !costMenu.contains(event.target)) {
+                    this.showCostDropdown = false;
+                }
+            }
+            // 点击外部时，关闭 Filter 条件弹框
+            if (this.showFilterConditionModal) {
+                const filterPopup = document.querySelector('.filter-condition-dropdown');
+                if (filterPopup && !filterPopup.contains(event.target)) {
+                    this.showFilterConditionModal = false;
+                }
+            }
+        },
+        clearActiveFilter() {
+            this.campaignNameFilter = '';
+            this.filterValueInput = '';
+            this.selectedFilterName = '';
+            this.filterText = '';
+            this.saveFilter();
+            this.currentPage = 1;
+        },
+        focusFilterTag() {
+            this.isFilterTagFocused = true;
+            // 打开二级弹框编辑
+            if (this.selectedFilterName) {
+                this.showFilterValueModal = true;
+            }
+        },
+        toggleCostDropdown() {
+            this.showCostDropdown = !this.showCostDropdown;
+            if (this.showCostDropdown) {
+                this.$nextTick(() => {
+                    this.updateCostDropdownPosition();
+                });
+            }
+        },
+        updateCostDropdownPosition() {
+            const trigger = this.$refs.costDropdownTrigger;
+            if (trigger) {
+                const rect = trigger.getBoundingClientRect();
+                this.costDropdownStyle = {
+                    top: rect.bottom + 4 + 'px',
+                    left: rect.left + 'px'
+                };
+            }
+        },
+        selectCostOption(option) {
+            this.showCostDropdown = false;
+            if (option === 'Filter') {
+                this.showFilterConditionModal = true;
+                this.$nextTick(() => {
+                    this.updateFilterConditionPosition();
+                });
+            }
+        },
+        updateFilterConditionPosition() {
+            const trigger = this.$refs.costDropdownTrigger;
+            if (trigger) {
+                const rect = trigger.getBoundingClientRect();
+                this.filterConditionStyle = {
+                    top: rect.bottom + 4 + 'px',
+                    left: rect.left + 'px'
+                };
+            }
+        },
+        closeFilterConditionModal() {
+            this.showFilterConditionModal = false;
+        },
+        addNewCondition() {
+            // 添加新条件的逻辑
+            console.log('Add new condition clicked');
+        },
+        removeAllConditions() {
+            this.costFilterValue = '';
+            this.costFilterOperator = 'gt';
+            this.appliedCostFilterValue = '';
+            this.appliedCostFilterOperator = 'gt';
+            this.currentPage = 1;
+            this.showFilterConditionModal = false;
+        },
+        applyCostFilter() {
+            if (this.costFilterValue) {
+                this.appliedCostFilterValue = this.costFilterValue;
+                this.appliedCostFilterOperator = this.costFilterOperator;
+                this.currentPage = 1;
+                this.showFilterConditionModal = false;
+            }
         }
     },
     async mounted() {
@@ -768,10 +1189,14 @@ createApp({
         this.applyDateRange({ skipRefresh: true });
         this.hideReportBootLoader();
         document.addEventListener('click', this.handleClickOutside);
+        document.addEventListener('click', this.handleGlobalClick);
+        document.addEventListener('keydown', this.handleKeyboardShortcut);
     },
     beforeUnmount() {
         this.stopColumnResize();
         document.removeEventListener('click', this.handleClickOutside);
+        document.removeEventListener('click', this.handleGlobalClick);
+        document.removeEventListener('keydown', this.handleKeyboardShortcut);
     },
     watch: {
         campaigns: {
