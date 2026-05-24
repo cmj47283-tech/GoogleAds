@@ -916,11 +916,75 @@
                         <span class="ga-create-tooltip">Create campaign</span>
                     </button>
                     <div class="ga-table-toolbar">
-                        <div class="ga-toolbar-left">
-                            <span class="material-symbols-outlined">filter_alt</span>
-                            <button v-if="pageMode === 'adassets'" class="ga-filter-badge" type="button">Asset status:
-                                All enabled</button>
-                            <span>Add filter</span>
+                        <div class="ga-toolbar-left" @click.stop>
+                            <div v-if="pageMode === 'campaigns'" class="ga-toolbar-filter filter-dropdown-wrapper"
+                                ref="campaignFilterDropdownRef">
+                                <span class="material-symbols-outlined">filter_alt</span>
+                                <div class="ga-toolbar-filter-control">
+                                    <div class="thead" @click.stop="openCampaignFilterDropdown">Add filter</div>
+                                    <div class="filter-input-container">
+                                        <div v-if="activeCampaignFilterTag" class="filter-tag"
+                                            :class="{ focused: isCampaignFilterTagFocused }"
+                                            @click.stop="focusCampaignFilterTag">
+                                            <span class="filter-tag-text">{{ activeCampaignFilterTag }}</span>
+                                            <span v-if="showCampaignFilterTagClose"
+                                                class="material-symbols-outlined filter-tag-close"
+                                                @click.stop="clearActiveCampaignFilter">close</span>
+                                        </div>
+                                        <input v-model="campaignFilterText" class="field" type="text"
+                                            aria-label="Add campaign filter" placeholder=""
+                                            @focus="openCampaignFilterDropdown" @input="openCampaignFilterDropdown">
+                                    </div>
+                                    <transition name="ga-campaign-filter-dropdown">
+                                        <div v-if="showCampaignFilterDropdown" class="filter-selector-dropdown" @click.stop>
+                                            <div class="filter-selector-list">
+                                                <div v-for="filter in displayCampaignFilters" :key="filter.id"
+                                                    class="filter-option" @click="selectCampaignFilter(filter)">
+                                                    <span class="filter-option-name">{{ filter.name }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </transition>
+                                    <transition name="ga-campaign-filter-dropdown">
+                                        <div v-if="showCampaignFilterValueModal" class="filter-value-modal" @click.stop>
+                                            <div class="filter-value-modal-content">
+                                                <div class="filter-value-header">
+                                                    <span class="filter-value-title">{{ selectedCampaignFilterName }}</span>
+                                                    <button class="filter-value-close" type="button" aria-label="Close filter"
+                                                        @click="closeCampaignFilterValueModal">
+                                                        <span class="material-symbols-outlined">close</span>
+                                                    </button>
+                                                </div>
+                                                <div class="filter-value-body">
+                                                    <div class="filter-value-row">
+                                                        <select class="filter-value-operator-select" v-model="campaignFilterOperator">
+                                                            <option value="contains">contains</option>
+                                                            <option value="is">is</option>
+                                                            <option value="is not">is not</option>
+                                                            <option value="does not contain">does not contain</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="filter-value-row">
+                                                        <input type="text" v-model="campaignFilterValueInput"
+                                                            class="filter-value-text-input" placeholder="Enter one value per line"
+                                                            @keyup.enter="applyCampaignFilterValue">
+                                                    </div>
+                                                </div>
+                                                <div class="filter-value-footer">
+                                                    <button class="filter-value-btn apply-btn"
+                                                        @click="applyCampaignFilterValue">Apply</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </transition>
+                                </div>
+                            </div>
+                            <template v-else>
+                                <span class="material-symbols-outlined">filter_alt</span>
+                                <button v-if="pageMode === 'adassets'" class="ga-filter-badge" type="button">Asset status:
+                                    All enabled</button>
+                                <span>Add filter</span>
+                            </template>
                         </div>
                         <div class="ga-toolbar-actions">
                             <button v-for="tool in tableTools" :key="tool.label" type="button">
@@ -945,8 +1009,13 @@
                                 <tr>
                                     <th class="select-col"><span class="ga-checkbox"></span></th>
                                     <th class="state-col"><span class="ga-status-dot"></span></th>
-                                    <th class="name-col">Campaign <span
-                                            class="material-symbols-outlined">arrow_upward</span></th>
+                                    <th class="name-col">
+                                        <button class="ga-sort-header ga-sort-header--left" type="button"
+                                            @click="toggleCampaignSort('campaign')">
+                                            <span>Campaign</span>
+                                            <span class="material-symbols-outlined">{{ campaignSortIcon('campaign') }}</span>
+                                        </button>
+                                    </th>
                                     <th>Budget</th>
                                     <th>Status</th>
                                     <th>Optimization score</th>
@@ -954,7 +1023,13 @@
                                     <th>Cost / Install</th>
                                     <th>Cost / In-app action</th>
                                     <th>View-through conv.</th>
-                                    <th>Installs</th>
+                                    <th>
+                                        <button class="ga-sort-header" type="button"
+                                            @click="toggleCampaignSort('installs')">
+                                            <span>Installs</span>
+                                            <span class="material-symbols-outlined">{{ campaignSortIcon('installs') }}</span>
+                                        </button>
+                                    </th>
                                     <th>In-app actions</th>
                                     <th>Particlpated in-app actions</th>
                                     <th>Cost</th>
