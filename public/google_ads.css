@@ -2440,6 +2440,55 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     transition-delay: 0.5s;
 }
 
+.ga-budget-simulator-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: default;
+}
+
+.ga-budget-simulator-popup {
+    position: absolute;
+    left: 100%;
+    top: 100%;
+    transform-origin: top left;
+    transform: translateX(0) translateY(0) scale(0.96);
+    width: 400px;
+    background: #fff;
+    color: #202124;
+    padding: 16px;
+    border-radius: 3px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.38s ease, transform 0.38s ease;
+    z-index: 1000;
+    text-align: left;
+    white-space: normal;
+}
+
+.ga-budget-simulator-tooltip:hover .ga-budget-simulator-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) translateY(0) scale(1);
+}
+
+.ga-budget-simulator-popup__title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.ga-budget-simulator-popup__body {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #5f6368;
+    white-space: normal;
+    word-break: break-word;
+}
+
 .danger {
     color: #d93025 !important;
 }
