@@ -279,13 +279,23 @@ test('google ads in-app route changes avoid full page navigation and use a soft 
   config.methods.navigateToGoogleAdsRoute.call(context, '/aw/adgroups?campaignId=BA608');
 
   assert.equal(context.isSoftRefreshing, true);
+  assert.equal(context.isRouteLoading, true);
+  assert.equal(context.pageMode, 'campaigns');
+  assert.equal(context.selectedCampaignId, '');
+  assert.deepEqual(history, []);
+  assert.equal(sandbox.timeouts[0].delay, 900);
+  assert.equal(sandbox.timeouts[1].delay, 420);
+
+  sandbox.timeouts[1].callback();
   assert.equal(context.pageMode, 'adgroups');
   assert.equal(context.selectedCampaignId, 'BA608');
   assert.deepEqual(history, ['/aw/adgroups?campaignId=BA608']);
-  assert.equal(sandbox.timeouts[0].delay, 260);
+  assert.equal(context.isSoftRefreshing, true);
+  assert.equal(context.isRouteLoading, true);
 
   sandbox.timeouts[0].callback();
   assert.equal(context.isSoftRefreshing, false);
+  assert.equal(context.isRouteLoading, false);
 });
 
 test('campaign conversion chart uses an arithmetic nice-number axis', () => {

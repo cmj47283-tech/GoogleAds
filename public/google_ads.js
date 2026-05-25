@@ -5,6 +5,8 @@ const CAMPAIGN_STATUS_STORAGE_KEY = 'googleAdsCampaignStatuses';
 const ASSET_RANDOM_CACHE_KEY = 'googleAdsAssetRandom_';
 const DATE_FILTER_STORAGE_KEY = 'googleAdsDateFilter';
 const DATE_FILTER_STORAGE_VERSION = 'yesterday-default-v1';
+const PAGE_ROUTE_TRANSITION_DELAY = 420;
+const PAGE_ROUTE_TRANSITION_DURATION = 900;
 
 function readCampaignStatusOverrides() {
     try {
@@ -130,6 +132,8 @@ createApp({
             isNotificationsOpen: false,
             isRefreshing: false,
             isSoftRefreshing: false,
+            isRouteLoading: false,
+            pageTransitionToken: 0,
             refreshMode: 'full',
             pageSize: 30,
             pageSizeOptions: [10, 30, 50, 100],
@@ -1676,11 +1680,18 @@ createApp({
         toggleNotifications() {
             this.isNotificationsOpen = !this.isNotificationsOpen
         },
-        startSoftPageTransition() {
+        startSoftPageTransition(duration = 260) {
+            const token = this.pageTransitionToken + 1;
+            this.pageTransitionToken = token;
             this.isSoftRefreshing = true;
+            this.isRouteLoading = true;
             window.setTimeout(() => {
-                this.isSoftRefreshing = false;
-            }, 260);
+                if (this.pageTransitionToken === token) {
+                    this.isSoftRefreshing = false;
+                    this.isRouteLoading = false;
+                }
+            }, duration);
+            return token;
         },
         syncGoogleAdsRoute(url, options = {}) {
             const routeBase = window.location.origin || 'https://localhost';
@@ -1715,12 +1726,18 @@ createApp({
         },
         navigateToGoogleAdsRoute(target, event) {
             if (event) event.preventDefault();
-            this.startSoftPageTransition();
-            this.syncGoogleAdsRoute(target);
+            const token = this.startSoftPageTransition(PAGE_ROUTE_TRANSITION_DURATION);
+            window.setTimeout(() => {
+                if (this.pageTransitionToken !== token) return;
+                this.syncGoogleAdsRoute(target);
+            }, PAGE_ROUTE_TRANSITION_DELAY);
         },
         handlePopState() {
-            this.startSoftPageTransition();
-            this.syncGoogleAdsRoute(`${window.location.pathname}${window.location.search || ''}`, { push: false });
+            const token = this.startSoftPageTransition(PAGE_ROUTE_TRANSITION_DURATION);
+            window.setTimeout(() => {
+                if (this.pageTransitionToken !== token) return;
+                this.syncGoogleAdsRoute(`${window.location.pathname}${window.location.search || ''}`, { push: false });
+            }, PAGE_ROUTE_TRANSITION_DELAY);
         },
         switchPage(mode) {
             this.navigateToGoogleAdsRoute(`/aw/${mode}`);

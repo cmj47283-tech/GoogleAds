@@ -763,7 +763,52 @@
 .ga-main.is-soft-refreshing .ga-chart-area,
 .ga-main.is-soft-refreshing .ga-table-panel {
     opacity: 0.74;
-    transition: opacity 0.16s ease;
+    filter: saturate(0.92);
+    transition: opacity 0.18s ease, filter 0.18s ease;
+}
+
+.ga-main.is-route-loading .ga-table-panel {
+    pointer-events: none;
+}
+
+.ga-main.is-route-loading .ga-table-scroll {
+    position: relative;
+    min-height: 360px;
+}
+
+.ga-main.is-route-loading .ga-table-scroll::after {
+    content: "";
+    position: absolute;
+    inset: 56px 18px 18px;
+    border-radius: 4px;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        repeating-linear-gradient(
+            180deg,
+            rgba(241, 243, 244, 0.94) 0,
+            rgba(241, 243, 244, 0.94) 42px,
+            rgba(218, 220, 224, 0.8) 42px,
+            rgba(218, 220, 224, 0.8) 43px,
+            rgba(255, 255, 255, 0.94) 43px,
+            rgba(255, 255, 255, 0.94) 88px
+        );
+    overflow: hidden;
+    z-index: 30;
+}
+
+.ga-main.is-route-loading .ga-table-scroll::before {
+    content: "";
+    position: absolute;
+    top: 76px;
+    left: 36px;
+    right: 36px;
+    height: 180px;
+    border-radius: 4px;
+    background: linear-gradient(100deg, transparent 0%, rgba(210, 227, 252, 0.72) 45%, transparent 80%);
+    background-size: 220% 100%;
+    animation: ga-loading-shimmer 1s ease-in-out infinite;
+    z-index: 31;
+    pointer-events: none;
 }
 
 .ga-context-bar {

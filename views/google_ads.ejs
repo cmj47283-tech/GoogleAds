@@ -32,7 +32,7 @@
                 fill="#34A853" r="29.33"></circle>
         </svg>
     </div>
-    <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing && refreshMode === 'full', 'ga-soft-refreshing': isSoftRefreshing }" v-cloak>
+    <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing && refreshMode === 'full', 'ga-soft-refreshing': isSoftRefreshing, 'ga-route-loading': isRouteLoading }" v-cloak>
         <header class="ga-topbar">
             <div class="ga-topbar-left">
                 <button class="ga-icon-button" type="button" aria-label="Toggle navigation" @click="toggleNavigation">
@@ -262,7 +262,7 @@
                 </div>
             </nav>
 
-            <main class="ga-main" :class="{ 'is-refreshing': isRefreshing && refreshMode === 'full', 'is-soft-refreshing': isSoftRefreshing }">
+            <main class="ga-main" :class="{ 'is-refreshing': isRefreshing && refreshMode === 'full', 'is-soft-refreshing': isSoftRefreshing, 'is-route-loading': isRouteLoading }">
                 <section class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
