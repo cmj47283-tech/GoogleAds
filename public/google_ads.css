@@ -2246,6 +2246,35 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     vertical-align: middle;
 }
 
+/* .th-dashed {
+    display: inline-block;
+    border-bottom: 2px dashed #3c4043;
+    padding-bottom: 6px;
+    line-height: 1;
+    cursor: pointer;
+} */
+.th-dashed {
+    position: relative;
+    display: inline-block;
+}
+
+.th-dashed::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1.5px;
+
+    background-image: repeating-linear-gradient(
+        to right,
+        #3c4043 0,
+        #3c4043 5px,
+        transparent 5px,
+        transparent 8px
+    );
+}
+
 .ga-sort-header {
     display: inline-flex;
     align-items: center;

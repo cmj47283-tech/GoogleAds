@@ -1018,7 +1018,7 @@
                                     </th>
                                     <th>Budget</th>
                                     <th>Status</th>
-                                    <th>Optimization score</th>
+                                    <th><span class="th-dashed">Optimization score</span></th>
                                     <th>Campaign type</th>
                                     <th>Cost / Install</th>
                                     <th>Cost / In-app action</th>
@@ -1028,23 +1028,23 @@
                                             @click="toggleCampaignSort('installs')">
                                             <span v-if="campaignSortKey === 'installs'"
                                                 class="material-symbols-outlined">{{ campaignSortIcon('installs') }}</span>
-                                            <span>Installs</span>
+                                            <span class="th-dashed">Installs</span>
                                         </button>
                                     </th>
-                                    <th>In-app actions</th>
-                                    <th>Particlpated in-app actions</th>
+                                    <th><span class="th-dashed">In-app actions</span></th>
+                                    <th><span class="th-dashed">Particlpated in-app actions</span></th>
                                     <th>
                                         <button class="ga-sort-header" type="button"
                                             @click="toggleCampaignSort('cost')">
                                             <span v-if="campaignSortKey === 'cost'"
                                                 class="material-symbols-outlined">{{ campaignSortIcon('cost') }}</span>
-                                            <span>Cost</span>
+                                            <span class="th-dashed">Cost</span>
                                         </button>
                                     </th>
-                                    <th>Cost / Particlpated in-app actions</th>
-                                    <th>Conv. rate</th>
-                                    <th>Conversions</th>
-                                    <th>Cost / conv.</th>
+                                    <th><span class="th-dashed">Cost / Particlpated in-app actions</span></th>
+                                    <th><span class="th-dashed">Conv. rate</span></th>
+                                    <th><span class="th-dashed">Conversions</span></th>
+                                    <th><span class="th-dashed">Cost / conv.</span></th>
                                 </tr>
                             </thead>
                             <tbody>
