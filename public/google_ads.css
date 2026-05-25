@@ -816,7 +816,7 @@
 .ga-main.is-route-loading .ga-table-scroll::after {
     content: "";
     position: absolute;
-    inset: 56px 18px 18px;
+    inset: 56px 0px 0px;
     border-radius: 4px;
     background:
         linear-gradient(#fff, #fff) padding-box,
