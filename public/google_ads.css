@@ -510,7 +510,7 @@
     justify-content: space-between;
     flex: 1 0;
     font-family: Google Sans, Roboto, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--acx-sys-color--on-background, #202124);
     overflow-wrap: break-word;
