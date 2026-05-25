@@ -1100,6 +1100,7 @@
                                                 <div class="ga-budget-simulator-popup">
                                                     <div class="ga-budget-simulator-popup__title">Campaign budget simulator</div>
                                                     <div class="ga-budget-simulator-popup__body">The budget simulator isn't available because this campaign doesn't have enough recent performance data.</div>
+                                                
                                                 </div>
                                             </span>
                                             <i class="ga-status-rowbudget" aria-hidden="true"></i>
@@ -1263,7 +1264,17 @@
                                     </td>
                                     <td>{{ asset.status }}</td>
                                     <td>{{ asset.assetType }}</td>
-                                    <td><span class="ga-dashed">{{ asset.performance }}</span></td>
+                                    <td>
+                                        <span class="ga-dashed">
+                                            <i>{{ asset.performance }}</i>
+                                            <div class="ga-budget-simulator-popup">
+                                                <div class="ga-budget-simulator-popup__body">This asset doesn't have any performance information yet. A performance rating for this asset will be shown once enough information has been collected.
+                                                    <span class="ga-budget-simulator-popup__learn">Learn more</span>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    
+                                    </td>
                                     <td>{{ formatNumber(asset.clicks) }}</td>
                                     <td>{{ asset.clicks ? percent(asset.ctr) : '-' }}</td>
                                     <td>{{ formatNumber(asset.impressions) }}</td>

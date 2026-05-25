@@ -2516,9 +2516,33 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 }
 
 .ga-dashed {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     text-decoration: underline;
     text-decoration-style: dashed;
     text-underline-offset: 4px;
+    cursor: pointer;
+}
+
+.ga-dashed:hover .ga-budget-simulator-popup {
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+    left: 115%;
+    top: -20px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) translateY(0) scale(1);
+}
+
+.ga-dashed:hover .ga-budget-simulator-popup__body {
+    font-size: 11px;
+}
+
+.ga-dashed:hover .ga-budget-simulator-popup__learn {
+    color: #1a73e8;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 4px;
 }
 
 .ga-optimization-score {
@@ -2629,6 +2653,7 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     opacity: 1;
     visibility: visible;
     transform: translateX(0) translateY(0) scale(1);
+
 }
 
 .ga-budget-simulator-popup__title {
