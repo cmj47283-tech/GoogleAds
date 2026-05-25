@@ -34,6 +34,27 @@
     src: url("./fonts/Gw6kwdfw6UnXLJCcmafZyFRXb3BL9rvi0QZG3Q.woff2") format('woff2');
 }
 
+@font-face {
+    font-family: 'noto sans regular';
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/Noto-Sans-Regular.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: 'noto sans sc';
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/Noto-Sans-SC.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: 'DM sana regular';
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/DM-Sans-regular.woff2") format('woff2');
+}
+
 
 .material-symbols-outlined {
     font-family: 'Material Symbols Outlined', 'Material Symbols Outlined extended';
