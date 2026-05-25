@@ -201,13 +201,10 @@
                     <div class="ga-sidebar-submenu">
                         <a class="ga-sidebar-link" href="#" data-tooltip="Brand report">Brand report</a>
                         <a class="ga-sidebar-link" href="#" data-tooltip="When and where ads showed">When and where ads<br>showed</a>
-                        <a class="ga-sidebar-link" 
-                        :class="{ active: pageMode === 'reporteditor' }" 
-                        href="#" 
-                        @click="switchPage('reporteditor')" 
-                        data-tooltip="Report editor">
-                            Report editor
-                        </a>
+                        <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'reporteditor' }" href="#" @click="switchPage('reporteditor')" >
+                        <span data-tooltip="Report editor">Report editor</span>
+                            
+                        </button>
                         <a class="ga-sidebar-link" href="#" data-tooltip="Dashboards"
                             data-tooltip="Dashboards">Dashboards</a>
                     </div>
