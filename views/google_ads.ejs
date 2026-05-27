@@ -1263,7 +1263,7 @@
                                     <td>{{ asset.assetType }}</td>
                                     <td>
                                         <span class="ga-dashed">
-                                            <i>{{ asset.performance }}</i>
+                                            <span>{{ asset.performance }}</span>
                                             <div class="ga-budget-simulator-popup">
                                                 <div class="ga-budget-simulator-popup__body">This asset doesn't have any performance information yet. A performance rating for this asset will be shown once enough information has been collected.
                                                     <span class="ga-budget-simulator-popup__learn">Learn more</span>
@@ -1273,13 +1273,13 @@
                                     
                                     </td>
                                     <td>{{ formatNumber(asset.clicks) }}</td>
-                                    <td>{{ asset.clicks ? percent(asset.ctr) : '-' }}</td>
+                                    <td>{{ asset.clicks ? percent(asset.ctr) : '—' }}</td>
                                     <td>{{ formatNumber(asset.impressions) }}</td>
                                     <td>{{ formatCurrency(asset.cost) }}</td>
-                                    <td>{{ formatCurrency(asset.installs) }}</td>
-                                    <td>{{ formatNumber(asset.costPerInstall , 2) }}</td>
-                                    <td>{{ formatCurrency(asset.inAppActions) }}</td>
-                                    <td>{{ formatNumber(asset.costPerInAppAction , 2) }}</td>
+                                    <td>{{ formatNumber(asset.installs , 2) }}</td>
+                                    <td>{{ formatCurrency(asset.costPerInstall , 2) }}</td>
+                                    <td>{{ formatNumber(asset.inAppActions, 2) }}</td>
+                                    <td>{{ formatCurrency(asset.costPerInAppAction , 2) }}</td>
                                 </tr>
                             </tbody>
                         </table>

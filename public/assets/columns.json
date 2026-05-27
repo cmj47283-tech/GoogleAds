@@ -6,11 +6,6 @@
   },
   {
     "width": 100,
-    "key": "campaignId",
-    "label": "campaignId"
-  },
-  {
-    "width": 100,
     "key": "campaign",
     "label": "Campaign"
   },

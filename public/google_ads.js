@@ -407,7 +407,7 @@ createApp({
 
             if (this.isRefreshing && this.refreshMode === 'full') {
                 return [
-                    { label: 'Avg. target CPA', value: '-', delta: '-' },
+                    { label: 'Avg. target CPA', value: '—', delta: '—' },
                     { label: 'Cost', value: this.formatCurrency(this.totals.cost), delta: this.randomizedMetricDelta('campaigns-cost',  this.totals.cost, 'money') },
                     { label: 'Conversions', value: this.formatNumber(this.totals.conversions, 2), delta: this.randomizedMetricDelta('campaigns-conversions', this.totals.conversions, 2, 'fixed') }
                 ];
@@ -417,7 +417,7 @@ createApp({
                 { label: 'Conversions', value: this.formatNumber(this.totals.conversions, 2), delta: this.randomizedMetricDelta('campaigns-conversions', this.totals.conversions, 'fixed') },
                 { label: 'Cost', value: this.formatCurrency(this.totals.cost), delta: this.randomizedMetricDelta('campaigns-cost',  this.totals.cost, 'money') },
                 { label: 'Impr.', value: this.formatNumber(this.totals.impressions), delta: this.randomizedMetricDelta('campaigns-impressions', this.totals.impressions, 'integer') },
-                { label: 'Avg. target CPA', value: '—', delta: '-' }
+                { label: 'Avg. target CPA', value: '—', delta: '—' }
             ];
         },
         conversionsChartValue() {
@@ -1497,8 +1497,8 @@ createApp({
                         ConvRate: 0,
                         Conversions: 0,
                         CostPerConv: 0,
-                        BrandInclusions: row.BrandInclusions || '-',
-                        LocationsOfInterest: row.LocationsOfInterest || '-'
+                        BrandInclusions: row.BrandInclusions || '—',
+                        LocationsOfInterest: row.LocationsOfInterest || '—'
                     });
                 }
 
@@ -1569,7 +1569,7 @@ createApp({
             return `${safeNumber(value).toFixed(2)}%`;
         },
         dash(value) {
-            if (value === null || value === undefined || value === '') return '-';
+            if (value === null || value === undefined || value === '') return '—';
             return value;
         },
         openUnavailablePreview() {

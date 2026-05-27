@@ -2314,7 +2314,7 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 }
 
 .ga-sort-header {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 2px;
@@ -2602,7 +2602,7 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
 }
 
 .ga-dashed:hover .ga-budget-simulator-popup__body {
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .ga-dashed:hover .ga-budget-simulator-popup__learn {

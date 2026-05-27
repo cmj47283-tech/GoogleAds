@@ -224,11 +224,11 @@ createApp({
     },
     methods: {
         formatCurrency(value) {
-            if (value === 0 || value === undefined) return '-';
+            if (value === 0 || value === undefined) return '—';
             return `US$${value.toFixed(2)}`;
         },
         formatNumber(value, decimals = 0) {
-            if (value === undefined || value === null) return '-';
+            if (value === undefined || value === null) return '—';
             if (value === 0) return '0';
 
             if (decimals > 0) {
@@ -241,7 +241,7 @@ createApp({
             return value.toString();
         },
         formatPercent(value) {
-            if (value === 0 || value === undefined) return '-';
+            if (value === 0 || value === undefined) return '—';
             return `${value.toFixed(2)}%`;
         },
         sortBy(key) {
