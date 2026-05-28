@@ -246,7 +246,7 @@
 
 .ga-tool-button span {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
 }
 .ga-tool-button .material-symbols-outlined {
     font-size: 22px;
@@ -397,6 +397,48 @@
     letter-spacing: .3px;
     color: var(--acx-sys-color--on-surface-variant, #5f6368);
     margin-top: 4px;
+}
+
+/* Tabs progress bar (indeterminate sliding animation) */
+.ga-tabs-progress {
+    height: 4px;
+    width: 100%;
+    position: relative;
+}
+
+.ga-progress-track {
+    width: 100%;
+    height: 100%;
+    background: rgba(60,64,67,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ga-progress-indicator {
+    position: absolute;
+    left: -40%;
+    top: 0;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, #1a73e8 0%, #4ea0ff 60%, #1a73e8 100%);
+    border-radius: 4px;
+    animation: ga-progress-slide 1.6s linear infinite;
+}
+
+@keyframes ga-progress-slide {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(220%);
+    }
+}
+
+.ga-tabs button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: transparent;
 }
 
 .ga-create-button .material-symbols-outlined {
@@ -567,6 +609,16 @@
 .ga-sidebar-group-title:hover {
     background: #e3e5e7;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.48);
+}
+
+.ga-sidebar-group-title.active {
+    background: #1a73e8;
+    color: #fff;
+    box-shadow: none;
+}
+
+.ga-sidebar-group-title.active:hover {
+    background: #1a73e8;
 }
 
 .ga-sidebar-link.active {
@@ -1042,7 +1094,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 16px 28px 0;
+    padding: 0 28px 0;
     position: sticky;
     top: 0;
     background: #eef0f1;
@@ -1073,6 +1125,33 @@
     line-height: 36px;
     margin: 0;
     color: #202124;
+}
+
+.ga-page-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ga-page-head-actions .ga-tool-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: transparent;
+    color: #3c4043;
+    box-shadow: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ga-page-head-actions .ga-tool-button:hover {
+    background: rgba(60, 64, 67, 0.08);
+    border-radius: 0;
+}
+
+.ga-page-head-actions .ga-tool-button.active {
+    color: #1a73e8;
 }
 
 .ga-page-head-selector-wrapper {
@@ -1145,25 +1224,31 @@
 }
 
 .ga-tabs {
+    display: flex;
     gap: 24px;
-    padding: 0 28px 0px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(60,64,67,0.12);
+}
+
+.ga-tabs-layout {
+    padding: 0 24px 0;
 }
 
 .ga-tabs button {
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
     border: 0;
     background: transparent;
     color: #5f6368;
-    font: inherit;
     font-size: 15px;
     font-weight: 500;
-    padding: 0 0 15px;
+    padding: 0 16px 15px;
     position: relative;
     cursor: pointer;
 }
 
 .ga-tabs button.active {
     color: #1a73e8;
+    margin: 0 8px 0;
 }
 
 .ga-tabs button.active::after {
@@ -1172,7 +1257,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 4px;
+    height: 2px;
     border-radius: 4px 4px 0 0;
     background: #1a73e8;
 }

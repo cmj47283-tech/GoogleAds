@@ -24,8 +24,7 @@
         <div class="report-boot-progress" aria-hidden="true">
             <span></span>
         </div>
-        <svg class="report-boot-logo" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
+        <svg class="report-boot-logo" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect fill="none" height="192" width="192"></rect>
             <path class="report-boot-logo-yellow report-boot-logo-shape"
                 d="M56.40,177.25L121.40,64.67A29.33,29.33 0 0 0 70.60,35.33L5.60,147.91A29.33,29.33 0 0 0 56.40,177.25z"
@@ -33,11 +32,13 @@
             <path class="report-boot-logo-blue report-boot-logo-shape"
                 d="M186.40,147.91L121.40,35.33A29.33,29.33 0 0 0 70.60,64.67L135.60,177.25A29.33,29.33 0 0 0 186.40,147.91z"
                 fill="#4285F4"></path>
-            <circle class="report-boot-logo-green report-boot-logo-shape" cx="47.25" cy="134.44"
-                fill="#34A853" r="29.33"></circle>
+            <circle class="report-boot-logo-green report-boot-logo-shape" cx="47.25" cy="134.44" fill="#34A853"
+                r="29.33"></circle>
         </svg>
     </div>
-    <div id="google-ads-app" :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing && refreshMode === 'full', 'ga-soft-refreshing': isSoftRefreshing, 'ga-route-loading': isRouteLoading }" v-cloak>
+    <div id="google-ads-app"
+        :class="{ 'ga-nav-collapsed': isNavCollapsed, 'ga-refreshing': isRefreshing && refreshMode === 'full', 'ga-soft-refreshing': isSoftRefreshing, 'ga-route-loading': isRouteLoading }"
+        v-cloak>
         <header class="ga-topbar">
             <div class="ga-topbar-left">
                 <button class="ga-icon-button" type="button" aria-label="Toggle navigation" @click="toggleNavigation">
@@ -104,7 +105,7 @@
                     <i class="material-symbols-outlined-extended">notifications</i>
                     <span>Notifications</span>
                     <!-- <b class="notifications-red-icon"></b> -->
-                     <b>!</b>
+                    <b>!</b>
                 </button>
                 <transition name="ga-notifications-transition-popup">
                     <div v-if="isNotificationsOpen" ref="notificationPopup" class="ga-notifications-popup" @click.stop>
@@ -158,11 +159,13 @@
                     <span class="material-symbols-outlined">overview</span>
                     <span>Overview</span>
                 </a> -->
-                <a class="ga-rail-item" href="/aw/campaigns" @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">
+                <a class="ga-rail-item" href="/aw/campaigns"
+                    @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">
                     <i class="material-symbols-outlined-extended">team_drive_outline</i>
                     <span>Accounts</span>
                 </a>
-                <a class="ga-rail-item active" href="/aw/campaigns" @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">
+                <a class="ga-rail-item active" href="/aw/campaigns"
+                    @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">
                     <span class="material-symbols-outlined">campaign</span>
                     <span>Campaigns</span>
                 </a>
@@ -187,12 +190,14 @@
             <nav class="ga-sidebar" aria-label="Campaign navigation" @mouseover="handleTooltipMouseOver"
                 @mouseleave="hideTooltip" @mousemove="handleMouseMove">
                 <div class="ga-sidebar-group" href="#">
-                    <button class="ga-sidebar-group-title" type="button" :class="{ active: pageMode === 'overview' }" href="#" @click="switchPage('overview')">
+                    <button class="ga-sidebar-group-title" type="button" :class="{ active: pageMode === 'overview' }"
+                        href="#" @click="switchPage('overview')">
                         <span data-tooltip="Overview">Overview</span>
                     </button>
                 </div>
                 <div class="ga-sidebar-group" href="#">
-                    <button class="ga-sidebar-group-title" type="button" :class="{ active: pageMode === 'recommendations' }" href="#"
+                    <button class="ga-sidebar-group-title" type="button"
+                        :class="{ active: pageMode === 'recommendations' }" href="#"
                         @click="switchPage('recommendations')">
                         <span data-tooltip="Recommendations">Recommendations</span>
                     </button>
@@ -206,10 +211,12 @@
                     </button>
                     <div class="ga-sidebar-submenu">
                         <a class="ga-sidebar-link" href="#" data-tooltip="Brand report">Brand report</a>
-                        <a class="ga-sidebar-link" href="#" data-tooltip="When and where ads showed">When and where ads<br>showed</a>
-                        <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'reporteditor' }" href="#" @click="switchPage('reporteditor')" >
-                        <span data-tooltip="Report editor">Report editor</span>
-                            
+                        <a class="ga-sidebar-link" href="#" data-tooltip="When and where ads showed">When and where
+                            ads<br>showed</a>
+                        <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'reporteditor' }"
+                            href="#" @click="switchPage('reporteditor')">
+                            <span data-tooltip="Report editor">Report editor</span>
+
                         </button>
                         <a class="ga-sidebar-link" href="#" data-tooltip="Dashboards"
                             data-tooltip="Dashboards">Dashboards</a>
@@ -227,11 +234,11 @@
                             @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)"
                             data-tooltip="Campaigns">Campaigns</a>
                         <a class="ga-sidebar-link" :class="{ active: pageMode === 'adgroups' }" :href="adGroupsHref"
-                            @click.prevent="navigateToGoogleAdsRoute(adGroupsHref, $event)"
-                            data-tooltip="Ad groups">Ad groups</a>
+                            @click.prevent="navigateToGoogleAdsRoute(adGroupsHref, $event)" data-tooltip="Ad groups">Ad
+                            groups</a>
                         <a class="ga-sidebar-link" :class="{ active: pageMode === 'adassets' }" :href="adAssetsHref"
-                            @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)"
-                            data-tooltip="Ad assets">Ad assets</a>
+                            @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)" data-tooltip="Ad assets">Ad
+                            assets</a>
                         <a class="ga-sidebar-link" href="#" data-tooltip="Experiments">Experiments</a>
                     </div>
                 </div>
@@ -249,7 +256,9 @@
                     </div>
                 </div>
                 <div class="ga-sidebar-group" :class="{ open: ads_isAudiencesOpen }">
-                    <button class="ga-sidebar-group-title" type="button" @click="ads_isAudiencesOpen = !ads_isAudiencesOpen" data-tooltip="Audiences, keywords, and content">
+                    <button class="ga-sidebar-group-title" type="button"
+                        @click="ads_isAudiencesOpen = !ads_isAudiencesOpen"
+                        data-tooltip="Audiences, keywords, and content">
                         <span>Audiences, keywords, and<br>content</span>
                         <span class="material-symbols-outlined">{{ ads_isAudiencesOpen ? 'expand_less' :
                             'expand_more' }}</span>
@@ -265,7 +274,8 @@
                 </div>
             </nav>
 
-            <main class="ga-main" :class="{ 'is-refreshing': isRefreshing && refreshMode === 'full', 'is-soft-refreshing': isSoftRefreshing, 'is-route-loading': isRouteLoading }">
+            <main class="ga-main"
+                :class="{ 'is-refreshing': isRefreshing && refreshMode === 'full', 'is-soft-refreshing': isSoftRefreshing, 'is-route-loading': isRouteLoading }">
                 <section class="ga-context-bar" :class="{ hidden: isContextBarHidden }">
                     <div class="ga-selectors">
                         <div class="ga-selector active" v-if="!isContextBarHidden" @click.stop="toggleDropdown('view')">
@@ -273,7 +283,8 @@
                             <a><span class="material-symbols-outlined">home</span> All campaigns</a>
                             <span class="material-symbols-outlined">arrow_drop_down</span>
                             <div v-if="dropdown === 'view'" class="ga-dropdown">
-                                <a href="/aw/campaigns" @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">All campaigns</a>
+                                <a href="/aw/campaigns"
+                                    @click.prevent="navigateToGoogleAdsRoute('/aw/campaigns', $event)">All campaigns</a>
                             </div>
                         </div>
                         <div class="ga-selector" :class="{ active: selectedCampaign }"
@@ -289,23 +300,29 @@
                                 </a>
                             </div>
                         </div>
-                        <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'" class="ga-selector"
-                            :class="{ active: pageMode === 'adassets' }" @click.stop="toggleDropdown('adgroup')">
+                        <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'"
+                            class="ga-selector" :class="{ active: pageMode === 'adassets' }"
+                            @click.stop="toggleDropdown('adgroup')">
                             <small>Ad groups</small>
                             <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Select an ad group' }}</a>
                             <span class="material-symbols-outlined">arrow_drop_down</span>
                             <div v-if="dropdown === 'adgroup'" class="ga-dropdown">
-                                <a :href="adAssetsHref" @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{ adGroup.adGroup }}</a>
+                                <a :href="adAssetsHref"
+                                    @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{ adGroup.adGroup
+                                    }}</a>
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview'" class="ga-state-line">
+                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations'"
+                        class="ga-state-line">
                         <span :class="['ga-dot', selectedCampaignStatusClass]"></span>
                         <span>{{ selectedCampaignStateLabel }}</span>
                         <span>Status: <a href="#" :class="{ danger: isSelectedCampaignProblem }">{{
                                 selectedCampaignStatusText }}</a></span>
-                        <span>Account: {{ selectedCampaign ? (selectedCampaign.Account || selectedCampaign.account) : '' }}</span>
-                        <span>Type: {{ selectedCampaign ? (selectedCampaign.CampaignType || selectedCampaign.campaignType || 'App') : 'App' }}</span>
+                        <span>Account: {{ selectedCampaign ? (selectedCampaign.Account || selectedCampaign.account) : ''
+                            }}</span>
+                        <span>Type: {{ selectedCampaign ? (selectedCampaign.CampaignType ||
+                            selectedCampaign.campaignType || 'App') : 'App' }}</span>
                         <span v-if="pageMode === 'adgroups'">Budget: <a href="#">{{ selectedCampaign ?
                                 selectedCampaign.budget : '' }}</a></span>
                         <span v-if="pageMode === 'adassets'">Target CPA: <a href="#">{{ adGroup.targetCpa }}</a></span>
@@ -314,7 +331,9 @@
                             {{ pageMode === 'adassets' ? 'Ad group settings' : 'Campaign settings' }}
                         </a>
                     </div>
-                    <section v-if="pageMode === 'campaigns' || pageMode === 'reporteditor' || pageMode === 'overview'" class="ga-page-filter-row">
+                    <section
+                        v-if="pageMode === 'campaigns' || pageMode === 'reporteditor' || pageMode === 'overview' || pageMode === 'recommendations'"
+                        class="ga-page-filter-row">
                         <span>Filters</span>
                         <button class="ga-filter-badge" type="button">Campaign status: All</button>
                         <button class="ga-filter-badge" type="button">Ad group status: Enabled, Paused</button>
@@ -325,14 +344,19 @@
                 <section class="ga-page-head" :class="{ 'ga-page-head--adassets': pageMode === 'adassets' }">
                     <div class="ga-page-head-heading">
                         <h1>{{ pageTitle }}</h1>
-                        <div v-if="isContextBarHidden && (pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'reporteditor' || pageMode === 'overview')" class="ga-page-head-selector-wrapper">
+                        <div v-if="isContextBarHidden && (pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'reporteditor' || pageMode === 'overview')"
+                            class="ga-page-head-selector-wrapper">
                             <div class="ga-ContextBarHidden">
                                 <small>Ad groups</small>
                                 <a>{{ pageMode === 'adassets' ? adGroup.adGroup : 'Ad group 1' }}</a>
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'overview'" class="ga-date-row">
+                    <div v-if="pageMode === 'recommendations'">
+                        <%- include('pages/recommendations', { component: 'header' }) %>
+                    </div>
+                    <div v-if="pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'overview'"
+                        class="ga-date-row">
                         <span>{{ getDateOptionLabel(appliedDateOption) }}</span>
                         <button ref="dateSelectRef" class="ga-date-button" type="button" @click.stop="toggleDatePicker">
                             {{ dateRangeLabel }}
@@ -512,82 +536,94 @@
                         </div>
                     </transition>
                 </section>
-<!-- Google Ads Dashboard Section -->
-<div class="gads-dashboard" v-if="pageMode === 'overview'">
+                <div v-if="pageMode === 'recommendations'">
+                        <%- include('pages/recommendations', { component: 'tabs' }) %>
+                </div>
+                <!-- Google Ads Dashboard Section -->
+                <div class="gads-dashboard" v-if="pageMode === 'overview'">
 
-  <!-- Tab Bar：两行 -->
-  <div class="gads-tabbar">
-    <!-- 第一行：导航标签 -->
-    <div class="gads-tabbar-row1">
-      <a class="gads-tab active" href="#">Home</a>
-      <a class="gads-tab gads-tab-add" href="#">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        Add custom view
-      </a>
-      <span class="material-symbols-outlined" style="color: #3c4043; font-size: 24px;">help_outline</span>
-    </div>
-    <!-- 第二行：操作按钮 -->
-    <div class="gads-tabbar-row2">
-      <div class="gads-action-btn">
-        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;">file_download</span>
-        Download
-      </div>
-      <div class="gads-action-btn">
-        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;">feedback</span>
-        Feedback
-      </div>
-    </div>
-  </div>
+                    <!-- Tab Bar：两行 -->
+                    <div class="gads-tabbar">
+                        <!-- 第一行：导航标签 -->
+                        <div class="gads-tabbar-row1">
+                            <a class="gads-tab active" href="#">Home</a>
+                            <a class="gads-tab gads-tab-add" href="#">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                                </svg>
+                                Add custom view
+                            </a>
+                            <span class="material-symbols-outlined"
+                                style="color: #3c4043; font-size: 24px;">help_outline</span>
+                        </div>
+                        <!-- 第二行：操作按钮 -->
+                        <div class="gads-tabbar-row2">
+                            <div class="gads-action-btn">
+                                <span class="material-symbols-outlined"
+                                    style="color: #5f6368; font-size: 24px;">file_download</span>
+                                Download
+                            </div>
+                            <div class="gads-action-btn">
+                                <span class="material-symbols-outlined"
+                                    style="color: #5f6368; font-size: 24px;">feedback</span>
+                                Feedback
+                            </div>
+                        </div>
+                    </div>
 
-  <!-- Metric Cards + Chart 合并（圆角8，四周border） -->
-  <div class="gads-metrics-chart" style="margin-top:16px">
-    <!-- Metric Cards -->
-    <div class="gads-metrics">
-      <div class="gads-metric accent-blue">
-        <div class="gads-metric-label">Clicks <span class="material-symbols-outlined" style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
-        <div class="gads-metric-value">1.86K</div>
-       
-      </div>
-      <div class="gads-metric accent-red">
-        <div class="gads-metric-label">Impressions <span class="material-symbols-outlined" style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
-        <div class="gads-metric-value">210.3K</div>
-      </div>
-      <div class="gads-metric">
-        <div class="gads-metric-label">Avg. CPC</div>
-        <div class="gads-metric-value">$0.81</div>
-      </div>
-      <div class="gads-metric">
-        <div class="gads-metric-label">Cost</div>
-        <div class="gads-metric-value">$1.51K</div>
-        
-      </div>
-      <div class="gads-metric">
-        
-        <span class="material-symbols-outlined" style="color: #5f6368; font-size: 24px;padding-left:180px;padding-top: 12px;">more_vert</span>
-      </div>
-    </div>
+                    <!-- Metric Cards + Chart 合并（圆角8，四周border） -->
+                    <div class="gads-metrics-chart" style="margin-top:16px">
+                        <!-- Metric Cards -->
+                        <div class="gads-metrics">
+                            <div class="gads-metric accent-blue">
+                                <div class="gads-metric-label">Clicks <span class="material-symbols-outlined"
+                                        style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
+                                <div class="gads-metric-value">1.86K</div>
 
-    <!-- Line Chart -->
-    <div class="gads-chart-wrapper">
-      <!-- 图表主体：左轴标签 + SVG + 右轴标签 -->
-      <div class="gads-chart-body">
-        <!-- 左轴（Clicks） -->
-        <div class="gads-chart-labels">
-          <span>400</span>
-          <span>200</span>
-          <span>0</span>
-        </div>
-        <!-- SVG 图表区域 -->
-        <div class="gads-chart-svg-container">
-         <svg viewBox="0 0 900 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- 背景网格线 -->
-  <line x1="0" y1="1" x2="900" y2="1" stroke="#e8eaed" stroke-width="1"/>
-  <line x1="0" y1="40" x2="900" y2="40" stroke="#e8eaed" stroke-width="1"/>
-  <line x1="0" y1="80" x2="900" y2="80" stroke="#e8eaed" stroke-width="1"/>
-  <line x1="0" y1="119" x2="900" y2="119" stroke="#e8eaed" stroke-width="1"/>
+                            </div>
+                            <div class="gads-metric accent-red">
+                                <div class="gads-metric-label">Impressions <span class="material-symbols-outlined"
+                                        style="color: #fff; font-size: 24px;">arrow_drop_down</span></div>
+                                <div class="gads-metric-value">210.3K</div>
+                            </div>
+                            <div class="gads-metric">
+                                <div class="gads-metric-label">Avg. CPC</div>
+                                <div class="gads-metric-value">$0.81</div>
+                            </div>
+                            <div class="gads-metric">
+                                <div class="gads-metric-label">Cost</div>
+                                <div class="gads-metric-value">$1.51K</div>
 
-  <!-- 红色线 (Impressions) -->
-  <path d="M0,100 
+                            </div>
+                            <div class="gads-metric">
+
+                                <span class="material-symbols-outlined"
+                                    style="color: #5f6368; font-size: 24px;padding-left:180px;padding-top: 12px;">more_vert</span>
+                            </div>
+                        </div>
+
+                        <!-- Line Chart -->
+                        <div class="gads-chart-wrapper">
+                            <!-- 图表主体：左轴标签 + SVG + 右轴标签 -->
+                            <div class="gads-chart-body">
+                                <!-- 左轴（Clicks） -->
+                                <div class="gads-chart-labels">
+                                    <span>400</span>
+                                    <span>200</span>
+                                    <span>0</span>
+                                </div>
+                                <!-- SVG 图表区域 -->
+                                <div class="gads-chart-svg-container">
+                                    <svg viewBox="0 0 900 120" preserveAspectRatio="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- 背景网格线 -->
+                                        <line x1="0" y1="1" x2="900" y2="1" stroke="#e8eaed" stroke-width="1" />
+                                        <line x1="0" y1="40" x2="900" y2="40" stroke="#e8eaed" stroke-width="1" />
+                                        <line x1="0" y1="80" x2="900" y2="80" stroke="#e8eaed" stroke-width="1" />
+                                        <line x1="0" y1="119" x2="900" y2="119" stroke="#e8eaed" stroke-width="1" />
+
+                                        <!-- 红色线 (Impressions) -->
+                                        <path d="M0,100 
            L50,100 
            L100,105 
            L140,102 
@@ -608,11 +644,10 @@
            L780,85
            L820,105
            L880,115
-           L900,115" 
-        fill="none" stroke="#d93025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+           L900,115" fill="none" stroke="#d93025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
 
-  <!-- 蓝色线 (Clicks) -->
-  <path d="M0,105 
+                                        <!-- 蓝色线 (Clicks) -->
+                                        <path d="M0,105 
            L50,105 
            L100,110 
            L140,105 
@@ -632,744 +667,833 @@
            L760,75
            L820,100
            L880,115
-           L900,115" 
-        fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-        </div>
-        <!-- 右轴（Impressions） -->
-        <div class="gads-chart-labels right">
-          <span>40K</span>
-          <span>20K</span>
-          <span>0</span>
-        </div>
-      </div>
-      <!-- 日期 -->
-      <div class="gads-chart-dates">
-        <span>12AM</span>
-        <span>11PM</span>
-      </div>
-    </div>
-  </div>
+           L900,115" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <!-- 右轴（Impressions） -->
+                                <div class="gads-chart-labels right">
+                                    <span>40K</span>
+                                    <span>20K</span>
+                                    <span>0</span>
+                                </div>
+                            </div>
+                            <!-- 日期 -->
+                            <div class="gads-chart-dates">
+                                <span>12AM</span>
+                                <span>11PM</span>
+                            </div>
+                        </div>
+                    </div>
 
-  <!-- Bottom Row: Campaigns + Promo -->
-  <div class="gads-bottom">
+                    <!-- Bottom Row: Campaigns + Promo -->
+                    <div class="gads-bottom">
 
-    <!-- Campaigns Panel -->
-    <div class="gads-panel">
-      <div class="gads-panel-header">
-        <div class="gads-panel-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        </div>
-        <span class="gads-panel-title">Campaigns</span>
-        <span class="gads-panel-more">⋮</span>
-      </div>
-      <div class="gads-panel-body">
-        <div class="gads-panel-subtitle">Summary of how your campaigns are performing</div>
-        <table class="gads-campaign-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Cost <span class="gads-sort-arrow"></span></th>
-              <th>Clicks <span class="gads-sort-arrow"></span></th>
-              <th>CTR <span class="gads-sort-arrow"></span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-active"></span>FG66-GG03-BD-12-Mulasakee-0515</div></td>
-              <td><span class="gads-cost-chip">$955.06</span></td>
-              <td>6,136</td><td>2.04%</td>
-            </tr>
-            <tr>
-              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-active"></span>KG777-包35-mgxg-GG-0515</div></td>
-              <td>$484.18</td><td>2,150</td><td>1.90%</td>
-            </tr>
-            <tr>
-              <td><div class="gads-campaign-name"><span class="gads-campaign-dot dot-active"></span>CV999-GG03-060-BD-0523-KKluv</div></td>
-              <td>$365.12</td><td>2,886</td><td>3.62%</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="gads-pagination">
-          <a class="gads-all-link" href="#">All campaigns</a>
-          <div class="gads-page-nav">
-            <span>1 / 27</span>
-            <button disabled>&#8249;</button>
-            <button disabled>&#8250;</button>
-          </div>
-        </div>
-      </div>
-    </div>
+                        <!-- Campaigns Panel -->
+                        <div class="gads-panel">
+                            <div class="gads-panel-header">
+                                <div class="gads-panel-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                                    </svg>
+                                </div>
+                                <span class="gads-panel-title">Campaigns</span>
+                                <span class="gads-panel-more">⋮</span>
+                            </div>
+                            <div class="gads-panel-body">
+                                <div class="gads-panel-subtitle">Summary of how your campaigns are performing</div>
+                                <table class="gads-campaign-table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Cost <span class="gads-sort-arrow"></span></th>
+                                            <th>Clicks <span class="gads-sort-arrow"></span></th>
+                                            <th>CTR <span class="gads-sort-arrow"></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="gads-campaign-name"><span
+                                                        class="gads-campaign-dot dot-active"></span>FG66-GG03-BD-12-Mulasakee-0515
+                                                </div>
+                                            </td>
+                                            <td><span class="gads-cost-chip">$955.06</span></td>
+                                            <td>6,136</td>
+                                            <td>2.04%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gads-campaign-name"><span
+                                                        class="gads-campaign-dot dot-active"></span>KG777-包35-mgxg-GG-0515
+                                                </div>
+                                            </td>
+                                            <td>$484.18</td>
+                                            <td>2,150</td>
+                                            <td>1.90%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gads-campaign-name"><span
+                                                        class="gads-campaign-dot dot-active"></span>CV999-GG03-060-BD-0523-KKluv
+                                                </div>
+                                            </td>
+                                            <td>$365.12</td>
+                                            <td>2,886</td>
+                                            <td>3.62%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="gads-pagination">
+                                    <a class="gads-all-link" href="#">All campaigns</a>
+                                    <div class="gads-page-nav">
+                                        <span>1 / 27</span>
+                                        <button disabled>&#8249;</button>
+                                        <button disabled>&#8250;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- Google Marketing Live Promo -->
-    <div class="gads-panel">
-      <div class="gads-promo-header">
-        <div class="gads-panel-icon">
-          <span class="g-logo"><span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span></span>
-        </div>
-        <span class="gads-panel-title" style="font-size:12px;color:#5f6368;font-weight:400">Google Ads</span>
-        <button class="gads-promo-close" onclick="this.closest('.gads-panel').style.display='none'">&#10005;</button>
-        <span class="gads-panel-more">⋮</span>
-      </div>
-      <div class="gads-promo-body">
-        <div class="gads-promo-title">Google Marketing Live 2026</div>
-        <div class="gads-promo-desc">Tune in now to see groundbreaking ads innovations across Ads, Search, and YouTube.</div>
-        <div class="gads-promo-thumb">
-          <div class="gads-promo-thumb-inner">
-            <div class="gads-promo-thumb-content">
-              <div class="gads-promo-thumb-text">
-                <div class="gads-promo-thumb-google">Google Ads</div>
-                <div class="gads-promo-thumb-headline">Google Marketing Live 2026</div>
-                <div class="gads-promo-thumb-sub">Global Keynote 2026</div>
-              </div>
-              <div class="gads-play-btn"></div>
-              <span class="gads-yt-badge">&#9654; YouTube</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                        <!-- Google Marketing Live Promo -->
+                        <div class="gads-panel">
+                            <div class="gads-promo-header">
+                                <div class="gads-panel-icon">
+                                    <span class="g-logo"><span class="g1">G</span><span class="g2">o</span><span
+                                            class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span
+                                            class="g6">e</span></span>
+                                </div>
+                                <span class="gads-panel-title"
+                                    style="font-size:12px;color:#5f6368;font-weight:400">Google Ads</span>
+                                <button class="gads-promo-close"
+                                    onclick="this.closest('.gads-panel').style.display='none'">&#10005;</button>
+                                <span class="gads-panel-more">⋮</span>
+                            </div>
+                            <div class="gads-promo-body">
+                                <div class="gads-promo-title">Google Marketing Live 2026</div>
+                                <div class="gads-promo-desc">Tune in now to see groundbreaking ads innovations across
+                                    Ads, Search, and YouTube.</div>
+                                <div class="gads-promo-thumb">
+                                    <div class="gads-promo-thumb-inner">
+                                        <div class="gads-promo-thumb-content">
+                                            <div class="gads-promo-thumb-text">
+                                                <div class="gads-promo-thumb-google">Google Ads</div>
+                                                <div class="gads-promo-thumb-headline">Google Marketing Live 2026</div>
+                                                <div class="gads-promo-thumb-sub">Global Keynote 2026</div>
+                                            </div>
+                                            <div class="gads-play-btn"></div>
+                                            <span class="gads-yt-badge">&#9654; YouTube</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-  </div><!-- /gads-bottom -->
-</div><!-- /gads-dashboard -->
+                    </div><!-- /gads-bottom -->
+                </div><!-- /gads-dashboard -->
                 <div v-if="pageMode === 'reporteditor'" class="ga-re-container">
-    
-    <div class="ga-re-action-bar">
-        <button class="ga-re-btn-primary" type="button">
-            <span class="material-symbols-outlined">add</span>
-            Create report
-        </button>
-    </div>
 
-    <div class="ga-re-card">
-        <div class="ga-re-card-header" style="justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-symbols-outlined" style="color: #5f6368;">analytics</span>
-                <span class="ga-re-card-title">Generate report</span>
-                <span class="ga-re-badge-beta">BETA</span>
-            </div>
-            <span class="material-symbols-outlined" style="color: #5f6368; cursor: pointer;">expand_less</span>
-        </div>
-        
-        <div class="ga-re-card-body">
-            <div class="ga-re-search-row">
-                <input type="text" class="ga-re-input" placeholder="Describe the report you want to generate">
-                <button class="ga-re-btn-generate" disabled>Generate</button>
-                <a href="#" class="ga-re-link-suggest">Refresh suggestions</a>
-            </div>
-            
-            <div class="ga-re-chips-group">
-                <button class="ga-re-chip" type="button">Where is my performance dropping?</button>
-                <button class="ga-re-chip" type="button">What are my top campaigns?</button>
-                <button class="ga-re-chip" type="button">Who are seeing my ads?</button>
-            </div>
-            
-            <p class="ga-re-notice-text">
-                Review the automatically selected rows and columns to ensure the generated report represents what you asked for. Do not share personal, confidential, or sensitive information. Learn more about Google's <a href="#">Terms of Service</a>.
-            </p>
-        </div>
-    </div>
-
-    <div class="ga-re-section">
-        <h2 class="ga-re-section-title">Frequently used reports</h2>
-        
-        <div class="ga-re-grid">
-            <a href="/aw/reporteditor/view" class="ga-re-report-card">
-                <div class="card-meta">Saved report</div>
-                <div class="card-main-title">2</div>
-                <div class="card-author">Created by reillymalvina309@gmail.com</div>
-            </a>
-
-            <div class="ga-re-report-card">
-                <div class="card-meta">Saved report</div>
-                <div class="card-main-title">BA</div>
-                <div class="card-author">Created by reillymalvina309@gmail.com</div>
-            </div>
-
-            <div class="ga-re-report-card">
-                <div class="card-meta">Saved report</div>
-                <div class="card-main-title">JK</div>
-                <div class="card-author">Created by reillymalvina309@gmail.com</div>
-            </div>
-
-            <div class="ga-re-report-card">
-                <div class="card-meta">Saved report</div>
-                <div class="card-main-title">999</div>
-                <div class="card-author">Created by reillymalvina309@gmail.com</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ga-re-card" style="margin-top: 16px;">
-        <div class="ga-re-card-header" style="justify-content: space-between; cursor: pointer; padding: 16px 24px;">
-            <span class="ga-re-card-title" style="font-size: 15px;">Saved reports</span>
-            <span class="material-symbols-outlined" style="color: #5f6368;">expand_more</span>
-        </div>
-    </div>
-
-</div>
-<template v-if="pageMode !== 'reporteditor' && pageMode !== 'overview'">
-                <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
-                    <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns' }}</button>
-                    <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
-                </div>
-
-                <div v-if="pageMode !== 'adassets'" class="ga-info-banner">
-                    <span class="material-symbols-outlined">info</span>
-                    <span>You are viewing data between {{ data.dateRange.start }} and {{ data.dateRange.end }}</span>
-                    <a href="#" @click.prevent="toggleDatePicker">Change date range</a>
-                    <a href="#">Dismiss</a>
-                </div>
-
-                <section v-if="pageMode !== 'adassets'" class="ga-metrics">
-                    <div v-for="(metric, index) in metricCards" :key="metric.label" class="ga-metric-card"
-                        :class="{ primary: index === 0 }">
-                        <span>{{ metric.label }}</span>
-                        <strong>{{ metric.value }}</strong>
-                        <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
-                            <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
-                            <small style="margin-left: 4px;">{{ metric.delta }}</small>
-                        </div>
-                        <div class="ga-metric-skeleton" aria-hidden="true">
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="ga-metric-actions">
-                        <button v-for="action in metricActions" :key="action.label" type="button">
-                            <span class="material-symbols-outlined">{{ action.icon }}</span>
-                            <small>{{ action.label }}</small>
-                            <b v-if="action.badge">{{ action.badge }}</b>
+                    <div class="ga-re-action-bar">
+                        <button class="ga-re-btn-primary" type="button">
+                            <span class="material-symbols-outlined">add</span>
+                            Create report
                         </button>
                     </div>
-                </section>
 
-                <section v-if="pageMode === 'adassets'" class="ga-asset-strength">
-                    <div class="ga-strength-message">
+                    <div class="ga-re-card">
+                        <div class="ga-re-card-header" style="justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-symbols-outlined" style="color: #5f6368;">analytics</span>
+                                <span class="ga-re-card-title">Generate report</span>
+                                <span class="ga-re-badge-beta">BETA</span>
+                            </div>
+                            <span class="material-symbols-outlined"
+                                style="color: #5f6368; cursor: pointer;">expand_less</span>
+                        </div>
+
+                        <div class="ga-re-card-body">
+                            <div class="ga-re-search-row">
+                                <input type="text" class="ga-re-input"
+                                    placeholder="Describe the report you want to generate">
+                                <button class="ga-re-btn-generate" disabled>Generate</button>
+                                <a href="#" class="ga-re-link-suggest">Refresh suggestions</a>
+                            </div>
+
+                            <div class="ga-re-chips-group">
+                                <button class="ga-re-chip" type="button">Where is my performance dropping?</button>
+                                <button class="ga-re-chip" type="button">What are my top campaigns?</button>
+                                <button class="ga-re-chip" type="button">Who are seeing my ads?</button>
+                            </div>
+
+                            <p class="ga-re-notice-text">
+                                Review the automatically selected rows and columns to ensure the generated report
+                                represents what you asked for. Do not share personal, confidential, or sensitive
+                                information. Learn more about Google's <a href="#">Terms of Service</a>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="ga-re-section">
+                        <h2 class="ga-re-section-title">Frequently used reports</h2>
+
+                        <div class="ga-re-grid">
+                            <a href="/aw/reporteditor/view" class="ga-re-report-card">
+                                <div class="card-meta">Saved report</div>
+                                <div class="card-main-title">2</div>
+                                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+                            </a>
+
+                            <div class="ga-re-report-card">
+                                <div class="card-meta">Saved report</div>
+                                <div class="card-main-title">BA</div>
+                                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+                            </div>
+
+                            <div class="ga-re-report-card">
+                                <div class="card-meta">Saved report</div>
+                                <div class="card-main-title">JK</div>
+                                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+                            </div>
+
+                            <div class="ga-re-report-card">
+                                <div class="card-meta">Saved report</div>
+                                <div class="card-main-title">999</div>
+                                <div class="card-author">Created by reillymalvina309@gmail.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ga-re-card" style="margin-top: 16px;">
+                        <div class="ga-re-card-header"
+                            style="justify-content: space-between; cursor: pointer; padding: 16px 24px;">
+                            <span class="ga-re-card-title" style="font-size: 15px;">Saved reports</span>
+                            <span class="material-symbols-outlined" style="color: #5f6368;">expand_more</span>
+                        </div>
+                    </div>
+
+                </div>
+                <template
+                    v-if="pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations'">
+                    <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
+                        <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns'
+                            }}</button>
+                        <button type="button">{{ pageMode === 'adassets' ? 'Combinations' : 'Settings' }}</button>
+                    </div>
+
+                    <div v-if="pageMode !== 'adassets'" class="ga-info-banner">
                         <span class="material-symbols-outlined">info</span>
-                        <span>Add videos to make more compelling ads.</span>
+                        <span>You are viewing data between {{ data.dateRange.start }} and {{ data.dateRange.end
+                            }}</span>
+                        <a href="#" @click.prevent="toggleDatePicker">Change date range</a>
+                        <a href="#">Dismiss</a>
                     </div>
-                    <div class="ga-strength-score">
-                        <span class="ga-ring"></span>
-                        <div><strong>Ad strength</strong><span>Good</span></div>
-                    </div>
-                    <div class="ga-strength-counts">
-                        <span><b :data-fill="data.assetSummaryProgress[0]" :style="{ '--fill-percent': data.assetSummaryProgress[0] }" :class="{ 'ga-filled': data.assetSummaryProgress[0] >= 1 }"></b>Headlines<br>{{ data.assetSummary.headlines }}</span>
-                        <span><b :data-fill="data.assetSummaryProgress[1]" :style="{ '--fill-percent': data.assetSummaryProgress[1] }" :class="{ 'ga-filled': data.assetSummaryProgress[1] >= 1 }"></b>Descriptions<br>{{ data.assetSummary.descriptions }}</span>
-                        <span><b :data-fill="data.assetSummaryProgress[2]" :style="{ '--fill-percent': data.assetSummaryProgress[2] }" :class="{ 'ga-filled': data.assetSummaryProgress[2] >= 1 }"></b>Images<br>{{ data.assetSummary.images }}</span>
-                        <span><b :data-fill="data.assetSummaryProgress[3]" :style="{ '--fill-percent': data.assetSummaryProgress[3] }" :class="{ 'ga-filled': data.assetSummaryProgress[3] >= 1 }"></b>Videos<br>{{ data.assetSummary.videos }}</span>
-                    </div>
-                    <span class="material-symbols-outlined">expand_more</span>
-                </section>
 
-                <section v-if="pageMode === 'adassets'" class="ga-asset-chart-area"
-                    aria-label="Ad asset performance chart" @mouseleave="hideAssetChartTooltip">
-                    <div class="ga-asset-chart-controls">
-                        <button class="ga-chart-select" type="button" aria-label="Chart metric">
-                            <span class="ga-chart-series-dot blue"></span>
-                            <span>Conversions</span>
-                            <span class="material-symbols-outlined">arrow_drop_down</span>
-                        </button>
-                        <button class="ga-chart-select" type="button" aria-label="Comparison metric">
-                            <span class="ga-chart-series-dot red"></span>
-                            <span>None</span>
-                            <span class="material-symbols-outlined">arrow_drop_down</span>
-                        </button>
-                        <span style="width: 20px;">  </span>
-                        <button class="ga-chart-tool" type="button">
-                            <span class="material-symbols-outlined">show_chart</span>
-                            <small>Chart type</small>
-                        </button>
-                        <button class="ga-chart-tool" type="button">
-                            <span class="material-symbols-outlined">fullscreen</span>
-                            <small>Expand</small>
-                        </button>
-                        <button class="ga-chart-tool" type="button">
-                            <span class="material-symbols-outlined">tune</span>
-                            <small>Adjust</small>
-                        </button>
-                    </div>
-                    <svg viewBox="0 0 1000 180" preserveAspectRatio="none">
-                        <line x1="78" y1="30" x2="970" y2="30"></line>
-                        <line x1="78" y1="90" x2="970" y2="90"></line>
-                        <line x1="78" y1="152" x2="970" y2="152"></line>
-                        <line v-if="assetChartTooltip.visible" :x1="assetChartPoint.x"
-                            :x2="assetChartPoint.x" y1="30" y2="154" class="ga-chart-hover-line"></line>
-                        <circle :cx="assetChartPoint.x" :cy="assetChartPoint.y" r="16"
-                            class="ga-asset-chart-point-hitarea" @mouseenter="showAssetChartTooltip"
-                            @mouseleave="hideAssetChartTooltip" @focus="showAssetChartTooltip"
-                            @blur="hideAssetChartTooltip" tabindex="0" aria-label="Show asset conversions data"></circle>
-                    </svg>
-                    <span class="ga-asset-chart-y-label" style="--chart-y: 30;">{{ assetChartLabels.max }}</span>
-                    <span class="ga-asset-chart-y-label" style="--chart-y: 90;">{{ assetChartLabels.mid }}</span>
-                    <span class="ga-asset-chart-y-label" style="--chart-y: 152;">{{ assetChartLabels.min }}</span>
-                    <span class="ga-asset-chart-point-marker" :style="assetChartPointMarkerStyle"
-                        aria-hidden="true"></span>
-                    <div v-if="assetChartTooltip.visible" class="ga-chart-tooltip ga-asset-chart-tooltip"
-                        :style="assetChartTooltipStyle">
-                        <div class="ga-chart-tooltip-date">{{ assetChartTooltipDate }}</div>
-                        <div class="ga-chart-tooltip-label">Conversions</div>
-                        <div class="ga-chart-tooltip-value">
-                            <span aria-hidden="true"></span>
-                            {{ assetChartTooltipValue }}
+                    <section v-if="pageMode !== 'adassets'" class="ga-metrics">
+                        <div v-for="(metric, index) in metricCards" :key="metric.label" class="ga-metric-card"
+                            :class="{ primary: index === 0 }">
+                            <span>{{ metric.label }}</span>
+                            <strong>{{ metric.value }}</strong>
+                            <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
+                                <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
+                                <small style="margin-left: 4px;">{{ metric.delta }}</small>
+                            </div>
+                            <div class="ga-metric-skeleton" aria-hidden="true">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
-                    </div>
-                    <span class="ga-chart-start">{{ formattedStartDate }}</span>
-                    <span class="ga-chart-end">{{ formattedEndDate }}</span>
-                </section>
-
-                <section v-if="pageMode === 'campaigns' || pageMode === 'adgroups'"
-                    class="ga-chart-area ga-conversions-dot-chart" @mouseleave="hideConversionsChartTooltip">
-                    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" aria-label="Conversions dot chart">
-                        <line x1="78" y1="30" x2="970" y2="30"></line>
-                        <line x1="78" y1="92" x2="970" y2="92"></line>
-                        <line x1="78" y1="154" x2="970" y2="154"></line>
-                        <line v-if="conversionsChartTooltip.visible" :x1="conversionsChartPoint.x"
-                            :x2="conversionsChartPoint.x" y1="30" y2="154" class="ga-chart-hover-line"></line>
-                        <circle :cx="conversionsChartPoint.x" :cy="conversionsChartPoint.y" r="16"
-                            class="ga-chart-point-hitarea" @mouseenter="showConversionsChartTooltip"
-                            @mouseleave="hideConversionsChartTooltip" @focus="showConversionsChartTooltip"
-                            @blur="hideConversionsChartTooltip" tabindex="0" aria-label="Show conversions data"></circle>
-                    </svg>
-                    <span class="ga-chart-y-label" style="--chart-y: 30;">{{ conversionsChartLabels.max }}</span>
-                    <span class="ga-chart-y-label" style="--chart-y: 92;">{{ conversionsChartLabels.mid }}</span>
-                    <span class="ga-chart-y-label" style="--chart-y: 154;">{{ conversionsChartLabels.min }}</span>
-                    <span class="ga-chart-point-marker" :style="conversionsChartPointMarkerStyle"
-                        aria-hidden="true"></span>
-                    <div v-if="conversionsChartTooltip.visible" class="ga-chart-tooltip"
-                        :style="conversionsChartTooltipStyle">
-                        <div class="ga-chart-tooltip-date">{{ conversionsChartTooltipDate }}</div>
-                        <div class="ga-chart-tooltip-label">Conversions</div>
-                        <div class="ga-chart-tooltip-value">
-                            <span aria-hidden="true"></span>
-                            {{ conversionsChartTooltipValue }}
+                        <div class="ga-metric-actions">
+                            <button v-for="action in metricActions" :key="action.label" type="button">
+                                <span class="material-symbols-outlined">{{ action.icon }}</span>
+                                <small>{{ action.label }}</small>
+                                <b v-if="action.badge">{{ action.badge }}</b>
+                            </button>
                         </div>
-                    </div>
-                    <div v-if="isRefreshing && refreshMode === 'full'" class="ga-chart-loading" role="status" aria-label="Refreshing data">
-                        <span></span>
-                    </div>
-                    <span class="ga-chart-start">{{ formattedStartDate }}</span>
-                    <span class="ga-chart-end">{{ formattedEndDate }}</span>
-                </section>
+                    </section>
 
-                <section class="ga-table-panel" :class="{
+                    <section v-if="pageMode === 'adassets'" class="ga-asset-strength">
+                        <div class="ga-strength-message">
+                            <span class="material-symbols-outlined">info</span>
+                            <span>Add videos to make more compelling ads.</span>
+                        </div>
+                        <div class="ga-strength-score">
+                            <span class="ga-ring"></span>
+                            <div><strong>Ad strength</strong><span>Good</span></div>
+                        </div>
+                        <div class="ga-strength-counts">
+                            <span><b :data-fill="data.assetSummaryProgress[0]"
+                                    :style="{ '--fill-percent': data.assetSummaryProgress[0] }"
+                                    :class="{ 'ga-filled': data.assetSummaryProgress[0] >= 1 }"></b>Headlines<br>{{
+                                data.assetSummary.headlines }}</span>
+                            <span><b :data-fill="data.assetSummaryProgress[1]"
+                                    :style="{ '--fill-percent': data.assetSummaryProgress[1] }"
+                                    :class="{ 'ga-filled': data.assetSummaryProgress[1] >= 1 }"></b>Descriptions<br>{{
+                                data.assetSummary.descriptions }}</span>
+                            <span><b :data-fill="data.assetSummaryProgress[2]"
+                                    :style="{ '--fill-percent': data.assetSummaryProgress[2] }"
+                                    :class="{ 'ga-filled': data.assetSummaryProgress[2] >= 1 }"></b>Images<br>{{
+                                data.assetSummary.images }}</span>
+                            <span><b :data-fill="data.assetSummaryProgress[3]"
+                                    :style="{ '--fill-percent': data.assetSummaryProgress[3] }"
+                                    :class="{ 'ga-filled': data.assetSummaryProgress[3] >= 1 }"></b>Videos<br>{{
+                                data.assetSummary.videos }}</span>
+                        </div>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </section>
+
+                    <section v-if="pageMode === 'adassets'" class="ga-asset-chart-area"
+                        aria-label="Ad asset performance chart" @mouseleave="hideAssetChartTooltip">
+                        <div class="ga-asset-chart-controls">
+                            <button class="ga-chart-select" type="button" aria-label="Chart metric">
+                                <span class="ga-chart-series-dot blue"></span>
+                                <span>Conversions</span>
+                                <span class="material-symbols-outlined">arrow_drop_down</span>
+                            </button>
+                            <button class="ga-chart-select" type="button" aria-label="Comparison metric">
+                                <span class="ga-chart-series-dot red"></span>
+                                <span>None</span>
+                                <span class="material-symbols-outlined">arrow_drop_down</span>
+                            </button>
+                            <span style="width: 20px;"> </span>
+                            <button class="ga-chart-tool" type="button">
+                                <span class="material-symbols-outlined">show_chart</span>
+                                <small>Chart type</small>
+                            </button>
+                            <button class="ga-chart-tool" type="button">
+                                <span class="material-symbols-outlined">fullscreen</span>
+                                <small>Expand</small>
+                            </button>
+                            <button class="ga-chart-tool" type="button">
+                                <span class="material-symbols-outlined">tune</span>
+                                <small>Adjust</small>
+                            </button>
+                        </div>
+                        <svg viewBox="0 0 1000 180" preserveAspectRatio="none">
+                            <line x1="78" y1="30" x2="970" y2="30"></line>
+                            <line x1="78" y1="90" x2="970" y2="90"></line>
+                            <line x1="78" y1="152" x2="970" y2="152"></line>
+                            <line v-if="assetChartTooltip.visible" :x1="assetChartPoint.x" :x2="assetChartPoint.x"
+                                y1="30" y2="154" class="ga-chart-hover-line"></line>
+                            <circle :cx="assetChartPoint.x" :cy="assetChartPoint.y" r="16"
+                                class="ga-asset-chart-point-hitarea" @mouseenter="showAssetChartTooltip"
+                                @mouseleave="hideAssetChartTooltip" @focus="showAssetChartTooltip"
+                                @blur="hideAssetChartTooltip" tabindex="0" aria-label="Show asset conversions data">
+                            </circle>
+                        </svg>
+                        <span class="ga-asset-chart-y-label" style="--chart-y: 30;">{{ assetChartLabels.max }}</span>
+                        <span class="ga-asset-chart-y-label" style="--chart-y: 90;">{{ assetChartLabels.mid }}</span>
+                        <span class="ga-asset-chart-y-label" style="--chart-y: 152;">{{ assetChartLabels.min }}</span>
+                        <span class="ga-asset-chart-point-marker" :style="assetChartPointMarkerStyle"
+                            aria-hidden="true"></span>
+                        <div v-if="assetChartTooltip.visible" class="ga-chart-tooltip ga-asset-chart-tooltip"
+                            :style="assetChartTooltipStyle">
+                            <div class="ga-chart-tooltip-date">{{ assetChartTooltipDate }}</div>
+                            <div class="ga-chart-tooltip-label">Conversions</div>
+                            <div class="ga-chart-tooltip-value">
+                                <span aria-hidden="true"></span>
+                                {{ assetChartTooltipValue }}
+                            </div>
+                        </div>
+                        <span class="ga-chart-start">{{ formattedStartDate }}</span>
+                        <span class="ga-chart-end">{{ formattedEndDate }}</span>
+                    </section>
+
+                    <section v-if="pageMode === 'campaigns' || pageMode === 'adgroups'"
+                        class="ga-chart-area ga-conversions-dot-chart" @mouseleave="hideConversionsChartTooltip">
+                        <svg viewBox="0 0 1000 180" preserveAspectRatio="none" aria-label="Conversions dot chart">
+                            <line x1="78" y1="30" x2="970" y2="30"></line>
+                            <line x1="78" y1="92" x2="970" y2="92"></line>
+                            <line x1="78" y1="154" x2="970" y2="154"></line>
+                            <line v-if="conversionsChartTooltip.visible" :x1="conversionsChartPoint.x"
+                                :x2="conversionsChartPoint.x" y1="30" y2="154" class="ga-chart-hover-line"></line>
+                            <circle :cx="conversionsChartPoint.x" :cy="conversionsChartPoint.y" r="16"
+                                class="ga-chart-point-hitarea" @mouseenter="showConversionsChartTooltip"
+                                @mouseleave="hideConversionsChartTooltip" @focus="showConversionsChartTooltip"
+                                @blur="hideConversionsChartTooltip" tabindex="0" aria-label="Show conversions data">
+                            </circle>
+                        </svg>
+                        <span class="ga-chart-y-label" style="--chart-y: 30;">{{ conversionsChartLabels.max }}</span>
+                        <span class="ga-chart-y-label" style="--chart-y: 92;">{{ conversionsChartLabels.mid }}</span>
+                        <span class="ga-chart-y-label" style="--chart-y: 154;">{{ conversionsChartLabels.min }}</span>
+                        <span class="ga-chart-point-marker" :style="conversionsChartPointMarkerStyle"
+                            aria-hidden="true"></span>
+                        <div v-if="conversionsChartTooltip.visible" class="ga-chart-tooltip"
+                            :style="conversionsChartTooltipStyle">
+                            <div class="ga-chart-tooltip-date">{{ conversionsChartTooltipDate }}</div>
+                            <div class="ga-chart-tooltip-label">Conversions</div>
+                            <div class="ga-chart-tooltip-value">
+                                <span aria-hidden="true"></span>
+                                {{ conversionsChartTooltipValue }}
+                            </div>
+                        </div>
+                        <div v-if="isRefreshing && refreshMode === 'full'" class="ga-chart-loading" role="status"
+                            aria-label="Refreshing data">
+                            <span></span>
+                        </div>
+                        <span class="ga-chart-start">{{ formattedStartDate }}</span>
+                        <span class="ga-chart-end">{{ formattedEndDate }}</span>
+                    </section>
+
+                    <section class="ga-table-panel" :class="{
                     'ga-table-panel--refreshing': isRefreshing && refreshMode === 'full',
                     'ga-table-panel--campaign-refreshing': isRefreshing && refreshMode === 'full' && pageMode === 'campaigns',
                     'ga-table-panel--adassets': pageMode === 'adassets'
                 }">
-                   <button class="ga-floating-add" :class="{ 'ga-floating-add--fixed': floatingAddIsFixed }" type="button"
-                        :aria-label="pageMode === 'adassets' ? 'Edit' : 'Create'">
-                        <span class="material-symbols-outlined">{{ pageMode === 'adassets' ? 'edit' : 'add' }}</span>
-                        <span class="ga-create-tooltip">Create campaign</span>
-                    </button>
-                    <div class="ga-table-toolbar">
-                        <div class="ga-toolbar-left" @click.stop>
-                            <div v-if="pageMode === 'campaigns'" class="ga-toolbar-filter filter-dropdown-wrapper"
-                                ref="campaignFilterDropdownRef">
-                                <span class="material-symbols-outlined">filter_alt</span>
-                                <div class="ga-toolbar-filter-control">
-                                    <div class="thead" @click.stop="openCampaignFilterDropdown">Add filter</div>
-                                    <div class="filter-input-container">
-                                        <div v-if="activeCampaignFilterTag" class="filter-tag"
-                                            :class="{ focused: isCampaignFilterTagFocused }"
-                                            @click.stop="focusCampaignFilterTag">
-                                            <span class="filter-tag-text">{{ activeCampaignFilterTag }}</span>
-                                            <span v-if="showCampaignFilterTagClose"
-                                                class="material-symbols-outlined filter-tag-close"
-                                                @click.stop="clearActiveCampaignFilter">close</span>
+                        <button class="ga-floating-add" :class="{ 'ga-floating-add--fixed': floatingAddIsFixed }"
+                            type="button" :aria-label="pageMode === 'adassets' ? 'Edit' : 'Create'">
+                            <span class="material-symbols-outlined">{{ pageMode === 'adassets' ? 'edit' : 'add'
+                                }}</span>
+                            <span class="ga-create-tooltip">Create campaign</span>
+                        </button>
+                        <div class="ga-table-toolbar">
+                            <div class="ga-toolbar-left" @click.stop>
+                                <div v-if="pageMode === 'campaigns'" class="ga-toolbar-filter filter-dropdown-wrapper"
+                                    ref="campaignFilterDropdownRef">
+                                    <span class="material-symbols-outlined">filter_alt</span>
+                                    <div class="ga-toolbar-filter-control">
+                                        <div class="thead" @click.stop="openCampaignFilterDropdown">Add filter</div>
+                                        <div class="filter-input-container">
+                                            <div v-if="activeCampaignFilterTag" class="filter-tag"
+                                                :class="{ focused: isCampaignFilterTagFocused }"
+                                                @click.stop="focusCampaignFilterTag">
+                                                <span class="filter-tag-text">{{ activeCampaignFilterTag }}</span>
+                                                <span v-if="showCampaignFilterTagClose"
+                                                    class="material-symbols-outlined filter-tag-close"
+                                                    @click.stop="clearActiveCampaignFilter">close</span>
+                                            </div>
+                                            <input v-model="campaignFilterText" class="field" type="text"
+                                                aria-label="Add campaign filter" placeholder=""
+                                                @focus="openCampaignFilterDropdown" @input="openCampaignFilterDropdown">
                                         </div>
-                                        <input v-model="campaignFilterText" class="field" type="text"
-                                            aria-label="Add campaign filter" placeholder=""
-                                            @focus="openCampaignFilterDropdown" @input="openCampaignFilterDropdown">
+                                        <transition name="ga-campaign-filter-dropdown">
+                                            <div v-if="showCampaignFilterDropdown" class="filter-selector-dropdown"
+                                                @click.stop>
+                                                <div class="filter-selector-list">
+                                                    <div v-for="filter in displayCampaignFilters" :key="filter.id"
+                                                        class="filter-option" @click="selectCampaignFilter(filter)">
+                                                        <span class="filter-option-name">{{ filter.name }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </transition>
+                                        <transition name="ga-campaign-filter-dropdown">
+                                            <div v-if="showCampaignFilterValueModal" class="filter-value-modal"
+                                                @click.stop>
+                                                <div class="filter-value-modal-content">
+                                                    <div class="filter-value-header">
+                                                        <span class="filter-value-title">{{ selectedCampaignFilterName
+                                                            }}</span>
+                                                        <button class="filter-value-close" type="button"
+                                                            aria-label="Close filter"
+                                                            @click="closeCampaignFilterValueModal">
+                                                            <span class="material-symbols-outlined">close</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="filter-value-body">
+                                                        <div class="filter-value-row">
+                                                            <select class="filter-value-operator-select"
+                                                                v-model="campaignFilterOperator">
+                                                                <option value="contains">contains</option>
+                                                                <option value="is">is</option>
+                                                                <option value="is not">is not</option>
+                                                                <option value="does not contain">does not contain
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="filter-value-row">
+                                                            <input type="text" v-model="campaignFilterValueInput"
+                                                                class="filter-value-text-input"
+                                                                placeholder="Enter one value per line"
+                                                                @keyup.enter="applyCampaignFilterValue">
+                                                        </div>
+                                                    </div>
+                                                    <div class="filter-value-footer">
+                                                        <button class="filter-value-btn apply-btn"
+                                                            @click="applyCampaignFilterValue">Apply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </transition>
                                     </div>
-                                    <transition name="ga-campaign-filter-dropdown">
-                                        <div v-if="showCampaignFilterDropdown" class="filter-selector-dropdown" @click.stop>
-                                            <div class="filter-selector-list">
-                                                <div v-for="filter in displayCampaignFilters" :key="filter.id"
-                                                    class="filter-option" @click="selectCampaignFilter(filter)">
-                                                    <span class="filter-option-name">{{ filter.name }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </transition>
-                                    <transition name="ga-campaign-filter-dropdown">
-                                        <div v-if="showCampaignFilterValueModal" class="filter-value-modal" @click.stop>
-                                            <div class="filter-value-modal-content">
-                                                <div class="filter-value-header">
-                                                    <span class="filter-value-title">{{ selectedCampaignFilterName }}</span>
-                                                    <button class="filter-value-close" type="button" aria-label="Close filter"
-                                                        @click="closeCampaignFilterValueModal">
-                                                        <span class="material-symbols-outlined">close</span>
-                                                    </button>
-                                                </div>
-                                                <div class="filter-value-body">
-                                                    <div class="filter-value-row">
-                                                        <select class="filter-value-operator-select" v-model="campaignFilterOperator">
-                                                            <option value="contains">contains</option>
-                                                            <option value="is">is</option>
-                                                            <option value="is not">is not</option>
-                                                            <option value="does not contain">does not contain</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="filter-value-row">
-                                                        <input type="text" v-model="campaignFilterValueInput"
-                                                            class="filter-value-text-input" placeholder="Enter one value per line"
-                                                            @keyup.enter="applyCampaignFilterValue">
-                                                    </div>
-                                                </div>
-                                                <div class="filter-value-footer">
-                                                    <button class="filter-value-btn apply-btn"
-                                                        @click="applyCampaignFilterValue">Apply</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </transition>
                                 </div>
+                                <template v-else>
+                                    <span class="material-symbols-outlined">filter_alt</span>
+                                    <button v-if="pageMode === 'adassets'" class="ga-filter-badge" type="button">Asset
+                                        status:
+                                        All enabled</button>
+                                    <span>Add filter</span>
+                                </template>
                             </div>
-                            <template v-else>
-                                <span class="material-symbols-outlined">filter_alt</span>
-                                <button v-if="pageMode === 'adassets'" class="ga-filter-badge" type="button">Asset status:
-                                    All enabled</button>
-                                <span>Add filter</span>
-                            </template>
+                            <div class="ga-toolbar-actions">
+                                <button v-for="tool in tableTools" :key="tool.label" type="button">
+                                    <span class="material-symbols-outlined">{{ tool.icon }}</span>
+                                    <small>{{ tool.label }}</small>
+                                </button>
+                                <div class="ga-vertical-divider" aria-hidden="true"></div>
+                                <button type="button">
+                                    <span class="material-symbols-outlined">keyboard_arrow_up</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="ga-toolbar-actions">
-                            <button v-for="tool in tableTools" :key="tool.label" type="button">
-                                <span class="material-symbols-outlined">{{ tool.icon }}</span>
-                                <small>{{ tool.label }}</small>
-                            </button>
-                            <div class="ga-vertical-divider" aria-hidden="true"></div>
-                            <button type="button">
-                                <span class="material-symbols-outlined">keyboard_arrow_up</span>
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- <div v-if="pageMode === 'adassets'" class="ga-policy-alert">
+                        <!-- <div v-if="pageMode === 'adassets'" class="ga-policy-alert">
                         Ad violates policy and can't run:
                         <a href="#">Destination not working</a>
                     </div> -->
 
-                    <div class="ga-table-scroll">
-                        <table v-if="pageMode === 'campaigns'" class="ga-data-table campaigns">
-                            <thead>
-                                <tr>
-                                    <th class="select-col"><span class="ga-checkbox"></span></th>
-                                    <th class="state-col"><span class="ga-status-dot"></span></th>
-                                    <th class="name-col">
-                                        <button class="ga-sort-header ga-sort-header--left" type="button"
-                                            @click="toggleCampaignSort('campaign')">
-                                            <span>Campaign</span>
-                                            <span class="material-symbols-outlined">{{ campaignSortIcon('campaign') }}</span>
-                                        </button>
-                                    </th>
-                                    <th>Budget</th>
-                                    <th>Status</th>
-                                    <th><span class="th-dashed">Optimization score</span></th>
-                                    <th>Campaign type</th>
-                                    <th>Cost / Install</th>
-                                    <th>Cost / In-app action</th>
-                                    <th>View-through conv.</th>
-                                    <th>
-                                        <button class="ga-sort-header" type="button"
-                                            @click="toggleCampaignSort('installs')">
-                                            <span v-if="campaignSortKey === 'installs'"
-                                                class="material-symbols-outlined">{{ campaignSortIcon('installs') }}</span>
-                                            <span class="th-dashed">Installs</span>
-                                        </button>
-                                    </th>
-                                    <th><span class="th-dashed">In-app actions</span></th>
-                                    <th><span class="th-dashed">Particlpated in-app actions</span></th>
-                                    <th>
-                                        <button class="ga-sort-header" type="button"
-                                            @click="toggleCampaignSort('cost')">
-                                            <span v-if="campaignSortKey === 'cost'"
-                                                class="material-symbols-outlined">{{ campaignSortIcon('cost') }}</span>
-                                            <span class="th-dashed">Cost</span>
-                                        </button>
-                                    </th>
-                                    <th><span class="th-dashed">Cost / Particlpated in-app actions</span></th>
-                                    <th><span class="th-dashed">Conv. rate</span></th>
-                                    <th><span class="th-dashed">Conversions</span></th>
-                                    <th><span class="th-dashed">Cost / conv.</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="draft-row">
-                                    <td></td>
-                                    <td><span class="material-symbols-outlined">expand_more</span></td>
-                                    <td class="name-col"><span class="material-symbols-outlined filled">folder</span>
-                                        Drafts in progress: 0</td>
-                                    <td colspan="15"></td>
-                                </tr>
-                                <tr v-for="(campaign, index) in paginatedCampaignRows" :key="campaign.id || index">
-                                    <td class="select-col"><span class="ga-checkbox"></span></td>
-                                    <td class="state-col">
-                                        <div class="ga-status-cell"
-                                            :class="{ open: dropdown === statusDropdownName(campaign.id || index) }"
-                                            @click.stop>
-                                            <button class="ga-status-trigger" type="button"
-                                                :aria-label="`Change campaign status for ${campaign.campaign}`"
-                                                :aria-expanded="dropdown === statusDropdownName(campaign.id || index)"
-                                                @click.stop="toggleStatusMenu(campaign.id || index)">
-                                                <span
-                                                    :class="['ga-status-marker', statusDotClass(getStatusFromRow(campaign))]"
-                                                    aria-hidden="true"></span>
-                                                <span class="material-symbols-outlined ga-status-arrow"
-                                                    aria-hidden="true">arrow_drop_down</span>
+                        <div class="ga-table-scroll">
+                            <table v-if="pageMode === 'campaigns'" class="ga-data-table campaigns">
+                                <thead>
+                                    <tr>
+                                        <th class="select-col"><span class="ga-checkbox"></span></th>
+                                        <th class="state-col"><span class="ga-status-dot"></span></th>
+                                        <th class="name-col">
+                                            <button class="ga-sort-header ga-sort-header--left" type="button"
+                                                @click="toggleCampaignSort('campaign')">
+                                                <span>Campaign</span>
+                                                <span class="material-symbols-outlined">{{ campaignSortIcon('campaign')
+                                                    }}</span>
                                             </button>
-                                            <div v-if="dropdown === statusDropdownName(campaign.id || index)"
-                                                class="ga-status-menu" role="menu">
-                                                <button v-for="option in statusMenuOptions" :key="option.state"
-                                                    type="button" role="menuitem"
-                                                    :class="{ active: getStatusFromRow(campaign) === option.state }"
-                                                    @click.stop="setCampaignStatus(campaign, option.state)">
-                                                    <span :class="['ga-status-marker', statusDotClass(option.state)]"
+                                        </th>
+                                        <th>Budget</th>
+                                        <th>Status</th>
+                                        <th><span class="th-dashed">Optimization score</span></th>
+                                        <th>Campaign type</th>
+                                        <th>Cost / Install</th>
+                                        <th>Cost / In-app action</th>
+                                        <th>View-through conv.</th>
+                                        <th>
+                                            <button class="ga-sort-header" type="button"
+                                                @click="toggleCampaignSort('installs')">
+                                                <span v-if="campaignSortKey === 'installs'"
+                                                    class="material-symbols-outlined">{{ campaignSortIcon('installs')
+                                                    }}</span>
+                                                <span class="th-dashed">Installs</span>
+                                            </button>
+                                        </th>
+                                        <th><span class="th-dashed">In-app actions</span></th>
+                                        <th><span class="th-dashed">Particlpated in-app actions</span></th>
+                                        <th>
+                                            <button class="ga-sort-header" type="button"
+                                                @click="toggleCampaignSort('cost')">
+                                                <span v-if="campaignSortKey === 'cost'"
+                                                    class="material-symbols-outlined">{{ campaignSortIcon('cost')
+                                                    }}</span>
+                                                <span class="th-dashed">Cost</span>
+                                            </button>
+                                        </th>
+                                        <th><span class="th-dashed">Cost / Particlpated in-app actions</span></th>
+                                        <th><span class="th-dashed">Conv. rate</span></th>
+                                        <th><span class="th-dashed">Conversions</span></th>
+                                        <th><span class="th-dashed">Cost / conv.</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="draft-row">
+                                        <td></td>
+                                        <td><span class="material-symbols-outlined">expand_more</span></td>
+                                        <td class="name-col"><span
+                                                class="material-symbols-outlined filled">folder</span>
+                                            Drafts in progress: 0</td>
+                                        <td colspan="15"></td>
+                                    </tr>
+                                    <tr v-for="(campaign, index) in paginatedCampaignRows" :key="campaign.id || index">
+                                        <td class="select-col"><span class="ga-checkbox"></span></td>
+                                        <td class="state-col">
+                                            <div class="ga-status-cell"
+                                                :class="{ open: dropdown === statusDropdownName(campaign.id || index) }"
+                                                @click.stop>
+                                                <button class="ga-status-trigger" type="button"
+                                                    :aria-label="`Change campaign status for ${campaign.campaign}`"
+                                                    :aria-expanded="dropdown === statusDropdownName(campaign.id || index)"
+                                                    @click.stop="toggleStatusMenu(campaign.id || index)">
+                                                    <span
+                                                        :class="['ga-status-marker', statusDotClass(getStatusFromRow(campaign))]"
                                                         aria-hidden="true"></span>
-                                                    <span>{{ option.label }}</span>
+                                                    <span class="material-symbols-outlined ga-status-arrow"
+                                                        aria-hidden="true">arrow_drop_down</span>
                                                 </button>
+                                                <div v-if="dropdown === statusDropdownName(campaign.id || index)"
+                                                    class="ga-status-menu" role="menu">
+                                                    <button v-for="option in statusMenuOptions" :key="option.state"
+                                                        type="button" role="menuitem"
+                                                        :class="{ active: getStatusFromRow(campaign) === option.state }"
+                                                        @click.stop="setCampaignStatus(campaign, option.state)">
+                                                        <span
+                                                            :class="['ga-status-marker', statusDotClass(option.state)]"
+                                                            aria-hidden="true"></span>
+                                                        <span>{{ option.label }}</span>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="name-col">
-                                        <!-- <span class="material-symbols-outlined ga-campaign-type">download_for_offline</span> -->
-                                        <span class="ga-nghost-awv"></span>
-                                        <a :href="campaignHref(campaign.campaign)"
-                                            @click.prevent="navigateToGoogleAdsRoute(campaignHref(campaign.campaign), $event)">{{ campaign.campaign }}</a>
-                                        <i class="ga-status-rowbudget" aria-hidden="true" style="margin-left: 15px; margin-right: 25px;"></i>
-                                        <i class="material-symbols-outlined ga-status-rowitem" aria-hidden="true">settings</i>
-                                    </td>
-                                    <td class="budget-col">
-                                        <span style="display: inline-flex; align-items: center; gap: 4px; position: relative;">
-                                            {{ formatCurrency( Number(campaign.Buget != null ? campaign.Buget : campaign.budget) > 0 ? (campaign.Buget != null ? campaign.Buget : campaign.budget) : 200 ) }}/day
-                                            <span class="ga-budget-simulator-tooltip">
-                                                <i class="material-symbols-outlined" style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
+                                        </td>
+                                        <td class="name-col">
+                                            <!-- <span class="material-symbols-outlined ga-campaign-type">download_for_offline</span> -->
+                                            <span class="ga-nghost-awv"></span>
+                                            <a :href="campaignHref(campaign.campaign)"
+                                                @click.prevent="navigateToGoogleAdsRoute(campaignHref(campaign.campaign), $event)">{{
+                                                campaign.campaign }}</a>
+                                            <i class="ga-status-rowbudget" aria-hidden="true"
+                                                style="margin-left: 15px; margin-right: 25px;"></i>
+                                            <i class="material-symbols-outlined ga-status-rowitem"
+                                                aria-hidden="true">settings</i>
+                                        </td>
+                                        <td class="budget-col">
+                                            <span
+                                                style="display: inline-flex; align-items: center; gap: 4px; position: relative;">
+                                                {{ formatCurrency( Number(campaign.Buget != null ? campaign.Buget :
+                                                campaign.budget) > 0 ? (campaign.Buget != null ? campaign.Buget :
+                                                campaign.budget) : 200 ) }}/day
+                                                <span class="ga-budget-simulator-tooltip">
+                                                    <i class="material-symbols-outlined"
+                                                        style="font-size: 20px; color: #a0a2a3;">bid_landscape_disabled</i>
+                                                    <div class="ga-budget-simulator-popup">
+                                                        <div class="ga-budget-simulator-popup__title">Campaign budget
+                                                            simulator</div>
+                                                        <div class="ga-budget-simulator-popup__body">The budget
+                                                            simulator isn't available because this campaign doesn't have
+                                                            enough recent performance data.</div>
+
+                                                    </div>
+                                                </span>
+                                                <i class="ga-status-rowbudget" aria-hidden="true"></i>
+                                            </span>
+                                        </td>
+                                        <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status)
+                                                }}</span>
+                                        </td>
+                                        <td><span class="ga-optimization-score"
+                                                data-tooltip="View relevant recommendations to improve your campaign's performance">{{
+                                                percent(campaign.OptimizationScore || campaign.optimizationScore)
+                                                }}</span></td>
+                                        <td>{{ dash(campaign.CampaignType || campaign.campaignType) }}</td>
+                                        <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
+                                        <td>{{ formatCurrency(campaign.costPerInAppActions ||
+                                            campaign.costPerInAppAction) }}
+                                        </td>
+                                        <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv , 2) }}
+                                        </td>
+                                        <td>{{ formatNumber(campaign.installs,2) }}</td>
+                                        <td>{{ formatNumber(campaign.inAppActions,2) }}</td>
+                                        <td>{{ formatNumber(campaign.ParticipatedInAppActions,2) }}</td>
+                                        <td>{{ formatCurrency(campaign.cost) }}</td>
+                                        <td>{{ formatCurrency(campaign.CostPerParticipatedInAppAction) }}</td>
+                                        <td>{{ percent(campaign.ConvRate) }}</td>
+                                        <td>{{ formatNumber(campaign.Conversions , 2) }}</td>
+                                        <td>{{ formatCurrency(campaign.CostPerConv) }}</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td colspan="3">Total: All campaigns in your current view</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>{{ formatNumber(totals.viewThroughConv , 2) }}</td>
+                                        <td>{{ formatNumber(totals.installs,2) }}</td>
+                                        <td>{{ formatNumber(totals.inAppActions,2) }}</td>
+                                        <td>—</td>
+                                        <td>{{ formatCurrency(totals.cost) }}</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table v-if="pageMode === 'adgroups'" class="ga-data-table adgroups">
+                                <thead>
+                                    <tr>
+                                        <th class="select-col"><span class="ga-checkbox"></span></th>
+                                        <th class="state-col"><span class="ga-status-dot"></span></th>
+                                        <th class="name-col">Ad group <span
+                                                class="material-symbols-outlined">arrow_downward</span></th>
+                                        <th>Status</th>
+                                        <th>Target CPA</th>
+                                        <th>Conversions</th>
+                                        <th>Cost / conv.</th>
+                                        <th>Cost / Install</th>
+                                        <th>Cost / In-app action</th>
+                                        <th>View-through conv.</th>
+                                        <th>Brand Inclusions</th>
+                                        <th>Locations of interest</th>
+                                        <th>Installs</th>
+                                        <th>In-app actions</th>
+                                        <th>Particlpated in-app actions</th>
+                                        <th>Cost</th>
+                                        <th>Cost / Particlpated in-app actions</th>
+                                        <th>Conv. rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(adGroup, index) in paginatedAdGroupRows" :key="adGroup.id">
+                                        <td><span class="ga-checkbox"></span></td>
+                                        <td><span
+                                                :class="'ga-status-dot ' + statusDotClass(getStatusFromRow(adGroup))"></span>
+                                        </td>
+                                        <td class="name-col"><a :href="adAssetsHref"
+                                                @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{
+                                                adGroup.adGroup }}</a></td>
+                                        <td><span class="ga-dashed">{{ dash(adGroup.Status || adGroup.status) }}</span>
+                                        </td>
+                                        <td>{{ fixed(adGroup.TargetCPA || adGroup.targetCpa) }}</td>
+                                        <td>{{ numberOrZero(adGroup.Conversions) }}</td>
+                                        <td>{{ moneyOrDash(adGroup.CostPerConv) }}</td>
+                                        <td>{{ moneyOrDash(adGroup.costPerInstall) }}</td>
+                                        <td>{{ moneyOrDash(adGroup.costPerInAppActions) }}</td>
+                                        <td>{{ numberOrZero(adGroup.ViewThroughConv) }}</td>
+                                        <td>{{ dash(adGroup.BrandInclusions) }}</td>
+                                        <td>{{ dash(adGroup.LocationsOfInterest) }}</td>
+                                        <td>{{ numberOrZero(adGroup.installs) }}</td>
+                                        <td>{{ numberOrZero(adGroup.inAppActions) }}</td>
+                                        <td>{{ numberOrZero(adGroup.ParticipatedInAppActions) }}</td>
+                                        <td>{{ money(adGroup.cost) }}</td>
+                                        <td>{{ moneyOrDash(adGroup.CostPerParticipatedInAppAction) }}</td>
+                                        <td>{{ percent(adGroup.ConvRate) }}</td>
+                                    </tr>
+                                    <tr v-if="adGroupRows.length" class="total-row">
+                                        <td colspan="5">Total: {{ adGroupRows.length }} ad groups</td>
+                                        <td>{{ numberOrZero(adGroupTotal.Conversions) }}</td>
+                                        <td>{{ money(adGroupTotal.CostPerConv) }}</td>
+                                        <td>{{ moneyOrDash(adGroupTotal.costPerInstall) }}</td>
+                                        <td>{{ moneyOrDash(adGroupTotal.costPerInAppActions) }}</td>
+                                        <td>{{ numberOrZero(adGroupTotal.ViewThroughConv) }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ numberOrZero(adGroupTotal.installs) }}</td>
+                                        <td>{{ numberOrZero(adGroupTotal.inAppActions) }}</td>
+                                        <td>{{ numberOrZero(adGroupTotal.ParticipatedInAppActions) }}</td>
+                                        <td>{{ money(adGroupTotal.cost) }}</td>
+                                        <td>{{ moneyOrDash(adGroupTotal.CostPerParticipatedInAppAction) }}</td>
+                                        <td>{{ percent(adGroupTotal.ConvRate) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table v-if="pageMode === 'adassets'" class="ga-data-table assets">
+                                <thead>
+                                    <tr>
+                                        <th class="name-col">
+                                            <span class="asset-header-cell">
+                                                <span class="ga-status-dot"></span>
+                                                <span>Asset</span>
+                                            </span>
+                                        </th>
+                                        <th>Status</th>
+                                        <th
+                                            :aria-sort="assetSortKey === 'assetType' ? (assetSortDirection === 'asc' ? 'ascending' : 'descending') : 'none'">
+                                            <button class="ga-sort-header" type="button"
+                                                @click="toggleAssetSort('assetType')"
+                                                aria-label="Sort assets by asset type">
+                                                <span>Asset type</span>
+                                                <span class="material-symbols-outlined">
+                                                    {{ assetTypeSortDirection === 'asc' ? 'arrow_upward' :
+                                                    'arrow_downward' }}
+                                                </span>
+                                            </button>
+                                        </th>
+                                        <th>Performance</th>
+                                        <th>Clicks</th>
+                                        <th>CTR</th>
+                                        <th>Impr.</th>
+                                        <th
+                                            :aria-sort="assetSortKey === 'cost' ? (assetSortDirection === 'asc' ? 'ascending' : 'descending') : 'none'">
+                                            <button class="ga-sort-header" type="button"
+                                                @click="toggleAssetSort('cost')" aria-label="Sort assets by cost">
+                                                <span>Cost</span>
+                                                <span class="material-symbols-outlined">
+                                                    {{ assetCostSortDirection === 'asc' ? 'arrow_upward' :
+                                                    'arrow_downward' }}
+                                                </span>
+                                            </button>
+                                        </th>
+                                        <th>Installs</th>
+                                        <th>Cost / Install</th>
+                                        <th>In-app actions</th>
+                                        <th>Cost / In-app action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="asset in paginatedAssetRows" :key="asset.id">
+                                        <td class="asset-cell name-col">
+                                            <span class="ga-status-dot enabled"></span>
+                                            <button v-if="asset.assetType === 'Image'" type="button" class="asset-thumb"
+                                                @click="openImagePreview(asset)">
+                                                <img :src="asset.image" :alt="asset.asset">
+                                            </button>
+                                            <div>
+                                                <span>{{ asset.asset }}</span>
+                                                <button type="button" class="link-button"
+                                                    @click="openUnavailablePreview">View ad previews</button>
+                                            </div>
+                                        </td>
+                                        <td>{{ asset.status }}</td>
+                                        <td>{{ asset.assetType }}</td>
+                                        <td>
+                                            <span class="ga-dashed">
+                                                <span>{{ asset.performance }}</span>
                                                 <div class="ga-budget-simulator-popup">
-                                                    <div class="ga-budget-simulator-popup__title">Campaign budget simulator</div>
-                                                    <div class="ga-budget-simulator-popup__body">The budget simulator isn't available because this campaign doesn't have enough recent performance data.</div>
-                                                
+                                                    <div class="ga-budget-simulator-popup__body">This asset doesn't have
+                                                        any performance information yet. A performance rating for this
+                                                        asset will be shown once enough information has been collected.
+                                                        <span class="ga-budget-simulator-popup__learn">Learn more</span>
+                                                    </div>
                                                 </div>
                                             </span>
-                                            <i class="ga-status-rowbudget" aria-hidden="true"></i>
-                                        </span>
-                                    </td>
-                                    <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status) }}</span>
-                                    </td>
-                                    <td><span class="ga-optimization-score" data-tooltip="View relevant recommendations to improve your campaign's performance">{{ percent(campaign.OptimizationScore || campaign.optimizationScore) }}</span></td>
-                                    <td>{{ dash(campaign.CampaignType || campaign.campaignType) }}</td>
-                                    <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
-                                    <td>{{ formatCurrency(campaign.costPerInAppActions || campaign.costPerInAppAction) }}
-                                    </td>
-                                    <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv , 2) }}</td>
-                                    <td>{{ formatNumber(campaign.installs,2) }}</td>
-                                    <td>{{ formatNumber(campaign.inAppActions,2) }}</td>
-                                    <td>{{ formatNumber(campaign.ParticipatedInAppActions,2) }}</td>
-                                    <td>{{ formatCurrency(campaign.cost) }}</td>
-                                    <td>{{ formatCurrency(campaign.CostPerParticipatedInAppAction) }}</td>
-                                    <td>{{ percent(campaign.ConvRate) }}</td>
-                                    <td>{{ formatNumber(campaign.Conversions , 2) }}</td>
-                                    <td>{{ formatCurrency(campaign.CostPerConv) }}</td>
-                                </tr>
-                                <tr class="total-row">
-                                    <td colspan="3">Total: All campaigns in your current view</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>{{ formatNumber(totals.viewThroughConv , 2) }}</td>
-                                    <td>{{ formatNumber(totals.installs,2) }}</td>
-                                    <td>{{ formatNumber(totals.inAppActions,2) }}</td>
-                                    <td>—</td>
-                                    <td>{{ formatCurrency(totals.cost) }}</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                </tr>
-                            </tbody>
-                        </table>
 
-                        <table v-if="pageMode === 'adgroups'" class="ga-data-table adgroups">
-                            <thead>
-                                <tr>
-                                    <th class="select-col"><span class="ga-checkbox"></span></th>
-                                    <th class="state-col"><span class="ga-status-dot"></span></th>
-                                    <th class="name-col">Ad group <span
-                                            class="material-symbols-outlined">arrow_downward</span></th>
-                                    <th>Status</th>
-                                    <th>Target CPA</th>
-                                    <th>Conversions</th>
-                                    <th>Cost / conv.</th>
-                                    <th>Cost / Install</th>
-                                    <th>Cost / In-app action</th>
-                                    <th>View-through conv.</th>
-                                    <th>Brand Inclusions</th>
-                                    <th>Locations of interest</th>
-                                    <th>Installs</th>
-                                    <th>In-app actions</th>
-                                    <th>Particlpated in-app actions</th>
-                                    <th>Cost</th>
-                                    <th>Cost / Particlpated in-app actions</th>
-                                    <th>Conv. rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(adGroup, index) in paginatedAdGroupRows" :key="adGroup.id">
-                                    <td><span class="ga-checkbox"></span></td>
-                                    <td><span
-                                            :class="'ga-status-dot ' + statusDotClass(getStatusFromRow(adGroup))"></span>
-                                    </td>
-                                    <td class="name-col"><a :href="adAssetsHref" @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{ adGroup.adGroup }}</a></td>
-                                    <td><span class="ga-dashed">{{ dash(adGroup.Status || adGroup.status) }}</span></td>
-                                    <td>{{ fixed(adGroup.TargetCPA || adGroup.targetCpa) }}</td>
-                                    <td>{{ numberOrZero(adGroup.Conversions) }}</td>
-                                    <td>{{ moneyOrDash(adGroup.CostPerConv) }}</td>
-                                    <td>{{ moneyOrDash(adGroup.costPerInstall) }}</td>
-                                    <td>{{ moneyOrDash(adGroup.costPerInAppActions) }}</td>
-                                    <td>{{ numberOrZero(adGroup.ViewThroughConv) }}</td>
-                                    <td>{{ dash(adGroup.BrandInclusions) }}</td>
-                                    <td>{{ dash(adGroup.LocationsOfInterest) }}</td>
-                                    <td>{{ numberOrZero(adGroup.installs) }}</td>
-                                    <td>{{ numberOrZero(adGroup.inAppActions) }}</td>
-                                    <td>{{ numberOrZero(adGroup.ParticipatedInAppActions) }}</td>
-                                    <td>{{ money(adGroup.cost) }}</td>
-                                    <td>{{ moneyOrDash(adGroup.CostPerParticipatedInAppAction) }}</td>
-                                    <td>{{ percent(adGroup.ConvRate) }}</td>
-                                </tr>
-                                <tr v-if="adGroupRows.length" class="total-row">
-                                    <td colspan="5">Total: {{ adGroupRows.length }} ad groups</td>
-                                    <td>{{ numberOrZero(adGroupTotal.Conversions) }}</td>
-                                    <td>{{ money(adGroupTotal.CostPerConv) }}</td>
-                                    <td>{{ moneyOrDash(adGroupTotal.costPerInstall) }}</td>
-                                    <td>{{ moneyOrDash(adGroupTotal.costPerInAppActions) }}</td>
-                                    <td>{{ numberOrZero(adGroupTotal.ViewThroughConv) }}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{ numberOrZero(adGroupTotal.installs) }}</td>
-                                    <td>{{ numberOrZero(adGroupTotal.inAppActions) }}</td>
-                                    <td>{{ numberOrZero(adGroupTotal.ParticipatedInAppActions) }}</td>
-                                    <td>{{ money(adGroupTotal.cost) }}</td>
-                                    <td>{{ moneyOrDash(adGroupTotal.CostPerParticipatedInAppAction) }}</td>
-                                    <td>{{ percent(adGroupTotal.ConvRate) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table v-if="pageMode === 'adassets'" class="ga-data-table assets">
-                            <thead>
-                                <tr>
-                                    <th class="name-col">
-                                        <span class="asset-header-cell">
-                                            <span class="ga-status-dot"></span>
-                                            <span>Asset</span>
-                                        </span>
-                                    </th>
-                                    <th>Status</th>
-                                    <th :aria-sort="assetSortKey === 'assetType' ? (assetSortDirection === 'asc' ? 'ascending' : 'descending') : 'none'">
-                                        <button class="ga-sort-header" type="button" @click="toggleAssetSort('assetType')"
-                                            aria-label="Sort assets by asset type">
-                                            <span>Asset type</span>
-                                            <span class="material-symbols-outlined">
-                                                {{ assetTypeSortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                                            </span>
-                                        </button>
-                                    </th>
-                                    <th>Performance</th>
-                                    <th>Clicks</th>
-                                    <th>CTR</th>
-                                    <th>Impr.</th>
-                                    <th :aria-sort="assetSortKey === 'cost' ? (assetSortDirection === 'asc' ? 'ascending' : 'descending') : 'none'">
-                                        <button class="ga-sort-header" type="button" @click="toggleAssetSort('cost')"
-                                            aria-label="Sort assets by cost">
-                                            <span>Cost</span>
-                                            <span class="material-symbols-outlined">
-                                                {{ assetCostSortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                                            </span>
-                                        </button>
-                                    </th>
-                                    <th>Installs</th>
-                                    <th>Cost / Install</th>
-                                    <th>In-app actions</th>
-                                    <th>Cost / In-app action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="asset in paginatedAssetRows" :key="asset.id">
-                                    <td class="asset-cell name-col">
-                                        <span class="ga-status-dot enabled"></span>
-                                        <button v-if="asset.assetType === 'Image'" type="button" class="asset-thumb"
-                                            @click="openImagePreview(asset)">
-                                            <img :src="asset.image" :alt="asset.asset">
-                                        </button>
-                                        <div>
-                                            <span>{{ asset.asset }}</span>
-                                            <button type="button" class="link-button"
-                                                @click="openUnavailablePreview">View ad previews</button>
-                                        </div>
-                                    </td>
-                                    <td>{{ asset.status }}</td>
-                                    <td>{{ asset.assetType }}</td>
-                                    <td>
-                                        <span class="ga-dashed">
-                                            <span>{{ asset.performance }}</span>
-                                            <div class="ga-budget-simulator-popup">
-                                                <div class="ga-budget-simulator-popup__body">This asset doesn't have any performance information yet. A performance rating for this asset will be shown once enough information has been collected.
-                                                    <span class="ga-budget-simulator-popup__learn">Learn more</span>
-                                                </div>
-                                            </div>
-                                        </span>
-                                    
-                                    </td>
-                                    <td>{{ formatNumber(asset.clicks) }}</td>
-                                    <td>{{ asset.clicks ? percent(asset.ctr) : '—' }}</td>
-                                    <td>{{ formatNumber(asset.impressions) }}</td>
-                                    <td>{{ formatCurrency(asset.cost) }}</td>
-                                    <td>{{ formatNumber(asset.installs , 2) }}</td>
-                                    <td>{{ formatCurrency(asset.costPerInstall , 2) }}</td>
-                                    <td>{{ formatNumber(asset.inAppActions, 2) }}</td>
-                                    <td>{{ formatCurrency(asset.costPerInAppAction , 2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="ga-pagination">
-                        <span>Show rows:</span>
-                        <div class="ga-page-size-control" @click.stop>
-                            <button type="button" @click.stop="togglePageSizeDropdown">
-                                {{ pageSize }}
-                                <span class="material-symbols-outlined"
-                                    :class="{ rotated: showPageSizeDropdown }">arrow_drop_down</span>
-                            </button>
-                            <div v-if="showPageSizeDropdown" class="ga-page-size-menu">
-                                <button v-for="option in pageSizeOptions" :key="option" type="button"
-                                    :class="{ active: option === pageSize }" @click.stop="setPageSize(option)">
-                                    {{ option }}
-                                </button>
-                            </div>
+                                        </td>
+                                        <td>{{ formatNumber(asset.clicks) }}</td>
+                                        <td>{{ asset.clicks ? percent(asset.ctr) : '—' }}</td>
+                                        <td>{{ formatNumber(asset.impressions) }}</td>
+                                        <td>{{ formatCurrency(asset.cost) }}</td>
+                                        <td>{{ formatNumber(asset.installs , 2) }}</td>
+                                        <td>{{ formatCurrency(asset.costPerInstall , 2) }}</td>
+                                        <td>{{ formatNumber(asset.inAppActions, 2) }}</td>
+                                        <td>{{ formatCurrency(asset.costPerInAppAction , 2) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <span>{{ paginationText }}</span>
-                        <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
-                            @click="canGoPreviousPage && goToFirstPage()">first_page</span>
-                        <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
-                            @click="canGoPreviousPage && goToPreviousPage()">chevron_left</span>
-                        <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
-                            @click="canGoNextPage && goToNextPage()">chevron_right</span>
-                        <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
-                            @click="canGoNextPage && goToLastPage()">last_page</span>
-                    </div>
-                </section>
 
-                <footer class="ga-footer">
-                    <p><a href="#">Reporting is not real-time.</a> Time zone for all dates and times: (GMT+08:00) China
-                        Standard Time. <a href="#">Learn more</a></p>
-                    <p>Some inventory may be provided through third party intermediaries.</p>
-                    <p>You'll see Media Rating Council (MRC) accreditation noted in the column header's hover text for
-                        accredited metrics.</p>
-                    <p>&copy; Google, 2026.</p>
-                </footer>
+                        <div class="ga-pagination">
+                            <span>Show rows:</span>
+                            <div class="ga-page-size-control" @click.stop>
+                                <button type="button" @click.stop="togglePageSizeDropdown">
+                                    {{ pageSize }}
+                                    <span class="material-symbols-outlined"
+                                        :class="{ rotated: showPageSizeDropdown }">arrow_drop_down</span>
+                                </button>
+                                <div v-if="showPageSizeDropdown" class="ga-page-size-menu">
+                                    <button v-for="option in pageSizeOptions" :key="option" type="button"
+                                        :class="{ active: option === pageSize }" @click.stop="setPageSize(option)">
+                                        {{ option }}
+                                    </button>
+                                </div>
+                            </div>
+                            <span>{{ paginationText }}</span>
+                            <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
+                                @click="canGoPreviousPage && goToFirstPage()">first_page</span>
+                            <span class="material-symbols-outlined" :class="{ muted: !canGoPreviousPage }"
+                                @click="canGoPreviousPage && goToPreviousPage()">chevron_left</span>
+                            <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
+                                @click="canGoNextPage && goToNextPage()">chevron_right</span>
+                            <span class="material-symbols-outlined" :class="{ muted: !canGoNextPage }"
+                                @click="canGoNextPage && goToLastPage()">last_page</span>
+                        </div>
+                    </section>
+
+                    <footer class="ga-footer">
+                        <p><a href="#">Reporting is not real-time.</a> Time zone for all dates and times: (GMT+08:00)
+                            China
+                            Standard Time. <a href="#">Learn more</a></p>
+                        <p>Some inventory may be provided through third party intermediaries.</p>
+                        <p>You'll see Media Rating Council (MRC) accreditation noted in the column header's hover text
+                            for
+                            accredited metrics.</p>
+                        <p>&copy; Google, 2026.</p>
+                    </footer>
                 </template>
             </main>
         </div>
@@ -1381,7 +1505,8 @@
                 <button type="button" @click="closePreview">Close</button>
             </section>
             <section v-if="previewModal.type === 'image'" class="ga-preview-modal image-preview">
-                <div class="ga-preview-stage" :class="{ 'ga-preview-stage--fullscreen': isPreviewFullscreen }" @click="closePreview">
+                <div class="ga-preview-stage" :class="{ 'ga-preview-stage--fullscreen': isPreviewFullscreen }"
+                    @click="closePreview">
                     <button class="ga-preview-close" type="button" @click="closePreview">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -1399,7 +1524,7 @@
                         <span class="material-symbols-outlined">chevron_right</span>
                     </button>
                     <img :src="previewModal.asset.image" :alt="previewModal.asset.asset">
-                    </div>
+                </div>
                 <aside class="ga-preview-details">
                     <!-- <h2>About this asset</h2> -->
                     <div class="ga-previewModal-asset-aboutinfo-aboutinfo">
@@ -1409,8 +1534,10 @@
                     <dl>
                         <dt class="ga-preview-details-title" @click="togglePreviewDetails">Details</dt>
                         <dd class="ga-preview-details-toggle">
-                            <button class="ga-preview-details-toggle-button" type="button" @click.stop="togglePreviewDetails" aria-label="Toggle details">
-                                <span class="material-symbols-outlined">{{ isPreviewDetailsExpanded ? 'expand_less' : 'expand_more' }}</span>
+                            <button class="ga-preview-details-toggle-button" type="button"
+                                @click.stop="togglePreviewDetails" aria-label="Toggle details">
+                                <span class="material-symbols-outlined">{{ isPreviewDetailsExpanded ? 'expand_less' :
+                                    'expand_more' }}</span>
                             </button>
                         </dd>
                         <template v-if="isPreviewDetailsExpanded">
