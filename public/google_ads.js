@@ -29,6 +29,7 @@ function getPageModeFromPath(pathname) {
     if (pathname.includes('/adgroups')) return 'adgroups';
     if (pathname.includes('/reporteditor')) return 'reporteditor';
     if (pathname.includes('/overview')) return 'overview';
+    if (pathname.includes('/recommendations')) return 'recommendations';
     return 'campaigns';
 }
 
@@ -356,6 +357,7 @@ createApp({
             if (this.pageMode === 'adgroups') return 'Ad groups';
             if (this.pageMode === 'reporteditor') return 'Report editor';
             if (this.pageMode === 'overview') return 'Overview';
+            if (this.pageMode === 'recommendations') return 'Recommendations';
             return 'Campaigns';
         },
         totals() {

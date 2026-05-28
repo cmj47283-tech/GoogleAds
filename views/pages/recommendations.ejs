@@ -1,0 +1,41 @@
+<% if (component==='header' ) { %>
+    <div class="ga-page-head-actions">
+        <button class="ga-tool-button active" type="button" aria-label="View cards">
+            <span class="material-symbols-outlined-extended">dashboard</span>
+            <span>View cards</span>
+        </button>
+        <button class="ga-tool-button" type="button" aria-label="View list">
+            <span class="material-symbols-outlined-extended">table_chart</span>
+            <span>View list</span>
+        </button>
+        <button class="ga-tool-button" type="button" aria-label="Export">
+            <span class="material-symbols-outlined-extended">download</span>
+            <span>Export</span>
+        </button>
+    </div>
+    <% } else if (component==='tabs' ) { %>
+        <div class="ga-tabs-layout">
+            <div class="ga-tabs">
+                <button class="active" type="button">Recommendations</button>
+                <button type="button">Auto-appley settings</button>
+            </div>
+            <div class="ga-tabs-progress" role="progressbar" aria-label="Recommendations progress" aria-valuemin="0"
+                aria-valuemax="100" aria-valuenow="0">
+                <div class="ga-progress-track">
+                    <div class="ga-progress-indicator"></div>
+                </div>
+            </div>
+        </div>
+        <% } else if (component==='content' ) { %>
+            <div class="ga-recommendations">
+                <p>This is the Recommendations page.</p>
+                <p>Here you can find personalized recommendations to improve your campaign performance.</p>
+                <ul>
+                    <li>Recommendation 1: Increase your budget to reach more potential customers.</li>
+                    <li>Recommendation 2: Add more keywords to your ad groups to expand your reach.</li>
+                    <li>Recommendation 3: Use ad extensions to provide more information to your
+                        customers.</li>
+                    <li>Recommendation 4: Optimize your ad copy to improve click-through rates.</li>
+                </ul>
+            </div>
+            <% } %>
