@@ -778,9 +778,9 @@
                     <div v-for="(metric, index) in metricCards" :key="metric.label" class="ga-metric-card"
                         :class="{ primary: index === 0 }">
                         <span>{{ metric.label }}</span>
-                        <strong>{{ metric.value }}</strong>
-                        <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
-                            <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
+                        <strong :class="{ empty: metric.value === '—' }">{{ metric.value }}</strong>
+                        <div class="ga-metric-delta">
+                            <i v-if="metric.label !== 'Avg. target CPA'" class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
                             <small style="margin-left: 4px;">{{ metric.delta }}</small>
                         </div>
                         <div class="ga-metric-skeleton" aria-hidden="true">

@@ -1252,6 +1252,10 @@
     margin-top: 4px;
 }
 
+.ga-metric-card strong.empty {
+    border-bottom: none;
+}
+
 .ga-metric-card small {
     color: #5f6368;
     font-size: 14px;
