@@ -76,6 +76,24 @@ router.get('/aw/adassets', async (ctx) => {
   await renderGoogleAdsPage(ctx, 'adassets');
 });
 
+router.get('/aw/recommendations', async (ctx) => {
+  await renderGoogleAdsPage(ctx, 'recommendations');
+});
+
+// Generic handler for other /aw/* pages to avoid 404s on refresh
+router.get('/aw/:page', async (ctx) => {
+  const page = ctx.params.page || '';
+  const allowed = ['campaigns', 'adgroups', 'adassets', 'recommendations', 'overview', 'reporteditor'];
+  if (allowed.includes(page)) {
+    await renderGoogleAdsPage(ctx, page);
+    return;
+  }
+
+  // If not allowed, fall back to render home or return 404
+  ctx.status = 404;
+  ctx.body = 'Not found';
+});
+
 // Ad assets 资源接口
 router.get('/api/adassets/plan1', async (ctx) => {
   const baseDir = path.join(__dirname, 'adassets', 'plan1');
@@ -91,7 +109,7 @@ router.get('/api/adassets/plan1', async (ctx) => {
       // asset: `Image ${i}`,
       asset: sizeName[i],
       assetType: 'Image',
-      source: `Free stock image - ${getRandomAssetSourceTime()}_1.870`,
+      source: `${i+1} - ${getRandomAssetSourceTime()}_1.870`,
       status: 'Eligible',
       performance: 'Pending',
       image: `/adassets/plan1/img${i}.jpg`,
