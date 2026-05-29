@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node index.js",
+    "start:http": "PROTOCOL=http PORT=8080 node index.js",
     "start:node20": "node20/node.exe index.js",
     "win": "start.bat",
     "test": "node --test"

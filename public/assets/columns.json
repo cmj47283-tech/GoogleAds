@@ -6,6 +6,11 @@
   },
   {
     "width": 100,
+    "key": "campaignId",
+    "label": "campaignId"
+  },
+  {
+    "width": 100,
     "key": "campaign",
     "label": "Campaign"
   },
@@ -56,13 +61,18 @@
   },
   {
     "width": 100,
-    "key": "AdGroup",
-    "label": "Ad group"
+    "key": "TargetCPA",
+    "label": "Target CPA"
   },
   {
     "width": 100,
     "key": "Status",
     "label": "Status"
+  },
+  {
+    "width": 100,
+    "key": "AdGroup",
+    "label": "Ad group"
   },
   {
     "width": 100,
@@ -108,11 +118,6 @@
     "width": 100,
     "key": "CostPerConv",
     "label": "Cost / conv."
-  },
-  {
-    "width": 100,
-    "key": "TargetCPA",
-    "label": "Target CPA"
   },
   {
     "width": 100,

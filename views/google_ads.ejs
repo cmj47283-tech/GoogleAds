@@ -1156,7 +1156,7 @@
                                             </button>
                                         </th>
                                         <th>Budget</th>
-                                        <th>Status</th>
+                                        <th class="status-col">Status</th>
                                         <th><span class="th-dashed">Optimization score</span></th>
                                         <th>Campaign type</th>
                                         <th>Cost / Install</th>
@@ -1259,8 +1259,12 @@
                                                 <i class="ga-status-rowbudget" aria-hidden="true"></i>
                                             </span>
                                         </td>
-                                        <td><span class="ga-dashed">{{ dash(campaign.Status || campaign.status)
-                                                }}</span>
+                                        <td class="status-col">
+                                            <span class="ga-status-lines">
+                                                <span v-for="line in statusDisplayLines(campaign.Status || campaign.status, 'campaign')"
+                                                    :key="line.text" :class="['ga-status-line', line.tone]">{{
+                                                    line.text }}</span>
+                                            </span>
                                         </td>
                                         <td><span class="ga-optimization-score"
                                                 data-tooltip="View relevant recommendations to improve your campaign's performance">{{
@@ -1336,7 +1340,12 @@
                                         <td class="name-col"><a :href="adAssetsHref"
                                                 @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{
                                                 adGroup.adGroup }}</a></td>
-                                        <td><span class="ga-dashed">{{ dash(adGroup.Status || adGroup.status) }}</span>
+                                        <td>
+                                            <span class="ga-status-lines">
+                                                <span v-for="line in statusDisplayLines(adGroup.Status || adGroup.status, 'adgroup')"
+                                                    :key="line.text" :class="['ga-status-line', line.tone]">{{
+                                                    line.text }}</span>
+                                            </span>
                                         </td>
                                         <td>{{ fixed(adGroup.TargetCPA || adGroup.targetCpa) }}</td>
                                         <td>{{ numberOrZero(adGroup.Conversions) }}</td>
@@ -1429,7 +1438,13 @@
                                                     @click="openUnavailablePreview">View ad previews</button>
                                             </div>
                                         </td>
-                                        <td>{{ asset.status }}</td>
+                                        <td>
+                                            <span class="ga-status-lines">
+                                                <span v-for="line in statusDisplayLines(asset.status, 'asset')"
+                                                    :key="line.text" :class="['ga-status-line', line.tone]">{{
+                                                    line.text }}</span>
+                                            </span>
+                                        </td>
                                         <td>{{ asset.assetType }}</td>
                                         <td>
                                             <span class="ga-dashed">
@@ -1445,13 +1460,13 @@
 
                                         </td>
                                         <td>{{ formatNumber(asset.clicks) }}</td>
-                                        <td>{{ asset.clicks ? percent(asset.ctr) : '—' }}</td>
+                                        <td>{{ percentOrDash(asset.ctr) }}</td>
                                         <td>{{ formatNumber(asset.impressions) }}</td>
                                         <td>{{ formatCurrency(asset.cost) }}</td>
                                         <td>{{ formatNumber(asset.installs , 2) }}</td>
-                                        <td>{{ formatCurrency(asset.costPerInstall , 2) }}</td>
+                                        <td>{{ currencyOrDash(asset.costPerInstall) }}</td>
                                         <td>{{ formatNumber(asset.inAppActions, 2) }}</td>
-                                        <td>{{ formatCurrency(asset.costPerInAppAction , 2) }}</td>
+                                        <td>{{ currencyOrDash(asset.costPerInAppAction) }}</td>
                                     </tr>
                                 </tbody>
                             </table>

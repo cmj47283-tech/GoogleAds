@@ -4,6 +4,7 @@ const views = require('koa-views');
 const serve = require('koa-static');
 const koaMount = require('koa-mount');
 const path = require('path');
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
@@ -176,15 +177,23 @@ router.get('/adsmanager/reporting/business_view', async (ctx) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-// HTTPS 配置
-const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'ssl', 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'cert.pem'))
-};
+const PORT = process.env.PORT || 443;
+const useHttp = process.env.PROTOCOL === 'http';
 
-// 启动 HTTPS 服务器
-const HTTPS_PORT = process.env.PORT || 443;
-https.createServer(sslOptions, app.callback()).listen(HTTPS_PORT, () => {
-  console.log(`HTTPS Server is running on https://ads.google.com:${HTTPS_PORT}`);
-  console.log(`HTTPS Server is running on https://localhost:${HTTPS_PORT}`);
-});
+if (useHttp) {
+  http.createServer(app.callback()).listen(PORT, () => {
+    console.log(`HTTP Server is running on http://localhost:${PORT}`);
+  });
+} else {
+  // HTTPS 配置
+  const sslOptions = {
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'cert.pem'))
+  };
+
+  // 启动 HTTPS 服务器
+  https.createServer(sslOptions, app.callback()).listen(PORT, () => {
+    console.log(`HTTPS Server is running on https://ads.google.com:${PORT}`);
+    console.log(`HTTPS Server is running on https://localhost:${PORT}`);
+  });
+}

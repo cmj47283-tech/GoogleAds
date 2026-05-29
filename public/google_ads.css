@@ -2321,6 +2321,10 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     text-align: left;
 }
 
+.ga-data-table.campaigns .status-col {
+    text-align: left;
+}
+
 .ga-data-table.adgroups .name-col {
     min-width: 260px;
 }
@@ -2679,6 +2683,27 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     text-decoration-style: dashed;
     text-underline-offset: 4px;
     cursor: pointer;
+}
+
+.ga-status-lines {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1.25;
+}
+
+.ga-status-line {
+    display: inline;
+    color: #3c4043;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 4px;
+    cursor: pointer;
+}
+
+.ga-status-line.danger {
+    color: #d93025;
 }
 
 .ga-dashed:hover .ga-budget-simulator-popup {

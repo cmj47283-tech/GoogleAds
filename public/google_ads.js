@@ -2,6 +2,7 @@ const { createApp } = Vue;
 
 const params = new URLSearchParams(window.location.search);
 const CAMPAIGN_STATUS_STORAGE_KEY = 'googleAdsCampaignStatuses';
+const CAMPAIGN_AUTO_STATUS_CACHE_KEY = 'googleAdsCampaignAutoStatuses';
 const ASSET_RANDOM_CACHE_KEY = 'googleAdsAssetRandom_';
 const DATE_FILTER_STORAGE_KEY = 'googleAdsDateFilter';
 const DATE_FILTER_STORAGE_VERSION = 'yesterday-default-v1';
@@ -11,6 +12,15 @@ const PAGE_ROUTE_TRANSITION_DURATION = 900;
 function readCampaignStatusOverrides() {
     try {
         const saved = JSON.parse(localStorage.getItem(CAMPAIGN_STATUS_STORAGE_KEY) || '{}');
+        return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function readCampaignAutoStatusCache() {
+    try {
+        const saved = JSON.parse(sessionStorage.getItem(CAMPAIGN_AUTO_STATUS_CACHE_KEY) || '{}');
         return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
     } catch (error) {
         return {};
@@ -106,6 +116,7 @@ createApp({
             pageMode: getInitialPageMode(),
             dropdown: '',
             campaignStatusOverrides: readCampaignStatusOverrides(),
+            campaignAutoStatusCache: readCampaignAutoStatusCache(),
             isNavCollapsed: localStorage.getItem('googleAdsNavCollapsed') === 'true',
             selectedCampaignId: params.get('campaignId') || '',
             selectedAdGroupId: params.get('adGroupId') || 'adgroup-1',
@@ -208,7 +219,7 @@ createApp({
                 assets: true
             },
             statusMenuOptions: [
-                { state: 'Enabled', label: 'Enable' },
+                { state: 'Eligible', label: 'Enable' },
                 { state: 'Paused', label: 'Pause' },
                 { state: 'Removed', label: 'Remove' }
             ],
@@ -309,7 +320,7 @@ createApp({
             const campaignName = this.selectedCampaignId || (this.selectedCampaign ? this.selectedCampaign.campaign : '') || '';
             if (!campaignName || !this.rawData.length) return [];
             const filtered = this.filteredRawData.filter(row => row.campaign === campaignName);
-            return this.mergeAdGroupsBy(filtered);
+            return this.mergeAdGroupsBy(filtered, campaignName);
         },
         adGroupTotal() {
             return this.adGroupRows.reduce((acc, row) => {
@@ -558,11 +569,11 @@ createApp({
         selectedCampaignStateLabel() {
             if (!this.selectedCampaign) return '';
             const status = this.getStatusFromRow(this.selectedCampaign);
-            return (status === 'Enabled' || status === 'Eligible') ? 'Enabled' : 'Paused';
+            return (status === 'Enabled' || status === 'Eligible' || status === 'Bid strategy learning') ? 'Enabled' : 'Paused';
         },
         selectedCampaignStatusText() {
             if (!this.selectedCampaign) return '';
-            return this.selectedCampaign.Status || this.selectedCampaign.status || this.selectedCampaign.campaignStatus || '';
+            return this.getStatusFromRow(this.selectedCampaign);
         },
         isSelectedCampaignProblem() {
             const text = this.selectedCampaignStatusText;
@@ -583,8 +594,10 @@ createApp({
                 !cached.imageRandom || !cached.imageFieldCoefs || cached.imageFieldCoefs.length !== 5 ||
                 !cached.imageWeights || cached.imageWeights.length !== 10 ||
                 !cached.imageRowCoefs || cached.imageRowCoefs.length !== 10 || cached.imageRowCoefs.some(r => r.length !== 5) ||
+                !cached.imageMinimums || cached.imageMinimums.length !== 10 ||
                 !cached.textRowRandoms || cached.textRowRandoms.length !== 6 ||
-                !cached.textRowCoefs || cached.textRowCoefs.length !== 6 || cached.textRowCoefs.some(r => r.length !== 5)) {
+                !cached.textRowCoefs || cached.textRowCoefs.length !== 6 || cached.textRowCoefs.some(r => r.length !== 5) ||
+                !cached.textMinimums || cached.textMinimums.length !== 6) {
 
                 // ====== 图片随机值 ======
                 const imageRandom = 0.6 + Math.random() * 0.8;
@@ -606,7 +619,15 @@ createApp({
                     Array.from({ length: 5 }, () => rx * (0.2 + Math.random() * 0.6))
                 );
 
-                cached = { imageRandom, imageFieldCoefs, imageRowCoefs, imageWeights, textRowRandoms, textRowCoefs };
+                const makeMinimums = length => Array.from({ length }, () => ({
+                    clicks: Math.floor(1 + Math.random() * 10),
+                    impressions: Math.floor(11 + Math.random() * 40),
+                    cost: +(0.1 + Math.random() * 1.9).toFixed(2)
+                }));
+                const imageMinimums = makeMinimums(10);
+                const textMinimums = makeMinimums(6);
+
+                cached = { imageRandom, imageFieldCoefs, imageRowCoefs, imageWeights, imageMinimums, textRowRandoms, textRowCoefs, textMinimums };
                 sessionStorage.setItem(ASSET_RANDOM_CACHE_KEY + campaignKey, JSON.stringify(cached));
             }
 
@@ -618,50 +639,66 @@ createApp({
             const imgTotalCost = src.cost * ifc[2];
             const imgTotalInstalls = src.installs * ifc[3];
             const imgTotalInAppActions = src.inAppActions * ifc[4];
+            const linkedStatus = this.campaignLinkedStatuses(this.selectedCampaign);
 
             const images = [];
             const headlines = [];
             const descriptions = [];
             let imgIdx = 0;
             let textIdx = 0;
+            const hasCost = safeNumber(src.cost) > 0;
+            const countWithMinimum = (value, minimum) => {
+                const rounded = Math.round(safeNumber(value));
+                return hasCost ? Math.max(minimum, rounded) : Math.max(0, rounded);
+            };
+            const costWithMinimum = (value, minimum) => {
+                const amount = safeNumber(value);
+                return +(hasCost ? Math.max(minimum, amount) : Math.max(0, amount)).toFixed(2);
+            };
 
             for (const asset of this.adAssetData) {
                 if (asset.assetType === 'Image') {
                     const w = cached.imageWeights[imgIdx];
                     const rc = cached.imageRowCoefs[imgIdx]; // 该行独立的5字段系数
+                    const minimums = cached.imageMinimums[imgIdx];
                     images.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(imgTotalClicks * rc[0] * w)),
-                        impressions: Math.max(1, Math.round(imgTotalImpr * rc[1] * w)),
-                        cost: +(Math.max(0.01, imgTotalCost * rc[2] * w)).toFixed(2),
-                        installs: Math.max(1, Math.round(imgTotalInstalls * rc[3] * w)),
-                        inAppActions: Math.max(1, Math.round(imgTotalInAppActions * rc[4] * w)),
+                        status: linkedStatus.assetStatus,
+                        clicks: countWithMinimum(imgTotalClicks * rc[0] * w, minimums.clicks),
+                        impressions: countWithMinimum(imgTotalImpr * rc[1] * w, minimums.impressions),
+                        cost: costWithMinimum(imgTotalCost * rc[2] * w, minimums.cost),
+                        installs: Math.max(0, Math.round(imgTotalInstalls * rc[3] * w)),
+                        inAppActions: Math.max(0, Math.round(imgTotalInAppActions * rc[4] * w)),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     imgIdx++;
                 } else if (asset.assetType === 'Headline') {
                     const rx = cached.textRowRandoms[textIdx];
                     const rc = cached.textRowCoefs[textIdx]; // [clicksCoef, imprCoef, costCoef, installsCoef, inAppActionsCoef]
+                    const minimums = cached.textMinimums[textIdx];
                     headlines.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(src.clicks * rc[0])),
-                        impressions: Math.max(1, Math.round(src.impressions * rc[1])),
-                        cost: +(Math.max(0.01, src.cost * rc[2])).toFixed(2),
-                        installs: Math.max(1, Math.round(src.installs * rc[3])),
-                        inAppActions: Math.max(1, Math.round(src.inAppActions * rc[4])),
+                        status: linkedStatus.assetStatus,
+                        clicks: countWithMinimum(src.clicks * rc[0], minimums.clicks),
+                        impressions: countWithMinimum(src.impressions * rc[1], minimums.impressions),
+                        cost: costWithMinimum(src.cost * rc[2], minimums.cost),
+                        installs: Math.max(0, Math.round(src.installs * rc[3])),
+                        inAppActions: Math.max(0, Math.round(src.inAppActions * rc[4])),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     textIdx++;
                 } else {
                     const rx = cached.textRowRandoms[textIdx];
                     const rc = cached.textRowCoefs[textIdx];
+                    const minimums = cached.textMinimums[textIdx];
                     descriptions.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(src.clicks * rc[0])),
-                        impressions: Math.max(1, Math.round(src.impressions * rc[1])),
-                        cost: +(Math.max(0.01, src.cost * rc[2])).toFixed(2),
-                        installs: Math.max(1, Math.round(src.installs * rc[3])),
-                        inAppActions: Math.max(1, Math.round(src.inAppActions * rc[4])),
+                        status: linkedStatus.assetStatus,
+                        clicks: countWithMinimum(src.clicks * rc[0], minimums.clicks),
+                        impressions: countWithMinimum(src.impressions * rc[1], minimums.impressions),
+                        cost: costWithMinimum(src.cost * rc[2], minimums.cost),
+                        installs: Math.max(0, Math.round(src.installs * rc[3])),
+                        inAppActions: Math.max(0, Math.round(src.inAppActions * rc[4])),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     textIdx++;
@@ -1379,14 +1416,82 @@ createApp({
             const dropdownName = this.statusDropdownName(campaignId);
             this.dropdown = this.dropdown === dropdownName ? '' : dropdownName;
         },
-        campaignStatusText(status) {
-            return status === 'Enabled' ? 'Eligible' : status;
+        normalizeCampaignStatus(status) {
+            const text = String(status || '').trim();
+            if (text === 'Enabled') return 'Eligible';
+            if (text === 'Pause') return 'Paused';
+            if (text === 'Eligible' || text === 'Bid strategy learning') return text;
+            if (text === 'Paused' || text === 'Paused All ad groups disapproved' || text === 'Removed') return text;
+            return 'Paused';
+        },
+        normalizeManualCampaignStatus(status) {
+            const normalized = this.normalizeCampaignStatus(status);
+            if (normalized === 'Eligible') return 'Eligible';
+            if (normalized === 'Removed') return 'Removed';
+            return 'Paused';
+        },
+        baseCampaignStatus(status) {
+            const normalized = this.normalizeCampaignStatus(status);
+            return normalized === 'Eligible' ? 'Eligible' : 'Paused';
+        },
+        automaticCampaignStatus(campaignName, baseStatus) {
+            const base = this.baseCampaignStatus(baseStatus);
+            const key = `${campaignName || 'default'}::${base}`;
+            const cached = this.campaignAutoStatusCache[key];
+            if (cached) return this.normalizeCampaignStatus(cached);
+
+            const status = base === 'Eligible'
+                ? (Math.random() < 0.7 ? 'Eligible' : 'Bid strategy learning')
+                : (Math.random() < 0.7 ? 'Paused' : 'Paused All ad groups disapproved');
+            this.campaignAutoStatusCache = {
+                ...this.campaignAutoStatusCache,
+                [key]: status
+            };
+            sessionStorage.setItem(CAMPAIGN_AUTO_STATUS_CACHE_KEY, JSON.stringify(this.campaignAutoStatusCache));
+            return status;
+        },
+        resolveCampaignStatus(campaignName, baseStatus) {
+            const manual = this.campaignStatusOverrides[campaignName];
+            if (manual) return this.normalizeManualCampaignStatus(manual);
+            return this.automaticCampaignStatus(campaignName, baseStatus);
+        },
+        campaignLinkedStatuses(campaign) {
+            const campaignStatus = campaign
+                ? this.getStatusFromRow(campaign)
+                : 'Paused';
+            if (campaignStatus === 'Eligible' || campaignStatus === 'Bid strategy learning') {
+                return {
+                    campaignStatus,
+                    adGroupStatus: 'Eligible',
+                    assetStatus: 'Eligible'
+                };
+            }
+            if (campaignStatus === 'Paused All ad groups disapproved') {
+                return {
+                    campaignStatus,
+                    adGroupStatus: 'Not eligible Ad group is disapproved, Campaign is paused',
+                    assetStatus: 'Not eligible Campaign is paused'
+                };
+            }
+            if (campaignStatus === 'Removed') {
+                return {
+                    campaignStatus,
+                    adGroupStatus: 'Not eligible Campaign is removed',
+                    assetStatus: 'Not eligible Campaign is removed'
+                };
+            }
+            return {
+                campaignStatus: 'Paused',
+                adGroupStatus: 'Not eligible Campaign is paused',
+                assetStatus: 'Not eligible Campaign is paused'
+            };
         },
         applyCampaignStatus(campaign, status) {
-            campaign.campaignStatus = status;
-            campaign.status = this.campaignStatusText(status);
-            campaign.Status = this.campaignStatusText(status);
-            campaign.isRemoved = status === 'Removed';
+            const normalized = this.normalizeCampaignStatus(status);
+            campaign.campaignStatus = normalized;
+            campaign.status = normalized;
+            campaign.Status = normalized;
+            campaign.isRemoved = normalized === 'Removed';
         },
         applyCampaignStatusOverrides() {
             if (!Array.isArray(this.data.campaigns)) return;
@@ -1398,12 +1503,21 @@ createApp({
             });
         },
         setCampaignStatus(campaign, status) {
-            this.applyCampaignStatus(campaign, status);
+            const manualStatus = this.normalizeManualCampaignStatus(status);
+            this.applyCampaignStatus(campaign, manualStatus);
             this.campaignStatusOverrides = {
                 ...this.campaignStatusOverrides,
-                [campaign.campaign]: status
+                [campaign.campaign]: manualStatus
             };
             localStorage.setItem(CAMPAIGN_STATUS_STORAGE_KEY, JSON.stringify(this.campaignStatusOverrides));
+            this.rawData.forEach(row => {
+                if (row.campaign === campaign.campaign) {
+                    row.Status = manualStatus;
+                    row.status = manualStatus;
+                    row.campaignStatus = manualStatus;
+                }
+            });
+            this.refreshCampaignData();
             this.dropdown = '';
         },
         campaignHref(id) {
@@ -1413,10 +1527,40 @@ createApp({
             if (status === 'Enabled') return 'enabled';
             if (status === 'Removed') return 'removed';
             if (status === 'Eligible') return 'enabled';
+            if (status === 'Bid strategy learning') return 'enabled';
             return 'paused';
         },
         getStatusFromRow(campaign) {
-            return campaign.Status || campaign.status || campaign.campaignStatus || 'Eligible';
+            return this.normalizeCampaignStatus(campaign && (campaign.Status || campaign.status || campaign.campaignStatus));
+        },
+        statusDisplayLines(status, scope = 'campaign') {
+            const normalized = scope === 'campaign'
+                ? this.normalizeCampaignStatus(status)
+                : String(status || '').trim();
+            const lines = [];
+            const add = (text, tone = '') => {
+                if (text) lines.push({ text, tone });
+            };
+
+            if (scope === 'campaign') {
+                if (normalized === 'Paused All ad groups disapproved') {
+                    add('Paused');
+                    add('All ad groups disapproved');
+                    return lines;
+                }
+                add(normalized || 'Paused');
+                return lines;
+            }
+
+            if (normalized.startsWith('Not eligible')) {
+                add('Not eligible', 'danger');
+                const reason = normalized.replace(/^Not eligible\s*/, '');
+                reason.split(',').map(part => part.trim()).filter(Boolean).forEach(part => add(part));
+                return lines;
+            }
+
+            add(normalized || 'Paused');
+            return lines;
         },
         mergeCampaignsBy(rawData) {
             const campaignMap = new Map();
@@ -1424,12 +1568,15 @@ createApp({
             for (const row of rawData) {
                 const key = row.campaign;
                 if (!campaignMap.has(key)) {
+                    const status = this.resolveCampaignStatus(key, row.Status || row.status || row.campaignStatus);
                     campaignMap.set(key, {
                         id: key,
                         campaign: key,
                         campaignId: row.campaignId,
                         Buget: row.Buget || 0,
-                        Status: row.Status || 'Eligible',
+                        Status: status,
+                        status,
+                        campaignStatus: status,
                         Account: row.Account || '',
                         account: row.Account || '',
                         OptimizationScore: row.OptimizationScore,
@@ -1475,8 +1622,14 @@ createApp({
 
             return Array.from(campaignMap.values());
         },
-        mergeAdGroupsBy(rawData) {
+        mergeAdGroupsBy(rawData, campaignName = '') {
             const adGroupMap = new Map();
+            const baseStatus = rawData[0] && (rawData[0].Status || rawData[0].status || rawData[0].campaignStatus);
+            const campaign = {
+                campaign: campaignName,
+                Status: this.resolveCampaignStatus(campaignName, baseStatus)
+            };
+            const linkedStatus = this.campaignLinkedStatuses(campaign);
 
             for (const row of rawData) {
                 const key = row.AdGroup;
@@ -1484,7 +1637,8 @@ createApp({
                     adGroupMap.set(key, {
                         id: `adgroup-${adGroupMap.size + 1}`,
                         adGroup: key,
-                        Status: row.Status || 'Eligible',
+                        Status: linkedStatus.adGroupStatus,
+                        status: linkedStatus.adGroupStatus,
                         TargetCPA: row.TargetCPA || 0,
                         costPerInstall: 0,
                         costPerInAppActions: 0,
@@ -1566,9 +1720,17 @@ createApp({
             const number = safeNumber(value);
             return number ? this.money(number) : '0.00';
         },
+        currencyOrDash(value) {
+            const number = safeNumber(value);
+            return number ? this.formatCurrency(number) : '—';
+        },
         percent(value) {
             if (value === 0 || value === undefined) return '0.00%';
             return `${safeNumber(value).toFixed(2)}%`;
+        },
+        percentOrDash(value) {
+            const number = safeNumber(value);
+            return number ? this.percent(number) : '—';
         },
         dash(value) {
             if (value === null || value === undefined || value === '') return '—';
