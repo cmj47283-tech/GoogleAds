@@ -2710,6 +2710,12 @@ button.ga-floating-add:focus-visible .ga-create-tooltip {
     text-underline-offset: 4px;
 }
 
+.ga-optimization-score.empty {
+    text-decoration: none;
+    cursor: default;
+    color: #5f6368;
+}
+
 .ga-optimization-score[data-tooltip]::after {
     content: attr(data-tooltip);
 

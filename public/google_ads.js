@@ -574,9 +574,9 @@ createApp({
             return text.toLowerCase().includes('not') || text.toLowerCase().includes('paused') || text.toLowerCase().includes('disapproved') || text.toLowerCase().includes('limited');
         },
         assetRows() {
-            if (!this.adAssetData.length) return [];
+            // if (!this.adAssetData.length) return [];
             const src = this.adGroupTotal;
-            if (!src.clicks && !src.cost) return [];
+            // if (!src.clicks && !src.cost) return [];
 
             const campaignKey = this.selectedCampaignId || (this.selectedCampaign ? this.selectedCampaign.campaign : '') || 'default';
             let cached = null;
@@ -635,11 +635,11 @@ createApp({
                     const rc = cached.imageRowCoefs[imgIdx]; // 该行独立的5字段系数
                     images.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(imgTotalClicks * rc[0] * w)),
-                        impressions: Math.max(1, Math.round(imgTotalImpr * rc[1] * w)),
-                        cost: +(Math.max(0.01, imgTotalCost * rc[2] * w)).toFixed(2),
-                        installs: Math.max(1, Math.round(imgTotalInstalls * rc[3] * w)),
-                        inAppActions: Math.max(1, Math.round(imgTotalInAppActions * rc[4] * w)),
+                        clicks: Math.max(0, Math.round(imgTotalClicks * rc[0] * w)),
+                        impressions: Math.max(0, Math.round(imgTotalImpr * rc[1] * w)),
+                        cost: +(Math.max(0.00, imgTotalCost * rc[2] * w)).toFixed(2),
+                        installs: Math.max(0, Math.round(imgTotalInstalls * rc[3] * w)),
+                        inAppActions: Math.max(0, Math.round(imgTotalInAppActions * rc[4] * w)),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     imgIdx++;
@@ -648,11 +648,11 @@ createApp({
                     const rc = cached.textRowCoefs[textIdx]; // [clicksCoef, imprCoef, costCoef, installsCoef, inAppActionsCoef]
                     headlines.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(src.clicks * rc[0])),
-                        impressions: Math.max(1, Math.round(src.impressions * rc[1])),
-                        cost: +(Math.max(0.01, src.cost * rc[2])).toFixed(2),
-                        installs: Math.max(1, Math.round(src.installs * rc[3])),
-                        inAppActions: Math.max(1, Math.round(src.inAppActions * rc[4])),
+                        clicks: Math.max(0, Math.round(src.clicks * rc[0])),
+                        impressions: Math.max(0, Math.round(src.impressions * rc[1])),
+                        cost: +(Math.max(0.00, src.cost * rc[2])).toFixed(2),
+                        installs: Math.max(0, Math.round(src.installs * rc[3])),
+                        inAppActions: Math.max(0, Math.round(src.inAppActions * rc[4])),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     textIdx++;
@@ -661,11 +661,11 @@ createApp({
                     const rc = cached.textRowCoefs[textIdx];
                     descriptions.push({
                         ...asset,
-                        clicks: Math.max(1, Math.round(src.clicks * rc[0])),
-                        impressions: Math.max(1, Math.round(src.impressions * rc[1])),
-                        cost: +(Math.max(0.01, src.cost * rc[2])).toFixed(2),
-                        installs: Math.max(1, Math.round(src.installs * rc[3])),
-                        inAppActions: Math.max(1, Math.round(src.inAppActions * rc[4])),
+                        clicks: Math.max(0, Math.round(src.clicks * rc[0])),
+                        impressions: Math.max(0, Math.round(src.impressions * rc[1])),
+                        cost: +(Math.max(0.00, src.cost * rc[2])).toFixed(2),
+                        installs: Math.max(0, Math.round(src.installs * rc[3])),
+                        inAppActions: Math.max(0, Math.round(src.inAppActions * rc[4])),
                         ctr: 0, costPerInstall: 0, costPerInAppAction: 0
                     });
                     textIdx++;
@@ -939,9 +939,9 @@ createApp({
             this.showCampaignFilterDropdown = false;
             this.showCampaignFilterValueModal = Boolean(this.selectedCampaignFilterName);
         },
-        formatCurrency(value) {
+        formatCurrency(value, emptyValue = '$0.00') {
             const numericValue = Number(value);
-            if (!Number.isFinite(numericValue) || numericValue === 0) return '$0.00';
+            if (!Number.isFinite(numericValue) || numericValue === 0) return emptyValue;
             const fixedValue = numericValue.toFixed(2);
             const parts = fixedValue.split('.');
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -1570,8 +1570,8 @@ createApp({
             const number = safeNumber(value);
             return number ? this.money(number) : '0.00';
         },
-        percent(value) {
-            if (value === 0 || value === undefined) return '0.00%';
+        percent(value, emptyValue = '0.00%') {
+            if (value === 0 || value === undefined) return emptyValue;
             return `${safeNumber(value).toFixed(2)}%`;
         },
         dash(value) {
@@ -1595,6 +1595,48 @@ createApp({
         },
         togglePreviewDetails() {
             this.isPreviewDetailsExpanded = !this.isPreviewDetailsExpanded;
+        },
+        turnLeftImagePreview() {
+            if (!this.previewModal || this.previewModal.type !== 'image') return;
+
+            const imageAssets = this.paginatedAssetRows.filter(asset => String(asset.assetType).toLowerCase() === 'image');
+            if (!imageAssets.length) return;
+
+            const currentKey = this.previewModal.asset?.id ?? this.previewModal.asset?.asset;
+            let currentIndex = imageAssets.findIndex(asset => (asset.id ?? asset.asset) === currentKey);
+            if (currentIndex === -1) {
+                currentIndex = imageAssets.findIndex(asset => String(asset.asset).trim() === String(this.previewModal.asset?.asset || '').trim());
+            }
+
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : imageAssets.length - 1;
+            const nextAsset = imageAssets[prevIndex];
+            if (!nextAsset) return;
+
+            this.previewModal = {
+                ...this.previewModal,
+                asset: nextAsset
+            };
+        },
+        turnRightImagePreview() {
+            if (!this.previewModal || this.previewModal.type !== 'image') return;
+
+            const imageAssets = this.paginatedAssetRows.filter(asset => String(asset.assetType).toLowerCase() === 'image');
+            if (!imageAssets.length) return;
+
+            const currentKey = this.previewModal.asset?.id ?? this.previewModal.asset?.asset;
+            let currentIndex = imageAssets.findIndex(asset => (asset.id ?? asset.asset) === currentKey);
+            if (currentIndex === -1) {
+                currentIndex = imageAssets.findIndex(asset => String(asset.asset).trim() === String(this.previewModal.asset?.asset || '').trim());
+            }
+
+            const nextIndex = currentIndex >= 0 && currentIndex < imageAssets.length - 1 ? currentIndex + 1 : 0;
+            const nextAsset = imageAssets[nextIndex];
+            if (!nextAsset) return;
+
+            this.previewModal = {
+                ...this.previewModal,
+                asset: nextAsset
+            };
         },
         handleScroll() {
             const mainElement = document.querySelector('.ga-main');
