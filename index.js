@@ -81,10 +81,18 @@ router.get('/aw/recommendations', async (ctx) => {
   await renderGoogleAdsPage(ctx, 'recommendations');
 });
 
+router.get('/aw/insights', async (ctx) => {
+  await renderGoogleAdsPage(ctx, 'insights');
+});
+
+router.get('/aw/brandreport', async (ctx) => {
+  await renderGoogleAdsPage(ctx, 'brandreport');
+});
+
 // Generic handler for other /aw/* pages to avoid 404s on refresh
 router.get('/aw/:page', async (ctx) => {
   const page = ctx.params.page || '';
-  const allowed = ['campaigns', 'adgroups', 'adassets', 'recommendations', 'overview', 'reporteditor'];
+  const allowed = ['campaigns', 'adgroups', 'adassets', 'recommendations', 'insights', 'brandreport', 'overview', 'reporteditor'];
   if (allowed.includes(page)) {
     await renderGoogleAdsPage(ctx, page);
     return;

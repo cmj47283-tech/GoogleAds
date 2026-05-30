@@ -12,6 +12,7 @@
     </script>
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/google_ads.css">
+    <link rel="stylesheet" href="/css/google_ads_w.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -210,7 +211,14 @@
                             'expand_more' }}</span>
                     </button>
                     <div class="ga-sidebar-submenu">
-                        <a class="ga-sidebar-link" href="#" data-tooltip="Brand report">Brand report</a>
+                        <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'insights' }"
+                            href="#" @click="switchPage('insights')">
+                            <span data-tooltip="Insights">Insights</span>
+                        </button>
+                        <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'brandreport' }"
+                            href="#" @click="switchPage('brandreport')">
+                            <span data-tooltip="Brand report">Brand report</span>
+                        </button>
                         <a class="ga-sidebar-link" href="#" data-tooltip="When and where ads showed">When and where
                             ads<br>showed</a>
                         <button class="ga-sidebar-link-1" type="button" :class="{ active: pageMode === 'reporteditor' }"
@@ -313,7 +321,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations'"
+                    <div v-if="pageMode !== 'campaigns' && pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations' && pageMode !== 'insights' && pageMode !== 'brandreport'"
                         class="ga-state-line">
                         <span :class="['ga-dot', selectedCampaignStatusClass]"></span>
                         <span>{{ selectedCampaignStateLabel }}</span>
@@ -332,7 +340,7 @@
                         </a>
                     </div>
                     <section
-                        v-if="pageMode === 'campaigns' || pageMode === 'reporteditor' || pageMode === 'overview' || pageMode === 'recommendations'"
+                        v-if="pageMode === 'campaigns' || pageMode === 'reporteditor' || pageMode === 'overview' || pageMode === 'recommendations' || pageMode === 'insights' || pageMode === 'brandreport'"
                         class="ga-page-filter-row">
                         <span>Filters</span>
                         <button class="ga-filter-badge" type="button">Campaign status: All</button>
@@ -354,6 +362,9 @@
                     </div>
                     <div v-if="pageMode === 'recommendations'">
                         <%- include('pages/recommendations', { component: 'header' }) %>
+                    </div>
+                    <div v-if="pageMode === 'brandreport'">
+                        <%- include('pages/brand_report', { component: 'header' }) %>
                     </div>
                     <div v-if="pageMode === 'campaigns' || pageMode === 'adassets' || pageMode === 'overview'"
                         class="ga-date-row">
@@ -873,7 +884,7 @@
 
                 </div>
                 <template
-                    v-if="pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations'">
+                    v-if="pageMode !== 'reporteditor' && pageMode !== 'overview' && pageMode !== 'recommendations' && pageMode !== 'insights' && pageMode !== 'brandreport'">
                     <div v-if="pageMode === 'campaigns' || pageMode === 'adassets'" class="ga-tabs">
                         <button class="active" type="button">{{ pageMode === 'adassets' ? 'Assets' : 'Campaigns'
                             }}</button>
@@ -892,9 +903,9 @@
                         <div v-for="(metric, index) in metricCards" :key="metric.label" class="ga-metric-card"
                             :class="{ primary: index === 0 }">
                             <span>{{ metric.label }}</span>
-                            <strong>{{ metric.value }}</strong>
-                            <div v-if="index !== metricCards.length - 1" class="ga-metric-delta">
-                                <i class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
+                            <strong :class="{ empty: metric.value === '—' }">{{ metric.value }}</strong>
+                            <div class="ga-metric-delta">
+                                <i v-if="metric.label !== 'Avg. target CPA'" class="material-symbols-outlined" style="font-size: 13px;">arrow_upward</i>
                                 <small style="margin-left: 4px;">{{ metric.delta }}</small>
                             </div>
                             <div class="ga-metric-skeleton" aria-hidden="true">
@@ -1267,21 +1278,24 @@
                                             </span>
                                         </td>
                                         <td><span class="ga-optimization-score"
+                                                :class="{
+                                                    empty: percent(campaign.OptimizationScore || campaign.optimizationScore, '—') === '—'
+                                                }"
                                                 data-tooltip="View relevant recommendations to improve your campaign's performance">{{
-                                                percent(campaign.OptimizationScore || campaign.optimizationScore)
+                                                percent(campaign.OptimizationScore || campaign.optimizationScore, '—')
                                                 }}</span></td>
                                         <td>{{ dash(campaign.CampaignType || campaign.campaignType) }}</td>
-                                        <td>{{ formatCurrency(campaign.costPerInstall) }}</td>
+                                        <td>{{ formatCurrency(campaign.costPerInstall, '—') }}</td>
                                         <td>{{ formatCurrency(campaign.costPerInAppActions ||
-                                            campaign.costPerInAppAction) }}
+                                            campaign.costPerInAppAction, '—') }}
                                         </td>
-                                        <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv , 2) }}
+                                        <td>{{ formatNumber(campaign.ViewThroughConv || campaign.viewThroughConv) }}
                                         </td>
                                         <td>{{ formatNumber(campaign.installs,2) }}</td>
                                         <td>{{ formatNumber(campaign.inAppActions,2) }}</td>
                                         <td>{{ formatNumber(campaign.ParticipatedInAppActions,2) }}</td>
                                         <td>{{ formatCurrency(campaign.cost) }}</td>
-                                        <td>{{ formatCurrency(campaign.CostPerParticipatedInAppAction) }}</td>
+                                        <td>{{ formatCurrency(campaign.CostPerParticipatedInAppAction, '—') }}</td>
                                         <td>{{ percent(campaign.ConvRate) }}</td>
                                         <td>{{ formatNumber(campaign.Conversions , 2) }}</td>
                                         <td>{{ formatCurrency(campaign.CostPerConv) }}</td>
@@ -1294,7 +1308,7 @@
                                         <td>—</td>
                                         <td>—</td>
                                         <td>—</td>
-                                        <td>{{ formatNumber(totals.viewThroughConv , 2) }}</td>
+                                        <td>{{ formatNumber(totals.viewThroughConv) }}</td>
                                         <td>{{ formatNumber(totals.installs,2) }}</td>
                                         <td>{{ formatNumber(totals.inAppActions,2) }}</td>
                                         <td>—</td>
@@ -1339,13 +1353,8 @@
                                         </td>
                                         <td class="name-col"><a :href="adAssetsHref"
                                                 @click.prevent="navigateToGoogleAdsRoute(adAssetsHref, $event)">{{
-                                                adGroup.adGroup }}</a></td>
-                                        <td>
-                                            <span class="ga-status-lines">
-                                                <span v-for="line in statusDisplayLines(adGroup.Status || adGroup.status, 'adgroup')"
-                                                    :key="line.text" :class="['ga-status-line', line.tone]">{{
-                                                    line.text }}</span>
-                                            </span>
+                                                adGroup.adGroup !== '' ? adGroup.adGroup : 'Ad group 1' }}</a></td>
+                                        <td><span class="ga-dashed">{{ dash(adGroup.Status || adGroup.status) }}</span>
                                         </td>
                                         <td>{{ fixed(adGroup.TargetCPA || adGroup.targetCpa) }}</td>
                                         <td>{{ numberOrZero(adGroup.Conversions) }}</td>
@@ -1355,9 +1364,9 @@
                                         <td>{{ numberOrZero(adGroup.ViewThroughConv) }}</td>
                                         <td>{{ dash(adGroup.BrandInclusions) }}</td>
                                         <td>{{ dash(adGroup.LocationsOfInterest) }}</td>
-                                        <td>{{ numberOrZero(adGroup.installs) }}</td>
-                                        <td>{{ numberOrZero(adGroup.inAppActions) }}</td>
-                                        <td>{{ numberOrZero(adGroup.ParticipatedInAppActions) }}</td>
+                                        <td>{{ formatNumber(adGroup.installs, 2) }}</td>
+                                        <td>{{ formatNumber(adGroup.inAppActions, 2) }}</td>
+                                        <td>{{ formatNumber(adGroup.ParticipatedInAppActions, 2) }}</td>
                                         <td>{{ money(adGroup.cost) }}</td>
                                         <td>{{ moneyOrDash(adGroup.CostPerParticipatedInAppAction) }}</td>
                                         <td>{{ percent(adGroup.ConvRate) }}</td>
@@ -1371,9 +1380,9 @@
                                         <td>{{ numberOrZero(adGroupTotal.ViewThroughConv) }}</td>
                                         <td></td>
                                         <td></td>
-                                        <td>{{ numberOrZero(adGroupTotal.installs) }}</td>
-                                        <td>{{ numberOrZero(adGroupTotal.inAppActions) }}</td>
-                                        <td>{{ numberOrZero(adGroupTotal.ParticipatedInAppActions) }}</td>
+                                        <td>{{ formatNumber(adGroupTotal.installs, 2) }}</td>
+                                        <td>{{ formatNumber(adGroupTotal.inAppActions, 2) }}</td>
+                                        <td>{{ formatNumber(adGroupTotal.ParticipatedInAppActions, 2) }}</td>
                                         <td>{{ money(adGroupTotal.cost) }}</td>
                                         <td>{{ moneyOrDash(adGroupTotal.CostPerParticipatedInAppAction) }}</td>
                                         <td>{{ percent(adGroupTotal.ConvRate) }}</td>
@@ -1464,9 +1473,9 @@
                                         <td>{{ formatNumber(asset.impressions) }}</td>
                                         <td>{{ formatCurrency(asset.cost) }}</td>
                                         <td>{{ formatNumber(asset.installs , 2) }}</td>
-                                        <td>{{ currencyOrDash(asset.costPerInstall) }}</td>
+                                        <td>{{ formatCurrency(asset.costPerInstall, '—') }}</td>
                                         <td>{{ formatNumber(asset.inAppActions, 2) }}</td>
-                                        <td>{{ currencyOrDash(asset.costPerInAppAction) }}</td>
+                                        <td>{{ formatCurrency(asset.costPerInAppAction, '—') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1510,6 +1519,21 @@
                         <p>&copy; Google, 2026.</p>
                     </footer>
                 </template>
+                <!-- Page content -->
+                <div v-if="pageMode === 'insights'">
+                    <%- include('pages/insights', { component: 'content' }) %>
+                </div>
+                <div v-if="pageMode === 'brandreport'">
+                    <%- include('pages/brand_report', { component: 'content' }) %>
+                </div>
+
+                <!-- Page footer -->
+                <div v-if="pageMode === 'insights'">
+                    <%- include('pages/insights', { component: 'footer' }) %>
+                </div>
+                <div v-if="pageMode === 'brandreport'">
+                    <%- include('pages/brand_report', { component: 'footer' }) %>
+                </div>
             </main>
         </div>
 
@@ -1521,7 +1545,7 @@
             </section>
             <section v-if="previewModal.type === 'image'" class="ga-preview-modal image-preview">
                 <div class="ga-preview-stage" :class="{ 'ga-preview-stage--fullscreen': isPreviewFullscreen }"
-                    @click="closePreview">
+                    @click.stop>
                     <button class="ga-preview-close" type="button" @click="closePreview">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -1532,10 +1556,10 @@
                             {{ isPreviewFullscreen ? 'close_fullscreen' : 'open_in_full' }}
                         </span>
                     </button>
-                    <button class="ga-preview-arrow ga-preview-arrow-left" type="button" title="Previous">
+                    <button class="ga-preview-arrow ga-preview-arrow-left" type="button" title="Previous" @click="turnLeftImagePreview">
                         <span class="material-symbols-outlined">chevron_left</span>
                     </button>
-                    <button class="ga-preview-arrow ga-preview-arrow-right" type="button" title="Next">
+                    <button class="ga-preview-arrow ga-preview-arrow-right" type="button" title="Next" @click="turnRightImagePreview">
                         <span class="material-symbols-outlined">chevron_right</span>
                     </button>
                     <img :src="previewModal.asset.image" :alt="previewModal.asset.asset">

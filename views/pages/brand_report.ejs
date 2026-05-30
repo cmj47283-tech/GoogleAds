@@ -1,0 +1,30 @@
+<% if (component==='header' ) { %>
+    <div class="ga-date-row">
+        <span>{{ getDateOptionLabel(appliedDateOption) }}</span>
+        <button ref="dateSelectRef" class="ga-date-button" type="button" @click.stop="toggleDatePicker">
+            {{ dateRangeLabel }}
+            <span class="material-symbols-outlined">arrow_drop_down</span>
+        </button>
+        <button class="ga-date-nav" type="button" @click="shiftDateRange(-1)" aria-label="Previous date range">
+            <i class="material-symbols-outlined-extended">chevron_left</i>
+        </button>
+        <button class="ga-date-nav" type="button" @click="shiftDateRange(1)" aria-label="Next date range">
+            <i class="material-symbols-outlined-extended">chevron_right</i>
+        </button>
+        <a href="#" @click.prevent="applyQuickDateOption('last30Days')">Show last 30 days</a>
+    </div>
+    <% } else if (component==='tabs' ) { %>
+        <div></div>
+        <% } else if (component==='content' ) { %>
+            <div class="_ngcontent-awn-VIDEO-3">
+                <div class="max-width-container no-report-placeholder-container _ngcontent-awn-VIDEO-3">
+                    <img alt="Browser error" class="_ngcontent-awn-VIDEO-3"
+                        src="https://www.gstatic.com/adwords/video/brand_performance/browser_error.svg">
+                    <p class="_ngcontent-awn-VIDEO-3">This report is not available for manager accounts.</p>
+                </div>
+            </div>
+            <% } else if (component==='footer' ) { %>
+                <footer class="ga-footer-1">
+                    <p>&copy; Google, 2026.</p>
+                </footer>
+                <% } %>
